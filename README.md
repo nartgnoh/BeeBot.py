@@ -1,14 +1,14 @@
-# BeeBot
+# BeeBot.py
 
-A cute bee-themed bot for my personal Discord server.
+A cute bee-themed Discord.py bot for my personal Discord server.
 
 ![BeeBot](SmileBee.png)
 
 ## Description
 
-Code-base for a Discord.py, bee-themed bot who responds with cute reactions, helps with organizing game nights, 
+Welcome to BeeBot.py!
 
-Project 1 - DATT4300 (Fall 2021)
+Code-base for a bee-themed Discord.py bot who responds with cute and helpful reactions, helps with organizing game nights, plays music and much more!
 
 ## Getting Started
 
@@ -35,7 +35,7 @@ Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
 
 * Run locally using;
 ```
-python3 $bee_bot.py
+python3 bee_bot.py
 ```
 
 ## Authors
