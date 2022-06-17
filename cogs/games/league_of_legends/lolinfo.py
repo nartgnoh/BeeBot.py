@@ -75,7 +75,7 @@ class lolinfo(commands.Cog):
     # *********************************************************************************************************************
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
-    @commands.command(name='champskills', aliases=['abilitychamp', 'champability' 'champabilities', 'abilitieschamp', 'schamp', 'champs', 'champskill', '💥'], 
+    @commands.command(name='champskills', aliases=['abilitychamp', 'champability' 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'], 
         help='💥 Full lookup for lol champ information. [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(owner_specific_command_name)
