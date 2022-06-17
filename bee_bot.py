@@ -36,6 +36,6 @@ async def on_ready():
 
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with BEES NUTS (type \"BB help\")"))
     print(f'BeeBot successfully logged in and booted! :D'
-            '\n----------------------------------------------')
+        '\n----------------------------------------------')
 
 bot.run(DISCORD_TOKEN, bot=True, reconnect=True)

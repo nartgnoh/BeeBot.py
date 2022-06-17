@@ -79,32 +79,32 @@ class games(commands.Cog):
                 # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
                 channel = ctx.message.author.voice.channel
                 number_of_players = len(channel.members)
-
-                # get games.json file
-                games_json_path = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/json_files/games.json'
-                with open(games_json_path) as games_json:
-                    games = json.load(games_json)
-                    
-                    final_games_list = []
-                    # iterate through games dictionary
-                    for key in games:
-                        if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
-                            final_games_list.append(key)  
-
-                # picking a random game from the final_games_list
-                random_game = random.choice(final_games_list)
-                pg_quotes = [
-                    ('Have you tried ***{}***? :smile:'.format(random_game)),
-                    ('Why not try ***{}***? :open_mouth:'.format(random_game)),
-                    ('I recommend ***{}***! :liar:'.format(random_game)),
-                    ('I might not have friends, but your friends can play ***{}***! :smiling_face_with_tear:'.format(random_game))
-                ]
-                pg_message = random.choice(pg_quotes)
-                await ctx.send(pg_message)
             # else number_of_players was 0
             else:
                 await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
                         'or joining a voice channel! :slight_smile:')
+
+        # get games.json file
+        games_json_path = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/json_files/games.json'
+        with open(games_json_path) as games_json:
+            games = json.load(games_json)
+            
+            final_games_list = []
+            # iterate through games dictionary
+            for key in games:
+                if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
+                    final_games_list.append(key)  
+
+        # picking a random game from the final_games_list
+        random_game = random.choice(final_games_list)
+        pg_quotes = [
+            ('Have you tried ***{}***? :smile:'.format(random_game)),
+            ('Why not try ***{}***? :open_mouth:'.format(random_game)),
+            ('I recommend ***{}***! :liar:'.format(random_game)),
+            ('I might not have friends, but your friends can play ***{}***! :smiling_face_with_tear:'.format(random_game))
+        ]
+        pg_message = random.choice(pg_quotes)
+        await ctx.send(pg_message)
 
 def setup(bot):
     bot.add_cog(games(bot))
