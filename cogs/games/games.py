@@ -67,9 +67,6 @@ class games(commands.Cog):
                 # set initals to embed
                 embed = Embed(title="The Teams:",
                     colour=ctx.author.colour)
-                # set footer to embed
-                embed.set_footer(text=f'Teams created by: {ctx.author.display_name}',
-                                icon_url=ctx.author.avatar_url)
 
                 for teams in range(len(teams_list)):
                     team_number += 1
@@ -130,8 +127,6 @@ class games(commands.Cog):
             embed = Embed(title=random_game,
                 description=pg_message,
                 colour=ctx.author.colour)
-        embed.set_footer(text=f'Reply to {ctx.author.display_name}',
-                        icon_url=ctx.author.avatar_url)
 
         await ctx.send(embed=embed)
 

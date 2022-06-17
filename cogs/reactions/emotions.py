@@ -41,8 +41,14 @@ class emotions(commands.Cog):
         ]
         happy_message = random.choice(happy_quotes)
 
-        msg = await ctx.send(f'{happy_message}',
-                    file=discord.File(f'resource_files/image_files/happy_images/{happy_images}'))
+        # set initals to embed
+        embed = Embed(title=happy_message,
+                      colour=discord.Colour.gold())
+        # set image to embed
+        file = discord.File(f'resource_files/image_files/happy_images/{happy_images}', filename="image.gif")
+        embed.set_image(url='attachment://image.gif')
+
+        msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😊")
 
     # *********************************************************************************************************************
@@ -65,8 +71,14 @@ class emotions(commands.Cog):
         ]
         sad_message = random.choice(sad_quotes)
 
-        msg = await ctx.send(f'{sad_message}',
-                    file=discord.File(f'resource_files/image_files/sad_images/{sad_images}'))
+        # set initals to embed
+        embed = Embed(title=sad_message,
+                      colour=discord.Colour.dark_blue())
+        # set image to embed
+        file = discord.File(f'resource_files/image_files/sad_images/{sad_images}', filename="image.gif")
+        embed.set_image(url='attachment://image.gif')
+
+        msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😔")
 
     # *********************************************************************************************************************
@@ -92,8 +104,14 @@ class emotions(commands.Cog):
         ]
         angry_message = random.choice(angry_quotes)
 
-        msg = await ctx.send(f'{angry_message}',
-                    file=discord.File(f'resource_files/image_files/angry_images/{angry_images}'))
+        # set initals to embed
+        embed = Embed(title=angry_message,
+                      colour=discord.Colour.red())
+        # set image to embed
+        file = discord.File(f'resource_files/image_files/angry_images/{angry_images}', filename="image.gif")
+        embed.set_image(url='attachment://image.gif')
+
+        msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😡")
 
 def setup(bot):
