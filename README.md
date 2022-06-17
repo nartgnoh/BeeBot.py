@@ -30,6 +30,10 @@ $ python3 -m pip install -U discord.py
 ```
 $ pip install python-dotenv
 ```
+* Install Riotwatcher
+```
+$ pip3 install riotwatcher
+```
   
 ### Installing
 
@@ -44,10 +48,14 @@ $ git clone git@github.com:nartgnoh/Discord_Beebot.git
 ```
 $ echo "# .env
 DISCORD_TOKEN=$INSERT DISCORD TOKEN$
-TENOR_KEY=$INSERT TENOR TOKEN$" > .env
+TENOR_KEY=$INSERT TENOR TOKEN$
+RIOT_LOL_KEY=$INSERT RIOT API LOL KEY$" > .env
 ```
 Click [here](https://discord.com/developers/applications/) to find steps for a Discord token.
+
 Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
+
+Click [here](https://developer.riotgames.com/) to find steps for a Riot API key.
 
 ## Executing program
 

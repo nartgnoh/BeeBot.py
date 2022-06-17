@@ -3,3 +3,9 @@
 
 # games.json
 "Event Name": {"start_utc_date": date, "end_utc_date": end},
+
+# lol.champ_example.json
+Contains an example json for league of legends champ: Miss Fortune <3
+json_url = http://ddragon.leagueoflegends.com/cdn/12.11.1/data/en_US/champion/MissFortune.json
+img_url = http://ddragon.leagueoflegends.com/cdn/img/champion/splash/MissFortune_0.jpg
+Checkout https://developer.riotgames.com/docs/lol for more
