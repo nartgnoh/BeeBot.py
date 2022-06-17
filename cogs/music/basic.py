@@ -20,7 +20,7 @@ class basic(commands.Cog):
     # *********************************************************************************************************************
     # bot command to join voice channel
     # *********************************************************************************************************************
-    @commands.command(name='join', aliases=['joincall'], help='🔊 Beebot joins your voice channel!')
+    @commands.command(name='join', aliases=['joincall', '🔊'], help='🔊 Beebot joins your voice channel!')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def command_name(self, ctx):
@@ -30,7 +30,7 @@ class basic(commands.Cog):
     # *********************************************************************************************************************
     # bot command to leave voice channel and deletes queue
     # *********************************************************************************************************************
-    @commands.command(name='leave', aliases=['stopaudio', 'leavecall', 'deletequeue', 'disconnect'],
+    @commands.command(name='leave', aliases=['stopaudio', 'leavecall', 'deletequeue', 'disconnect', '🔈'],
                 help='🔈 Beebot leaves voice channel and deletes current queue. [Role specific]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)

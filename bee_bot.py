@@ -7,11 +7,17 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 # get all cog extensions
-all_extensions = ['cogs.reactions.emotions',
-                'cogs.reactions.reactions',
+all_extensions = [
+                'cogs.games.games',
+                # 'cogs.games.lolclash',
+                # 'cogs.music.basic',
+                # 'cogs.music.play',
+                # 'cogs.music.view',
+                'cogs.reactions.emotions',
                 'cogs.reactions.poll',
-                'cogs.games.games']
-                # 'cogs.music.basic']
+                'cogs.reactions.reactions',
+                ]
+                
 
 # get from .env file
 load_dotenv()
@@ -21,8 +27,14 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.default()
 intents.members = True
 
+def get_prefix(bot, message):
+    prefixes = ['BB ', 'bb '] # BeeBot exclusive
+    # prefixes = ['BT ', 'bt ', 'B ', 'b '] # BeeBot-Testing exclusive
+
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+
 # setup bot
-bot = commands.Bot(command_prefix="BB ", description='🐝 Hello! I am BeeBot! 🐝', case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix=get_prefix, description='🐝 Hello! I am BeeBot! 🐝', case_insensitive=True, intents=intents)
 
 # load extensions(cogs) listed above in [all_extensions].
 if __name__ == '__main__':
