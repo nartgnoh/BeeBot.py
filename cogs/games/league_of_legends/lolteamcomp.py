@@ -9,6 +9,7 @@ from pydoc import describe
 import discord
 import random
 import json
+from matplotlib.style import available
 import requests
 import cogs.games.league_of_legends.lolconstants as lolconstants
 
@@ -79,11 +80,6 @@ class lolteamcomp(commands.Cog):
 
                 # all_tags - new_tags_list
                 missing_tags = [tag for tag in all_tags if tag not in new_tags_list]
-                if not missing_tags:
-                    missing_tags = 'Congrats! You covered all of the available tags! :tada:'
-                else:
-                    missing_tags = [s + 's' for s in missing_tags]
-                    missing_tags = f"You team is missing some; \n***{', '.join(missing_tags)}***"
                 # most common tag
                 most_common_tag = max(tags_list, key = tags_list.count)
                 # highest affinity
@@ -96,6 +92,17 @@ class lolteamcomp(commands.Cog):
                 if len(available_champs) >= 10:
                     available_champs = random.sample(available_champs, 10)
 
+                missing_txt = ''
+                available_txt = ''
+                if not missing_tags:
+                    missing_txt = '-'
+                    available_txt = '-'
+                    
+                else:
+                    missing_tags = [s + 's' for s in missing_tags]
+                    missing_txt = f"You team is missing some; \n***{', '.join(missing_tags)}***"
+                    available_txt = f"Try adding these champions to your comp to round it out! c:\n***{', '.join(available_champs)}***"
+
                 # set initals to embed
                 embed = Embed(title="Team Comp Balance!",
                             description="Check if your team is well balanced! :D",
@@ -107,11 +114,14 @@ class lolteamcomp(commands.Cog):
                 # set variables for fields to embed
                 fields = [(f"Highest Affinity:", f"***{highest_aff}***", True),
                         (f"Most Common Tag:", f"***{most_common_tag}***", True),
-                        ("Missing Tags:", missing_tags, False),
-                        ("Available Champions:", f"Try adding these champions to your comp to round it out! c:\n***{', '.join(available_champs)}***", False)]
+                        ("Missing Tags:", missing_txt, False),
+                        ("Available Champions:", available_txt, False)]
                 for name, value, inline in fields:
                     embed.add_field(name=name, value=value, inline=inline)
 
+                if not missing_tags:
+                    embed.add_field(name=f':tada: Congrats! Your team covers all of the available tags! :tada:',
+                    value='Now you\'re ready to hit the rift!', inline=False)
                 await ctx.send(file=file, embed=embed)
             else:
                 await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again!\n" +
