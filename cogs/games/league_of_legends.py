@@ -126,7 +126,7 @@ class league_of_legends(commands.Cog):
     # *********************************************************************************************************************
     # bot command pick a random skin for champion
     # *********************************************************************************************************************
-    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp'], 
+    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp', '👗'], 
         help='👗 Pick a random skin for a champion!')
     # only specific roles can use this command
     @commands.has_role(owner_specific_command_name)
