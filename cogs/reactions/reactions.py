@@ -120,7 +120,7 @@ class reactions(commands.Cog):
     # bot command to roll dice (no specification is an auto 1D6)
     # *********************************************************************************************************************
     @commands.command(name='rolldice', aliases=['diceroll', 'roll', 'dice'],
-                help='🎲 Simulates rolling dice. [Auto: 1D6, Max number of dice: 500]')
+                help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
     async def roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
         try:
             # default 1D6 dice
@@ -128,8 +128,8 @@ class reactions(commands.Cog):
                 number_of_dice = 1
             if number_of_sides == None:
                 number_of_sides = 6
-            if number_of_dice > 500 or number_of_dice < 1 or number_of_sides < 1:
-                await ctx.send('Sorry! The dice is broken. :cry: Try again! ')
+            if number_of_dice > 100 or number_of_dice < 1 or number_of_sides > 100 or number_of_sides < 1:
+                await ctx.send('Sorry! The maximum is 100D100 and your number(s) is too high! :cry: Try again!')
             else:
                 dice = [
                     str(random.choice(range(1, number_of_sides + 1)))

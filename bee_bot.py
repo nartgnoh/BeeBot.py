@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 all_extensions = ['cogs.reactions.emotions',
                 'cogs.reactions.reactions',
                 'cogs.reactions.poll',
-                'cogs.games.games',
-                'cogs.music.basic']
+                'cogs.games.games']
+                # 'cogs.music.basic']
 
 # get from .env file
 load_dotenv()
@@ -22,7 +22,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 # setup bot
-bot = commands.Bot(command_prefix="BB ", description='Hello! I am BeeBot! c:', case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix="BB ", description='🐝 Hello! I am BeeBot! 🐝', case_insensitive=True, intents=intents)
 
 # load extensions(cogs) listed above in [all_extensions].
 if __name__ == '__main__':

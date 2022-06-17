@@ -27,7 +27,7 @@ class poll(commands.Cog):
     # bot command to make a poll in chat
     # *********************************************************************************************************************
 
-    @commands.command(name='poll', aliases=['createpoll', 'makepoll', 'polls'], help='💈 Make a poll! [Put your question in quotes "", Max Options: 9]')
+    @commands.command(name='poll', aliases=['createpoll', 'makepoll', 'polls'], help='💈 Make a poll! [Put your question in quotes "", Max options: 9]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def command_name(self, ctx, question: str, *options):
