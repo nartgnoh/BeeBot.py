@@ -36,13 +36,16 @@ class poll(commands.Cog):
         elif len(options) > 9:
             await ctx.send("Sorry, you have too many options! D: Please try again.")
         else:
+            # set initals to embed
             embed = Embed(title="Poll!",
                           description=question,
                           colour=ctx.author.colour)
-
+            # set author to embed
+            embed.set_author(name=ctx.author.display_name,
+                            icon_url=ctx.author.avatar_url)
+            # set poll variables to embed
             fields = [("Options", "\n".join([f"{poll_hearts[idx]} {option}" for idx, option in enumerate(options)]), False),
                          ("Instructions", "React to cast a vote!", False)]
-                         
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
 

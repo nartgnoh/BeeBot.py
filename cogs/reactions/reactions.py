@@ -6,6 +6,7 @@ import requests
 import json
 
 from discord.ext import commands
+from discord import Embed
 from typing import Optional
 from dotenv import load_dotenv
 
