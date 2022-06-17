@@ -19,7 +19,7 @@ class emotions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show cute happy pictures
     # *********************************************************************************************************************
-    @commands.command(name='happy', aliases=['c:'], help='😊 BeeBot happy! c:')
+    @commands.command(name='happy', aliases=['c:', '😊'], help='😊 BeeBot happy! c:')
     async def happy(self, ctx):
         # get happy_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/happy_images'
@@ -41,7 +41,7 @@ class emotions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show cute sad pictures
     # *********************************************************************************************************************
-    @commands.command(name='sad', aliases=['sadge', ':c'], help='😔 BeeBot sad! :c')
+    @commands.command(name='sad', aliases=['sadge', ':c', '😔'], help='😔 BeeBot sad! :c')
     async def sad(self, ctx):
         # get sad_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/sad_images'
@@ -65,7 +65,7 @@ class emotions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show cute angry pictures
     # *********************************************************************************************************************
-    @commands.command(name='angry', aliases=['angy', 'mad', 'hmph', '>:c', 'madge'], help='😡 BeeBot angry! >:c')
+    @commands.command(name='angry', aliases=['angy', 'mad', 'hmph', '>:c', 'madge', '😡'], help='😡 BeeBot angry! >:c')
     async def angry(self, ctx):
         # get angry_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/angry_images'

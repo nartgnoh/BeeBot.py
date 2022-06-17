@@ -27,7 +27,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show bee facts
     # *********************************************************************************************************************
-    @commands.command(name='facts', aliases=['fact'], help='🐝 Bee facts!')
+    @commands.command(name='beefacts', aliases=['beefact', 'fact', 'facts', '🐝'], help='🐝 Bee facts!')
     async def facts(self, ctx):
         # get resources directory
         resources_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files'
@@ -51,7 +51,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to pick random colour
     # *********************************************************************************************************************
-    @commands.command(name='pickcolour', aliases=['pickcolor', 'colour', 'color'],
+    @commands.command(name='pickcolour', aliases=['pickcolor', 'colour', 'color', '🎨'],
                 help='🎨 Picks a colour (typically chroma colours).')
     async def colour(self, ctx):
         colours_quotes = [
@@ -63,7 +63,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to wish someone a Happy Birthday
     # *********************************************************************************************************************
-    @commands.command(name='happybirthday', aliases=['hbd', 'birthday'],
+    @commands.command(name='happybirthday', aliases=['hbd', 'birthday', '🎂'],
                 help='🎂 Wishes someone a Happy Birthday! Try a mention!')
     async def hbd(self, ctx, *, member_name: Optional[str]):
         if member_name == None:
@@ -86,7 +86,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to flip coin
     # *********************************************************************************************************************
-    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips'], help='💰 Simulates coin flip. [Max coins: 300]')
+    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'], help='🟡 Simulates coin flip. [Max coins: 300]')
     async def coin_flip(self, ctx, number_of_coins: Optional[int]):
         try:
             # empty message
@@ -119,7 +119,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to roll dice (no specification is an auto 1D6)
     # *********************************************************************************************************************
-    @commands.command(name='rolldice', aliases=['diceroll', 'roll', 'dice'],
+    @commands.command(name='rolldice', aliases=['diceroll', 'roll', 'dice', '🎲'],
                 help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
     async def roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
         try:
@@ -152,7 +152,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to send gif/tenor
     # *********************************************************************************************************************
-    @commands.command(name='gif', aliases=['giphy', 'tenor'], help='😂 Random gif from Tenor. [Auto: bees, Role Specific]')
+    @commands.command(name='gif', aliases=['giphy', 'tenor', '😂'], help='😂 Random gif from Tenor. [Auto: bees, Role Specific]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def gif(self, ctx, *, search: Optional[str]):
