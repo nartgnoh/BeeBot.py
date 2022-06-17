@@ -9,7 +9,6 @@ from pydoc import describe
 import discord
 import random
 import json
-from matplotlib.style import available
 import requests
 
 from discord.ext import commands
