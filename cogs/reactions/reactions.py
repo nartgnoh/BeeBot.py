@@ -1,4 +1,13 @@
+# *********************************************************************************************************************
 # reactions.py
+# - bee_facts command
+# - colour command
+# - hbd command
+# - coin_flip command
+# - dice_roll command
+# - gif command
+# *********************************************************************************************************************
+
 import os
 import discord
 import random
@@ -29,7 +38,7 @@ class reactions(commands.Cog):
     # bot command to show bee facts
     # *********************************************************************************************************************
     @commands.command(name='beefacts', aliases=['beefact', 'fact', 'facts', '🐝'], help='🐝 Bee facts!')
-    async def facts(self, ctx):
+    async def bee_facts(self, ctx):
         # get resources directory
         resources_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files'
         # get image directory
@@ -120,9 +129,9 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to roll dice (no specification is an auto 1D6)
     # *********************************************************************************************************************
-    @commands.command(name='rolldice', aliases=['diceroll', 'roll', 'dice', '🎲'],
+    @commands.command(name='diceroll', aliases=['rolldice', 'roll', 'dice', '🎲'],
                 help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
-    async def roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
+    async def dice_roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
         try:
             # default 1D6 dice
             if number_of_dice == None:
