@@ -32,6 +32,7 @@ $ pip install python-dotenv
 ```
   
 ### Installing
+
 Run in Terminal:
 ```
 $ git clone git@github.com:nartgnoh/Discord_Beebot.git
@@ -49,8 +50,10 @@ Click [here](https://discord.com/developers/applications/) to find steps for a D
 Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
 
 ## Executing program
+
 You can either run BeeBot.py locally or on a Google Cloud VM
 ### Running Locally
+
 * Run locally using;
 ```
 $ cd BeeBot.py
@@ -58,6 +61,7 @@ $ python3 bee_bot.py
 ```
 
 ### Running on Google Cloud Platform VM
+
 * Create an instances the on [Google Cloud Platform](https://console.cloud.google.com/compute/instances)
 * Setup an SSH connection
 * Go through the "Getting Started" section above
@@ -68,17 +72,20 @@ $ chmod +x bee_bot.py
 ```
 * These commands will be helpful with navigating the running processes of BeeBot.py:
 ```
-<!-- Run bee_bot.py -->
+# CD into BeeBot.py directory
+$ cd BeeBot.py
+
+# Run bee_bot.py
 $ nohup python3 -u bee_bot.py &>> activity.log &
 
-<!-- Lookup all python3 processes -->
+# Lookup all python3 processes
 $ ps -ef | grep python3
 
-<!-- To kill bee_bot.py process -->
-<!-- First lookup bee_bot.py process -->
+# To kill bee_bot.py process
+# First lookup bee_bot.py process
 $ ps -ef | grep python3
-<!-- Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py -->
-<!-- Using the number of the process, kill the process -->
+# Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py
+# Using the number of the process, kill the process
 $ kill 1224
 ```
 * ## Authors
