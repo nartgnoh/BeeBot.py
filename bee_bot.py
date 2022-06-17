@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 all_extensions = [
                 'cogs.games.games',
                 # 'cogs.games.lolclash',
-                # 'cogs.music.basic',
+                'cogs.music.basic',
                 # 'cogs.music.play',
                 # 'cogs.music.view',
                 'cogs.reactions.emotions',
@@ -28,8 +28,8 @@ intents = discord.Intents.default()
 intents.members = True
 
 def get_prefix(bot, message):
-    prefixes = ['BB ', 'bb '] # BeeBot exclusive
-    # prefixes = ['BT ', 'bt ', 'B ', 'b '] # BeeBot-Testing exclusive
+    # prefixes = ['BB ', 'bb '] # BeeBot exclusive
+    prefixes = ['BT ', 'bt ', 'B ', 'b '] # BeeBot-Testing exclusive
 
     return commands.when_mentioned_or(*prefixes)(bot, message)
 

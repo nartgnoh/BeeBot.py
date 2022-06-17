@@ -5,6 +5,7 @@ import discord
 import random
 
 from discord.ext import commands
+from discord import Embed
 from typing import Optional
 
 # get current directory
@@ -35,9 +36,6 @@ class basic(commands.Cog):
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def leave(self, ctx):
-        voice = ctx.voice
-        print(voice)
-
         await ctx.voice_client.disconnect()
 
         # voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)

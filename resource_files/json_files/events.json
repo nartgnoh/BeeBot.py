@@ -1,0 +1,4 @@
+// "Event Name": {"start_utc_date": date, "end_utc_date": end},
+{
+    "Clash": {"start_utc_date": "now", "end_utc_date": "27-06-2022 2:00"}
+}
