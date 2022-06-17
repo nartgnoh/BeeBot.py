@@ -31,44 +31,49 @@ class games(commands.Cog):
         team_number = 0
         players_list = []
         teams_list = []
-        # set "number_of_teams" to 2 if none
-        if number_of_teams == None:
-            number_of_teams = 2
-        if number_of_teams <= max_teams and number_of_teams > 0:
-            # create a "players_list" for members in the voice channel
-            channel = ctx.message.author.voice.channel
-            for member in channel.members:
-                user = member.display_name
-                players_list.append(user)
-            # randomize the elements of the list 1 to "len(channel.members)" times
-            for i in range(random.randint(1, len(channel.members))):
-                random.shuffle(players_list)
-            # split the teams into the number of teams
-            team_splitting = np.array_split(players_list, number_of_teams)
-            # create a "team_list" for the split teams
-            for i in range(len(team_splitting)):
-                # checking empty
-                # if team_splitting[i]:
-                quote_players = ''
-                for j in range(len(team_splitting[i])):
-                    if team_splitting[i][j]:
-                        quote_players = quote_players + '{}, '.format(team_splitting[i][j])
-                teams_list.append(quote_players)
 
-            # create an embed with all the teams
-            embed = Embed(title="The Teams:",
-                colour=ctx.author.colour)
-
-            for teams in range(len(teams_list)):
-                team_number += 1
-                # check if element is not empty
-                if teams_list[teams]:
-                    # add a new "Team" field to the embed
-                    embed.add_field(name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
-
-            await ctx.send(embed=embed)
-        else:
+        # check for members in voice call
+        if ctx.message.author.voice is None:
             await ctx.send('An error has occurred! :confounded: Try joining a voice channel! :slight_smile:')
+        else:
+            # set "number_of_teams" to 2 if none
+            if number_of_teams == None:
+                number_of_teams = 2
+            if number_of_teams <= max_teams and number_of_teams > 0:
+                # create a "players_list" for members in the voice channel
+                channel = ctx.message.author.voice.channel
+                for member in channel.members:
+                    user = member.display_name
+                    players_list.append(user)
+                # randomize the elements of the list 1 to "len(channel.members)" times
+                for i in range(random.randint(1, len(channel.members))):
+                    random.shuffle(players_list)
+                # split the teams into the number of teams
+                team_splitting = np.array_split(players_list, number_of_teams)
+                # create a "team_list" for the split teams
+                for i in range(len(team_splitting)):
+                    # checking empty
+                    # if team_splitting[i]:
+                    quote_players = ''
+                    for j in range(len(team_splitting[i])):
+                        if team_splitting[i][j]:
+                            quote_players = quote_players + '{}, '.format(team_splitting[i][j])
+                    teams_list.append(quote_players)
+
+                # create an embed with all the teams
+                embed = Embed(title="The Teams:",
+                    colour=ctx.author.colour)
+
+                for teams in range(len(teams_list)):
+                    team_number += 1
+                    # check if element is not empty
+                    if teams_list[teams]:
+                        # add a new "Team" field to the embed
+                        embed.add_field(name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
+
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max teams: 101]')
 
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
