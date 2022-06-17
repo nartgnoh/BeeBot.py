@@ -9,9 +9,10 @@ from dotenv import load_dotenv
 # get all cog extensions
 all_extensions = [
                 # 'cogs.events.events',
+                'cogs.games.league_of_legends.lolinfo',
+                'cogs.games.league_of_legends.lolskins',
+                # 'cogs.games.league_of_legends.lolclash',
                 'cogs.games.games',
-                'cogs.games.league_of_legends',
-                # 'cogs.games.lolclash',
                 # 'cogs.games.teamfight_tactics',
                 # 'cogs.music.basic',
                 # 'cogs.music.play',
