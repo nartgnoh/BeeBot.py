@@ -8,14 +8,13 @@ from dotenv import load_dotenv
 
 # get all cog extensions
 all_extensions = ['cogs.reactions.emotions',
-                'cogs.reactions.reactions']
+                'cogs.reactions.reactions',
+                'cogs.games.games']
 
 # get from .env file
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TENOR_KEY = os.getenv('TENOR_KEY')
-role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
 
 # connecting with discord with "discord intents"
 intents = discord.Intents.default()
@@ -31,10 +30,11 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    print(f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
+    print('----------------------------------------------\n'
+        f'Logged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n\n')
 
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with BEES NUTS c: (type \"BB help\")"))
-    print(f'BeeBot successfully logged in and booted! c:')
-
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with BEES NUTS (type \"BB help\")"))
+    print(f'BeeBot successfully logged in and booted! :D'
+            '\n----------------------------------------------')
 
 bot.run(TOKEN, bot=True, reconnect=True)

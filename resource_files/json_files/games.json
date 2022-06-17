@@ -1,0 +1,22 @@
+{
+"League of Legends SR": {"min": 1, "max": 5},
+"League of Legends ARAM": {"min": 1, "max": 5},
+"League of Legends 3v3 Custom ARAM": {"min": 6, "max": 6},
+"League of Legends 4v4 Custom ARAM": {"min": 8, "max": 8},
+"League of Legends 5v5 Custom ARAM": {"min": 10, "max": 10},
+"League of Legends 5v5 Custom SR": {"min": 10, "max": 10},
+"Teamfight Tactics": {"min": 1, "max": 8},
+"Secret Hitler @ https://secrethitler.io/ OR https://netgames.io/games/secret-hitler/": {"min": 5, "max": 1},
+"One Night Ultimate Werewolf @ https://netgames.io/games/onu-werewolf/": {"min": 3, "max": 21},
+"Love Letter @ https://netgames.io/games/love-letter/": {"min": 2, "max": 4},
+"Among Us": {"min": 5, "max": 10},
+"Coup @ https://www.chickenkoup.com/": {"min": 2, "max": 6},
+"Hanabi @ https://hanab.live/lobby": {"min": 2, "max": 5},
+"Monopoly Deal @ https://playmdeal.com/": {"min": 2, "max": 5},
+"Covidopoly @ https://www.covidopoly.io/": {"min": 2, "max": 100},
+"Skribblio @ https://skribbl.io/": {"min": 2, "max": 12},
+"Uno @ http://play.unofreak.com/": {"min": 2, "max": 10},
+"Codenames @ https://codenames.game/": {"min": 4, "max": 100},
+"Gartic Phone @ https://garticphone.com/": {"min": 3, "max": 30},
+"Drawful @ the Jackbox Party Pack": {"min": 3, "max": 8}
+}
