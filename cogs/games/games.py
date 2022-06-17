@@ -72,7 +72,7 @@ class games(commands.Cog):
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', help='🎮 Picks a game to play. [Auto: Number of people in voice call)')
+    @commands.command(name='pickgame', help='🎮 Picks a game to play. [Auto: Number of people in voice call]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
             if ctx.message.author.voice is not None:
