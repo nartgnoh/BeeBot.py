@@ -34,7 +34,7 @@ class poll(commands.Cog):
         if len(options) == 0:
             await ctx.send("Please add some options! :slight_smile:")
         elif len(options) > 9:
-            await ctx.send("Sorry, you have too many options! D: Please try again.")
+            await ctx.send("Sorry! You have too many options! :cry: Please try again! [Max options: 9]")
         else:
             # set initals to embed
             embed = Embed(title="Poll!",

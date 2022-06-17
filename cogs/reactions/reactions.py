@@ -87,7 +87,7 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to flip coin
     # *********************************************************************************************************************
-    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'], help='🟡 Simulates coin flip. [Max coins: 300]')
+    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'], help='🟡 Simulates coin flip. [Max coins: 100]')
     async def coin_flip(self, ctx, number_of_coins: Optional[int]):
         try:
             # empty message
@@ -95,8 +95,8 @@ class reactions(commands.Cog):
             # default 1 coin
             if number_of_coins == None:
                 number_of_coins = 1
-            if number_of_coins > 300 or number_of_coins < 1:
-                await ctx.send('Sorry! The coin is broken. :cry: Try again!')
+            if number_of_coins > 100 or number_of_coins < 1:
+                await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max coins: 100]')
             else:
                 coin_flip_ht = [
                     'Heads, ',
@@ -130,7 +130,7 @@ class reactions(commands.Cog):
             if number_of_sides == None:
                 number_of_sides = 6
             if number_of_dice > 100 or number_of_dice < 1 or number_of_sides > 100 or number_of_sides < 1:
-                await ctx.send('Sorry! The maximum is 100D100 and your number(s) is too high! :cry: Try again!')
+                await ctx.send('Sorry! Your number(s) are out of bounds! :cry: Try again! [Max dice: 100D100]')
             else:
                 dice = [
                     str(random.choice(range(1, number_of_sides + 1)))
