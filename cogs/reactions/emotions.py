@@ -19,7 +19,7 @@ class emotions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show cute happy pictures
     # *********************************************************************************************************************
-    @commands.command(name='happy', aliases=['c:'], help='~ BeeBot happy! c:')
+    @commands.command(name='happy', aliases=['c:'], help='😊 BeeBot happy! c:')
     async def happy(self, ctx):
         # get happy_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/happy_images'
@@ -34,13 +34,14 @@ class emotions(commands.Cog):
         ]
         happy_message = random.choice(happy_quotes)
 
-        await ctx.send('{}'.format(happy_message),
+        msg = await ctx.send('{}'.format(happy_message),
                     file=discord.File('resource_files/image_files/happy_images/{}'.format(happy_images)))
+        await msg.add_reaction("😊")
 
     # *********************************************************************************************************************
     # bot command to show cute sad pictures
     # *********************************************************************************************************************
-    @commands.command(name='sad', aliases=['sadge', ':c'], help='~ BeeBot sad! :c')
+    @commands.command(name='sad', aliases=['sadge', ':c'], help='😔 BeeBot sad! :c')
     async def sad(self, ctx):
         # get sad_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/sad_images'
@@ -57,13 +58,14 @@ class emotions(commands.Cog):
         ]
         sad_message = random.choice(sad_quotes)
 
-        await ctx.send('{}'.format(sad_message),
+        msg = await ctx.send('{}'.format(sad_message),
                     file=discord.File('resource_files/image_files/sad_images/{}'.format(sad_images)))
+        await msg.add_reaction("😔")
 
     # *********************************************************************************************************************
     # bot command to show cute angry pictures
     # *********************************************************************************************************************
-    @commands.command(name='angry', aliases=['angy', 'mad', 'hmph', '>:c', 'madge'], help='~ BeeBot angry! >:c')
+    @commands.command(name='angry', aliases=['angy', 'mad', 'hmph', '>:c', 'madge'], help='😡 BeeBot angry! >:c')
     async def angry(self, ctx):
         # get angry_images directory
         img_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/image_files/angry_images'
@@ -83,8 +85,9 @@ class emotions(commands.Cog):
         ]
         angry_message = random.choice(angry_quotes)
 
-        await ctx.send('{}'.format(angry_message),
+        msg = await ctx.send('{}'.format(angry_message),
                     file=discord.File('resource_files/image_files/angry_images/{}'.format(angry_images)))
+        await msg.add_reaction("😡")
 
 def setup(bot):
     bot.add_cog(emotions(bot))

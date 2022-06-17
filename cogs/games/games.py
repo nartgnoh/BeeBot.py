@@ -23,7 +23,7 @@ class games(commands.Cog):
     # bot command to split teams
     # *********************************************************************************************************************
     @commands.command(name='splitteam', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team'],
-                help='~ Splits members in voice channel into teams. [Auto: 2, Max teams: 101]')
+                help='📋 Splits members in voice channel into teams. [Auto: 2, Max teams: 101]')
     async def split_team(self, ctx, number_of_teams: Optional[int]):
         max_teams = 101
         team_number = 0
@@ -72,7 +72,7 @@ class games(commands.Cog):
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', help='Picks a game to play. [Auto: Number of people in voice call)')
+    @commands.command(name='pickgame', help='🎮 Picks a game to play. [Auto: Number of people in voice call)')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
             if ctx.message.author.voice is not None:

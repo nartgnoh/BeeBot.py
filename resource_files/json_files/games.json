@@ -18,5 +18,7 @@
 "Uno @ http://play.unofreak.com/": {"min": 2, "max": 10},
 "Codenames @ https://codenames.game/": {"min": 4, "max": 100},
 "Gartic Phone @ https://garticphone.com/": {"min": 3, "max": 30},
-"Drawful @ the Jackbox Party Pack": {"min": 3, "max": 8}
+"Drawful @ the Jackbox Party Pack": {"min": 3, "max": 8},
+"Fortnite": {"min": 1, "max": 4},
+"Overcooked 2": {"min": 1, "max": 4}
 }

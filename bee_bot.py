@@ -9,12 +9,13 @@ from dotenv import load_dotenv
 # get all cog extensions
 all_extensions = ['cogs.reactions.emotions',
                 'cogs.reactions.reactions',
-                'cogs.games.games']
+                'cogs.reactions.poll',
+                'cogs.games.games',
+                'cogs.music.basic']
 
 # get from .env file
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-TENOR_KEY = os.getenv('TENOR_KEY')
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
 # connecting with discord with "discord intents"
 intents = discord.Intents.default()
@@ -37,4 +38,4 @@ async def on_ready():
     print(f'BeeBot successfully logged in and booted! :D'
             '\n----------------------------------------------')
 
-bot.run(TOKEN, bot=True, reconnect=True)
+bot.run(DISCORD_TOKEN, bot=True, reconnect=True)

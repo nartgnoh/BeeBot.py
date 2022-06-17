@@ -15,6 +15,10 @@ Code-base for a bee-themed Discord.py bot who responds with cute and helpful rea
 ### Dependencies
 
 * Runs on Python3
+* Install discord.py
+```
+python3 -m pip install -U discord.py
+```
   
 ### Installing
 Run in Terminal:
