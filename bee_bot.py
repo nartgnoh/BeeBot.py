@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 all_extensions = [
                 'cogs.games.games',
                 # 'cogs.games.lolclash',
-                'cogs.music.basic',
+                # 'cogs.music.basic',
                 # 'cogs.music.play',
                 # 'cogs.music.view',
                 'cogs.reactions.emotions',

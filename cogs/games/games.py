@@ -31,7 +31,6 @@ class games(commands.Cog):
         team_number = 0
         players_list = []
         teams_list = []
-        final_message = ''
         # set "number_of_teams" to 2 if none
         if number_of_teams == None:
             number_of_teams = 2
@@ -56,7 +55,7 @@ class games(commands.Cog):
                         quote_players = quote_players + '{}, '.format(team_splitting[i][j])
                 teams_list.append(quote_players)
 
-            # create a "final_message" with all the teams
+            # create an embed with all the teams
             embed = Embed(title="The Teams:",
                 colour=ctx.author.colour)
 
@@ -64,10 +63,9 @@ class games(commands.Cog):
                 team_number += 1
                 # check if element is not empty
                 if teams_list[teams]:
-                    # final_message = final_message + 'Team {} :  {}\n'.format(team_number, teams_list[teams][:-2])
+                    # add a new "Team" field to the embed
                     embed.add_field(name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
 
-            # await ctx.send('The teams are: \n{}'.format(final_message))
             await ctx.send(embed=embed)
         else:
             await ctx.send('An error has occurred! :confounded: Try joining a voice channel! :slight_smile:')
