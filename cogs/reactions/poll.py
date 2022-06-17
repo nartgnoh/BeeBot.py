@@ -46,7 +46,7 @@ class poll(commands.Cog):
             # set footer to embed
             embed.set_footer(text=f'Poll created by: {ctx.author.display_name}',
                             icon_url=ctx.author.avatar_url)
-            # set poll variables to embed
+            # set variables for fields to embed
             fields = [("Options", "\n".join([f"{poll_hearts[idx]} {option}" for idx, option in enumerate(options)]), False),
                          ("Instructions", "React to cast a vote!", False)]
             for name, value, inline in fields:

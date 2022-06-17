@@ -62,7 +62,7 @@ class lolinfo(commands.Cog):
                         description=champion_info['title'],
                         colour=discord.Colour.random())
             # set image to embed
-            embed.set_image(url=img_url)
+            embed.set_thumbnail(url=img_url)
             # add a new field to the embed
             embed.add_field(name=f'Tags:', value=', '.join(champion_info['tags']), inline=False)
             aff = champion_info['info']
@@ -116,6 +116,6 @@ class lolinfo(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
-
+    
 def setup(bot):
     bot.add_cog(lolinfo(bot))
