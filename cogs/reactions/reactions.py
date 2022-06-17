@@ -45,8 +45,8 @@ class reactions(commands.Cog):
             fact_quotes = file.readlines()
             fact_message = random.choice(fact_quotes)
 
-        msg = await ctx.send('{}'.format(fact_message),
-                    file=discord.File('resource_files/image_files/bee_facts_images/{}'.format(fact_images)))
+        msg = await ctx.send(f'{fact_message}',
+                    file=discord.File(f'resource_files/image_files/bee_facts_images/{fact_images}'))
         await msg.add_reaction("🐝")
 
     # *********************************************************************************************************************
@@ -72,9 +72,9 @@ class reactions(commands.Cog):
         else:
             member_name = ' ' + member_name
         hbd_quotes = [
-            'HAPPY BIRTHDAY{}!!!!!  :partying_face: :birthday: :tada:'.format(member_name),
-            'Wishing you a Happy Birthday{}! :relieved: :birthday: :tada:'.format(member_name),
-            'May all your birthday wishes come true{} — except for the illegal ones! :birthday: :tada: :neutral_face:'.format(member_name)
+            f'HAPPY BIRTHDAY{member_name}!!!!!  :partying_face: :birthday: :tada:',
+            f'Wishing you a Happy Birthday{member_name}! :relieved: :birthday: :tada:',
+            f'May all your birthday wishes come true{member_name} — except for the illegal ones! :birthday: :tada: :neutral_face:'
         ]
         hbd_message = random.choice(hbd_quotes)
         msg = await ctx.send(hbd_message)
@@ -112,7 +112,7 @@ class reactions(commands.Cog):
                 # add coin flips to string
                 for i in range(number_of_coins):
                     cf_message = cf_message + random.choice(coin_flip_ht)
-                await ctx.send('{}{}'.format(random.choice(cf_quotes), cf_message[:-2]))
+                await ctx.send(f'{random.choice(cf_quotes)}{cf_message[:-2]}')
         except:
             # if out of bounds of bot's capability
             await ctx.send('Sorry! The coin is broken. :cry: Try again!')
@@ -145,7 +145,7 @@ class reactions(commands.Cog):
                     ':skull: + :ice_cube:\n'
                 ]
                 rd_message = random.choice(rd_quotes)
-                await ctx.send('{}'.format(rd_message) + ', '.join(dice))
+                await ctx.send(f'{rd_message}' + ', '.join(dice))
         except:
             # if out of bounds of bot's capability
             await ctx.send('Sorry! The dice is broken. :cry: Try again! ')
@@ -161,12 +161,12 @@ class reactions(commands.Cog):
         if search == None:
             search = 'bees'
         # set discord.Embed colour to blue
-        embed = discord.Embed(colour=discord.Colour.blue(), title='GIF from Tenor for \"{}\"'.format(search))
+        embed = discord.Embed(colour=discord.Colour.blue(), title=f'GIF from Tenor for \"{search}\"')
         # make the search, url friendly by changing all spaces into "+"
         search.replace(' ', '+')
         # api.tenor website for given search
         # settings: ContentFilter = medium (PG)
-        url = 'https://api.tenor.com/v1/search?q={}&key={}&ContentFilter=medium'.format(search, TENOR_KEY)
+        url = f'https://api.tenor.com/v1/search?q={search}&key={TENOR_KEY}&ContentFilter=medium'
         # get url info
         get_url_info = requests.get(url)
         # 200 status_code means tenor is working
@@ -175,7 +175,7 @@ class reactions(commands.Cog):
             json_search = get_url_info.json()
             json_check = json_search['next']
             if json_check == "0":
-                await ctx.send("Sorry! Couldn't find any gifs for {}! :cry:".format(search))
+                await ctx.send(f"Sorry! Couldn't find any gifs for {search}! :cry:")
             else:
                 # load json to get url data
                 data = json.loads(get_url_info.text)

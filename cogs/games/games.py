@@ -57,7 +57,7 @@ class games(commands.Cog):
                     quote_players = ''
                     for j in range(len(team_splitting[i])):
                         if team_splitting[i][j]:
-                            quote_players = quote_players + '{}, '.format(team_splitting[i][j])
+                            quote_players = quote_players + f'{team_splitting[i][j]}, '
                     teams_list.append(quote_players)
 
                 # create an embed with all the teams
@@ -103,11 +103,13 @@ class games(commands.Cog):
 
         # picking a random game from the final_games_list
         random_game = random.choice(final_games_list)
+
+
         pg_quotes = [
-            ('Have you tried ***{}***? :smile:'.format(random_game)),
-            ('Why not try ***{}***? :open_mouth:'.format(random_game)),
-            ('I recommend ***{}***! :liar:'.format(random_game)),
-            ('I might not have friends, but your friends can play ***{}***! :smiling_face_with_tear:'.format(random_game))
+            f'Have you tried ***{random_game}***? :smile:',
+            f'Why not try ***{random_game}***? :open_mouth:',
+            f'I recommend ***{random_game}***! :liar:',
+            f'I might not have friends, but your friends can play ***{random_game}***! :smiling_face_with_tear:'
         ]
         pg_message = random.choice(pg_quotes)
         await ctx.send(pg_message)

@@ -35,8 +35,8 @@ class emotions(commands.Cog):
         ]
         happy_message = random.choice(happy_quotes)
 
-        msg = await ctx.send('{}'.format(happy_message),
-                    file=discord.File('resource_files/image_files/happy_images/{}'.format(happy_images)))
+        msg = await ctx.send(f'{happy_message}',
+                    file=discord.File(f'resource_files/image_files/happy_images/{happy_images}'))
         await msg.add_reaction("😊")
 
     # *********************************************************************************************************************
@@ -59,8 +59,8 @@ class emotions(commands.Cog):
         ]
         sad_message = random.choice(sad_quotes)
 
-        msg = await ctx.send('{}'.format(sad_message),
-                    file=discord.File('resource_files/image_files/sad_images/{}'.format(sad_images)))
+        msg = await ctx.send(f'{sad_message}',
+                    file=discord.File(f'resource_files/image_files/sad_images/{sad_images}'))
         await msg.add_reaction("😔")
 
     # *********************************************************************************************************************
@@ -86,8 +86,8 @@ class emotions(commands.Cog):
         ]
         angry_message = random.choice(angry_quotes)
 
-        msg = await ctx.send('{}'.format(angry_message),
-                    file=discord.File('resource_files/image_files/angry_images/{}'.format(angry_images)))
+        msg = await ctx.send(f'{angry_message}',
+                    file=discord.File(f'resource_files/image_files/angry_images/{angry_images}'))
         await msg.add_reaction("😡")
 
 def setup(bot):
