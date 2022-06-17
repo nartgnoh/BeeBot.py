@@ -131,6 +131,10 @@ dmypy.json
 #.env file
 .env
 
+# from VM
+.nohup.out
+.activity.log
+
 # specific files
 /old
 /resource_files/clash_files
