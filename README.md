@@ -64,7 +64,7 @@ $ python3 bee_bot.py
 ### Running on Google Cloud Platform VM
 
 * Create an instances the on [Google Cloud Platform](https://console.cloud.google.com/compute/instances)
-* Setup an SSH connection
+* Setup an [SSH connection](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 * Go through the "Getting Started" section above
 * First make sure bee_bot.py is in an executable state
 ```
