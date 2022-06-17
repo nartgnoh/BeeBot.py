@@ -16,59 +16,70 @@ Code-base for a bee-themed Discord.py bot who responds with cute and helpful rea
 
 * Runs on Python3 and pip
 ```
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.8
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository ppa:deadsnakes/ppa
+$ sudo apt-get update
+$ sudo apt-get install python3.8
 ```
 
 * Install discord.py
 ```
-python3 -m pip install -U discord.py
+$ python3 -m pip install -U discord.py
 ```
 * Install dotenv
 ```
-pip install python-dotenv
+$ pip install python-dotenv
 ```
   
 ### Installing
 Run in Terminal:
 ```
-git clone git@github.com:nartgnoh/Discord_Beebot.git
+$ git clone git@github.com:nartgnoh/Discord_Beebot.git
 ```
 
 ### Setup
 
 * Create a .env file and add the specified tokens
 ```
-# .env
+$ echo "# .env
 DISCORD_TOKEN=$INSERT DISCORD TOKEN$
-TENOR_KEY=$INSERT TENOR TOKEN$
+TENOR_KEY=$INSERT TENOR TOKEN$" > .env
 ```
 Click [here](https://discord.com/developers/applications/) to find steps for a Discord token.
 Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
 
-* Download python3, pip, discord.py
-
-### Executing program
+## Executing program
 You can either run BeeBot.py locally or on a Google Cloud VM
-#### Running Locally
+### Running Locally
 * Run locally using;
 ```
-python3 bee_bot.py
+$ cd BeeBot.py
+$ python3 bee_bot.py
 ```
 
-#### Running on Google Cloud Platform VM
+### Running on Google Cloud Platform VM
 * Create an instances the on [Google Cloud Platform](https://console.cloud.google.com/compute/instances)
-* Setup an SSH connection and clone the repo
-* Don't forget the .env file as specified in the "Setup" section!
-* Now to run BeeBot.py in the background:
+* Setup an SSH connection
+* Go through the "Getting Started" section above
+* First make sure bee_bot.py is in an executable state
 ```
-# First make sure bee_bot.py is in an executable state
-chmod +x bee_bot.py
+$ cd BeeBot.py
+$ chmod +x bee_bot.py
 ```
+* These commands will be helpful with navigating the running processes of BeeBot.py:
 ```
-# To run the python
+<!-- Run bee_bot.py -->
+$ nohup python3 -u bee_bot.py &>> activity.log &
+
+<!-- Lookup all python3 processes -->
+$ ps -ef | grep python3
+
+<!-- To kill bee_bot.py process -->
+<!-- First lookup bee_bot.py process -->
+$ ps -ef | grep python3
+<!-- Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py -->
+<!-- Using the number of the process, kill the process -->
+$ kill 1224
 ```
 * ## Authors
 
