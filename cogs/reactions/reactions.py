@@ -37,13 +37,13 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to show bee facts
     # *********************************************************************************************************************
-    @commands.command(name='beefacts', aliases=['beefact', 'fact', 'facts', '🐝'], help='🐝 Bee facts!')
+    @commands.command(name='beefacts', aliases=['bee', 'beefact', 'fact', 'facts', '🐝'], help='🐝 Bee facts!')
     async def bee_facts(self, ctx):
         # get resources directory
         resources_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files'
         # get image directory
         img_directory = resources_directory + '/image_files/bee_facts_images'
-        fact_images = random.choice([
+        bee_facts_images = random.choice([
             x for x in os.listdir(img_directory)
             if os.path.isfile(os.path.join(img_directory, x))
         ])
@@ -54,8 +54,14 @@ class reactions(commands.Cog):
             fact_quotes = file.readlines()
             fact_message = random.choice(fact_quotes)
 
-        msg = await ctx.send(f'{fact_message}',
-                    file=discord.File(f'resource_files/image_files/bee_facts_images/{fact_images}'))
+        # set initals to embed
+        embed = Embed(title=fact_message,
+                      colour=discord.Colour.gold())
+        # set image to embed
+        file = discord.File(f'resource_files/image_files/bee_facts_images/{bee_facts_images}', filename="image.gif")
+        embed.set_image(url='attachment://image.gif')
+
+        msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("🐝")
 
     # *********************************************************************************************************************
@@ -100,7 +106,7 @@ class reactions(commands.Cog):
     async def coin_flip(self, ctx, number_of_coins: Optional[int]):
         try:
             # empty message
-            cf_message = ''
+            cf_results = ''
             # default 1 coin
             if number_of_coins == None:
                 number_of_coins = 1
@@ -112,16 +118,23 @@ class reactions(commands.Cog):
                     'Tails, '
                 ]
                 cf_quotes = [
-                    'You coin flip(s) were:\n',
-                    'Clink, spin, spin, clink:\n',
-                    'Heads or Tails? :open_mouth:\n',
-                    'I wish you good RNG :relieved:\n',
-                    ':coin:\n'
+                    'You coin flip(s) were:',
+                    'Clink, spin, spin, clink:',
+                    'Heads or Tails? :open_mouth:',
+                    'I wish you good RNG :relieved:',
+                    ':coin:'
                 ]
+                cf_message = random.choice(cf_quotes)
                 # add coin flips to string
                 for i in range(number_of_coins):
-                    cf_message = cf_message + random.choice(coin_flip_ht)
-                await ctx.send(f'{random.choice(cf_quotes)}{cf_message[:-2]}')
+                    cf_results = cf_results + random.choice(coin_flip_ht)
+
+                # set initals to embed
+                embed = Embed(title=cf_message,
+                      colour=discord.Colour.gold(),
+                      description=cf_results[:-2])
+
+                await ctx.send(embed=embed)
         except:
             # if out of bounds of bot's capability
             await ctx.send('Sorry! The coin is broken. :cry: Try again!')
@@ -132,7 +145,7 @@ class reactions(commands.Cog):
     @commands.command(name='diceroll', aliases=['rolldice', 'roll', 'dice', '🎲'],
                 help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
     async def dice_roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
-        try:
+        # try:
             # default 1D6 dice
             if number_of_dice == None:
                 number_of_dice = 1
@@ -146,18 +159,24 @@ class reactions(commands.Cog):
                     for _ in range(number_of_dice)
                 ]
                 rd_quotes = [
-                    'Your dice roll(s) were:\n',
-                    'Clack, rattle, clatter:\n',
-                    'Highroller?!? :open_mouth:\n',
-                    'I wish you good RNG :relieved:\n',
-                    ':game_die:\n',
-                    ':skull: + :ice_cube:\n'
+                    'Your dice roll(s) were:',
+                    'Clack, rattle, clatter:',
+                    'Highroller?!? :open_mouth:',
+                    'I wish you good RNG :relieved:',
+                    ':game_die:',
+                    ':skull: + :ice_cube:'
                 ]
                 rd_message = random.choice(rd_quotes)
-                await ctx.send(f'{rd_message}' + ', '.join(dice))
-        except:
-            # if out of bounds of bot's capability
-            await ctx.send('Sorry! The dice is broken. :cry: Try again! ')
+
+                # set initals to embed
+                embed = Embed(title=rd_message,
+                      colour=discord.Colour.random(),
+                      description=', '.join(dice))
+
+                await ctx.send(embed=embed)               
+        # except:
+        #     # if out of bounds of bot's capability
+        #     await ctx.send('Sorry! The dice is broken. :cry: Try again! ')
 
     # *********************************************************************************************************************
     # bot command to send gif/tenor
@@ -170,8 +189,8 @@ class reactions(commands.Cog):
         if search == None:
             search = 'bees'
         # set initals to embed
-        embed = Embed(colour=discord.Colour.blue(), 
-                      title=f'GIF from Tenor for \"{search}\"')
+        embed = Embed(title=f'GIF from Tenor for \"{search}\"',
+                    colour=discord.Colour.blue())
         # set footer to embed
         embed.set_footer(text=f'Reply to {ctx.author.display_name}',
                         icon_url=ctx.author.avatar_url)
