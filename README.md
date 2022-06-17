@@ -54,6 +54,7 @@ Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
 You can either run BeeBot.py locally or on a Google Cloud VM
 ### Running Locally
 
+* Go through the "Getting Started" section above
 * Run locally using;
 ```
 $ cd BeeBot.py
