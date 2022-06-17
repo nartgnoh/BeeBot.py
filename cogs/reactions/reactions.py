@@ -1,4 +1,13 @@
+# *********************************************************************************************************************
 # reactions.py
+# - bee_facts command
+# - colour command
+# - hbd command
+# - coin_flip command
+# - dice_roll command
+# - gif command
+# *********************************************************************************************************************
+
 import os
 import discord
 import random
@@ -29,7 +38,7 @@ class reactions(commands.Cog):
     # bot command to show bee facts
     # *********************************************************************************************************************
     @commands.command(name='beefacts', aliases=['beefact', 'fact', 'facts', '🐝'], help='🐝 Bee facts!')
-    async def facts(self, ctx):
+    async def bee_facts(self, ctx):
         # get resources directory
         resources_directory = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files'
         # get image directory
@@ -45,8 +54,8 @@ class reactions(commands.Cog):
             fact_quotes = file.readlines()
             fact_message = random.choice(fact_quotes)
 
-        msg = await ctx.send('{}'.format(fact_message),
-                    file=discord.File('resource_files/image_files/bee_facts_images/{}'.format(fact_images)))
+        msg = await ctx.send(f'{fact_message}',
+                    file=discord.File(f'resource_files/image_files/bee_facts_images/{fact_images}'))
         await msg.add_reaction("🐝")
 
     # *********************************************************************************************************************
@@ -72,9 +81,9 @@ class reactions(commands.Cog):
         else:
             member_name = ' ' + member_name
         hbd_quotes = [
-            'HAPPY BIRTHDAY{}!!!!!  :partying_face: :birthday: :tada:'.format(member_name),
-            'Wishing you a Happy Birthday{}! :relieved: :birthday: :tada:'.format(member_name),
-            'May all your birthday wishes come true{} — except for the illegal ones! :birthday: :tada: :neutral_face:'.format(member_name)
+            f'HAPPY BIRTHDAY{member_name}!!!!!  :partying_face: :birthday: :tada:',
+            f'Wishing you a Happy Birthday{member_name}! :relieved: :birthday: :tada:',
+            f'May all your birthday wishes come true{member_name} — except for the illegal ones! :birthday: :tada: :neutral_face:'
         ]
         hbd_message = random.choice(hbd_quotes)
         msg = await ctx.send(hbd_message)
@@ -112,7 +121,7 @@ class reactions(commands.Cog):
                 # add coin flips to string
                 for i in range(number_of_coins):
                     cf_message = cf_message + random.choice(coin_flip_ht)
-                await ctx.send('{}{}'.format(random.choice(cf_quotes), cf_message[:-2]))
+                await ctx.send(f'{random.choice(cf_quotes)}{cf_message[:-2]}')
         except:
             # if out of bounds of bot's capability
             await ctx.send('Sorry! The coin is broken. :cry: Try again!')
@@ -120,9 +129,9 @@ class reactions(commands.Cog):
     # *********************************************************************************************************************
     # bot command to roll dice (no specification is an auto 1D6)
     # *********************************************************************************************************************
-    @commands.command(name='rolldice', aliases=['diceroll', 'roll', 'dice', '🎲'],
+    @commands.command(name='diceroll', aliases=['rolldice', 'roll', 'dice', '🎲'],
                 help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
-    async def roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
+    async def dice_roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
         try:
             # default 1D6 dice
             if number_of_dice == None:
@@ -145,7 +154,7 @@ class reactions(commands.Cog):
                     ':skull: + :ice_cube:\n'
                 ]
                 rd_message = random.choice(rd_quotes)
-                await ctx.send('{}'.format(rd_message) + ', '.join(dice))
+                await ctx.send(f'{rd_message}' + ', '.join(dice))
         except:
             # if out of bounds of bot's capability
             await ctx.send('Sorry! The dice is broken. :cry: Try again! ')
@@ -160,13 +169,18 @@ class reactions(commands.Cog):
         # search 'bees' if no given search
         if search == None:
             search = 'bees'
-        # set discord.Embed colour to blue
-        embed = discord.Embed(colour=discord.Colour.blue(), title='GIF from Tenor for \"{}\"'.format(search))
+        # set initals to embed
+        embed = Embed(colour=discord.Colour.blue(), 
+                      title=f'GIF from Tenor for \"{search}\"')
+        # set footer to embed
+        embed.set_footer(text=f'Reply to {ctx.author.display_name}',
+                        icon_url=ctx.author.avatar_url)
+
         # make the search, url friendly by changing all spaces into "+"
         search.replace(' ', '+')
         # api.tenor website for given search
         # settings: ContentFilter = medium (PG)
-        url = 'https://api.tenor.com/v1/search?q={}&key={}&ContentFilter=medium'.format(search, TENOR_KEY)
+        url = f'https://api.tenor.com/v1/search?q={search}&key={TENOR_KEY}&ContentFilter=medium'
         # get url info
         get_url_info = requests.get(url)
         # 200 status_code means tenor is working
@@ -175,7 +189,7 @@ class reactions(commands.Cog):
             json_search = get_url_info.json()
             json_check = json_search['next']
             if json_check == "0":
-                await ctx.send("Sorry! Couldn't find any gifs for {}! :cry:".format(search))
+                await ctx.send(f"Sorry! Couldn't find any gifs for {search}! :cry:")
             else:
                 # load json to get url data
                 data = json.loads(get_url_info.text)

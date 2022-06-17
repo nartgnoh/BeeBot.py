@@ -1,4 +1,8 @@
+# *********************************************************************************************************************
 # games.py
+# - split_team command
+# - pick_game command
+# *********************************************************************************************************************
 
 from ast import alias
 import os
@@ -57,12 +61,15 @@ class games(commands.Cog):
                     quote_players = ''
                     for j in range(len(team_splitting[i])):
                         if team_splitting[i][j]:
-                            quote_players = quote_players + '{}, '.format(team_splitting[i][j])
+                            quote_players = quote_players + f'{team_splitting[i][j]}, '
                     teams_list.append(quote_players)
 
-                # create an embed with all the teams
+                # set initals to embed
                 embed = Embed(title="The Teams:",
                     colour=ctx.author.colour)
+                # set footer to embed
+                embed.set_footer(text=f'Teams created by: {ctx.author.display_name}',
+                                icon_url=ctx.author.avatar_url)
 
                 for teams in range(len(teams_list)):
                     team_number += 1
@@ -78,7 +85,7 @@ class games(commands.Cog):
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', aliases=['🎮'], help='🎮 Picks a game to play. [Auto: Number of people in voice call]')
+    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'], help='🎮 Picks a game to play. [Auto: Number of people in voice call]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
             if ctx.message.author.voice is not None:
@@ -94,23 +101,39 @@ class games(commands.Cog):
         games_json_path = "/".join(list(current_directory.split('/')[0:-2])) + '/resource_files/json_files/games.json'
         with open(games_json_path) as games_json:
             games = json.load(games_json)
-            
+
             final_games_list = []
             # iterate through games dictionary
             for key in games:
                 if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
                     final_games_list.append(key)  
 
-        # picking a random game from the final_games_list
-        random_game = random.choice(final_games_list)
+            # picking a random game from the final_games_list
+            random_game = random.choice(final_games_list)
+            url = games[random_game]['url']
+
         pg_quotes = [
-            ('Have you tried ***{}***? :smile:'.format(random_game)),
-            ('Why not try ***{}***? :open_mouth:'.format(random_game)),
-            ('I recommend ***{}***! :liar:'.format(random_game)),
-            ('I might not have friends, but your friends can play ***{}***! :smiling_face_with_tear:'.format(random_game))
+            f'Have you tried *{random_game}*? :smile:',
+            f'Why not try *{random_game}*? :open_mouth:',
+            f'I recommend *{random_game}*! :liar:',
+            f'I might not have friends, but your friends can play *{random_game}*! :smiling_face_with_tear:'
         ]
         pg_message = random.choice(pg_quotes)
-        await ctx.send(pg_message)
+        # create an embed with game url
+        if url is not None:
+            embed = Embed(title=random_game,
+                url=url,
+                description=pg_message,
+                colour=ctx.author.colour)
+        # embed without url
+        else:
+            embed = Embed(title=random_game,
+                description=pg_message,
+                colour=ctx.author.colour)
+        embed.set_footer(text=f'Reply to {ctx.author.display_name}',
+                        icon_url=ctx.author.avatar_url)
+
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(games(bot))

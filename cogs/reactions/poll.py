@@ -1,4 +1,7 @@
+# *********************************************************************************************************************
 # poll.py
+# - poll command
+# *********************************************************************************************************************
 
 import os
 import discord
@@ -40,8 +43,8 @@ class poll(commands.Cog):
             embed = Embed(title="Poll!",
                           description=question,
                           colour=ctx.author.colour)
-            # set author to embed
-            embed.set_author(name=ctx.author.display_name,
+            # set footer to embed
+            embed.set_footer(text=f'Poll created by: {ctx.author.display_name}',
                             icon_url=ctx.author.avatar_url)
             # set poll variables to embed
             fields = [("Options", "\n".join([f"{poll_hearts[idx]} {option}" for idx, option in enumerate(options)]), False),

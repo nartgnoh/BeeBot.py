@@ -1,11 +1,7 @@
+# *********************************************************************************************************************
 # play.py
-# ---------------------------------------------------------------------------------
-# New Cog Steps:
-# 1. Replace all occurences of "play" with new "cog_name"
-# 2. Add new "cog_name" to existing bee_bot.py file in the [all_extensions] list 
-#       (for cogs inside directories, add cogs.<directory>.<cog_name>)
-# 3. Add new commands using the command template below
-# ---------------------------------------------------------------------------------
+# - wip
+# *********************************************************************************************************************
 
 import os
 import discord

@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # get all cog extensions
 all_extensions = [
+                # 'cogs.events.events',
                 'cogs.games.games',
                 # 'cogs.games.lolclash',
                 # 'cogs.music.basic',

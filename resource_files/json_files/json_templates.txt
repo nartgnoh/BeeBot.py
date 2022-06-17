@@ -1,0 +1,5 @@
+# events.json
+"Game Name": {"url": url, "min": min, "max": max},
+
+# games.json
+"Event Name": {"start_utc_date": date, "end_utc_date": end},
