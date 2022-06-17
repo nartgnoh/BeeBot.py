@@ -1,8 +1,8 @@
 # *********************************************************************************************************************
 # lolprofile.py
-# - lolprofile command
-# - lolrank command
-# - lolmastery command
+# - lol_profile command
+# - lol_rank command
+# - lol_mastery command
 # *********************************************************************************************************************
 
 import os
@@ -184,7 +184,7 @@ class lolprofile(commands.Cog):
             top_master_champ_info = champ_list[top_master_champ_info]
 
             # API image urls
-            img_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{top_master_champ_info['name']}.png"
+            img_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{top_master_champ_info['id']}.png"
             thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
 
             # set initals to embed
