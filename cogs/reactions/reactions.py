@@ -160,8 +160,13 @@ class reactions(commands.Cog):
         # search 'bees' if no given search
         if search == None:
             search = 'bees'
-        # set discord.Embed colour to blue
-        embed = discord.Embed(colour=discord.Colour.blue(), title=f'GIF from Tenor for \"{search}\"')
+        # set initals to embed
+        embed = Embed(colour=discord.Colour.blue(), 
+                      title=f'GIF from Tenor for \"{search}\"')
+        # set footer to embed
+        embed.set_footer(text=f'Reply to {ctx.author.display_name}',
+                        icon_url=ctx.author.avatar_url)
+
         # make the search, url friendly by changing all spaces into "+"
         search.replace(' ', '+')
         # api.tenor website for given search
