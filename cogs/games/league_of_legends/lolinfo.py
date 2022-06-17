@@ -1,15 +1,8 @@
 # *********************************************************************************************************************
-# league_of_legends.py
-# - 
+# lolinfo.py
+# - champ_lookup command
+# - champ_skills command
 # *********************************************************************************************************************
-
-# **********************************************************************************
-# New Cog Steps:
-# 1. Replace all occurences of "league_of_legends" with new "cog_name"
-# 2. Add new "cog_name" to existing bee_bot.py file in the [all_extensions] list 
-#       (for cogs inside directories, add cogs.<directory>.<cog_name>)
-# 3. Add new commands using the command template below
-# **********************************************************************************
 
 import os
 import discord
@@ -35,14 +28,15 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 role_specific_command_name = 'Bot Commander'
 owner_specific_command_name = 'Server Owner'
 
-# league_of_legends class
-class league_of_legends(commands.Cog):
+# lolinfo class
+class lolinfo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     # *********************************************************************************************************************
     # bot command to lookup basic league of legends champion info
     # *********************************************************************************************************************
-    @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'], help='🔍 Quick lookup for lol champ information. [Auto: random champ]')
+    @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'], 
+        help='🔍 Quick lookup for lol champ information. [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(owner_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
@@ -82,10 +76,10 @@ class league_of_legends(commands.Cog):
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
     @commands.command(name='champskills', aliases=['abilitychamp', 'champability' 'champabilities', 'abilitieschamp', 'schamp', 'champs', 'champskill', '💥'], 
-        help='💥 Full lookup for lol champ information.')
+        help='💥 Full lookup for lol champ information. [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(owner_specific_command_name)
-    async def champ_skills(self, ctx, *, lol_champion: Optional[str]):
+    async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         versions = lol_watcher.data_dragon.versions_for_region(default_region)
         champions_version = versions['n']['champion']
@@ -123,50 +117,5 @@ class league_of_legends(commands.Cog):
         else:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
 
-    # *********************************************************************************************************************
-    # bot command pick a random skin for champion
-    # *********************************************************************************************************************
-    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp', '👗'], 
-        help='👗 Pick a random skin for a champion!')
-    # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
-    async def pick_skin(self, ctx, *, lol_champion: Optional[str]):
-        # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)['data']
-
-        if lol_champion == None:
-            lol_champion = random.choice(list(champ_list))
-        else:
-            # format string
-            lol_champion = lol_champion.lower().title().replace(' ', '')
-
-        if lol_champion in champ_list:
-            # API champion info
-            response = requests.get(f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/champion/{lol_champion}.json')
-            champion_info = response.json()['data'][lol_champion]
-            
-            # get skin number dict
-            num_dict = {}
-            for skin in champion_info['skins']:
-                num_dict[skin['num']] = skin['name']
-            print(num_dict)
-            skin_key = random.choice(list(num_dict))
-
-            # API image urls
-            img_url = f'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{lol_champion}_{skin_key}.jpg'
-
-            # set initals to embed
-            embed = Embed(title=num_dict.get(skin_key),
-                        description=champion_info['title'],
-                        colour=discord.Colour.random())
-            # set image to embed
-            embed.set_image(url=img_url)
-            
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
-
 def setup(bot):
-    bot.add_cog(league_of_legends(bot))
+    bot.add_cog(lolinfo(bot))
