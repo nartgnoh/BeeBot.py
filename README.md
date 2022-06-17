@@ -51,11 +51,11 @@ DISCORD_TOKEN=$INSERT DISCORD TOKEN$
 TENOR_KEY=$INSERT TENOR TOKEN$
 RIOT_LOL_KEY=$INSERT RIOT API LOL KEY$" > .env
 ```
-Click [here](https://discord.com/developers/applications/) to find steps for a Discord token.
+Click [here](https://discord.com/developers/applications/) to find steps for a Discord token and [here](https://discordpy.readthedocs.io/en/stable/api.html) for useful docs.
 
-Click [here](https://tenor.com/gifapi) to find steps for a Tenor token.
+Click [here](https://tenor.com/gifapi) to find steps for a Tenor token and [here](https://tenor.com/gifapi/documentation) for useful docs.
 
-Click [here](https://developer.riotgames.com/) to find steps for a Riot API key.
+Click [here](https://developer.riotgames.com/) to find steps for a Riot API key, [here](https://developer.riotgames.com/apis) for useful docs, and [here](https://developer.riotgames.com/docs/lol) for data dragon.
 
 ## Executing program
 
