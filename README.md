@@ -72,7 +72,7 @@ $ chmod +x bee_bot.py
 ```
 * These commands will be helpful with navigating the running processes of BeeBot.py:
 ```
-# CD into BeeBot.py directory
+### CD into BeeBot.py directory
 $ cd BeeBot.py
 
 ### Run bee_bot.py
