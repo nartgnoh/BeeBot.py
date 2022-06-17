@@ -42,9 +42,9 @@ class poll(commands.Cog):
 
             fields = [("Options", "\n".join([f"{poll_hearts[idx]} {option}" for idx, option in enumerate(options)]), False),
                          ("Instructions", "React to cast a vote!", False)]
-
-            for name, options, instructions in fields:
-                embed.add_field(name=name, options=options, instructions=instructions)
+                         
+            for name, value, inline in fields:
+                embed.add_field(name=name, value=value, inline=inline)
 
             msg = await ctx.send(embed=embed)
 
