@@ -10,6 +10,7 @@ import discord
 import random
 import json
 import requests
+import cogs.games.league_of_legends.lolconstants as lolconstants
 
 from discord.ext import commands
 from discord import Embed
@@ -37,7 +38,7 @@ class lolteamcomp(commands.Cog):
     # *********************************************************************************************************************
     # bot command to balance a league of legends team comp
     # *********************************************************************************************************************
-    @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', '⚖️'], 
+    @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', 'lolteams', 'teamslol', '⚖️'], 
         help='⚖️ Help balance a lol teamcomp! [Put champions with spaces in quotes ""]')
     # only specific roles can use this command
     @commands.has_role(owner_specific_command_name)
@@ -72,7 +73,7 @@ class lolteamcomp(commands.Cog):
                     affinity.update({'AD': ad, 'AP': ap, 'DEF': de})
 
             if check:
-                all_tags = ['Fighter', 'Tank', 'Mage', 'Assassin', 'Marksman', 'Support']
+                all_tags = lolconstants.lol_tags()
                 # drop duplicates in list
                 new_tags_list = list(dict.fromkeys(tags_list))
 

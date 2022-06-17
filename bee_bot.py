@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 all_extensions = [
                 # 'cogs.events.events',
                 'cogs.games.league_of_legends.lolinfo',
-                # 'cogs.games.league_of_legends.lolprofile',
+                'cogs.games.league_of_legends.lolprofile',
                 'cogs.games.league_of_legends.lolskins',
                 # 'cogs.games.league_of_legends.lolclash',
                 'cogs.games.league_of_legends.lolteamcomp',
