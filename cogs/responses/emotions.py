@@ -40,14 +40,17 @@ class emotions(commands.Cog):
             'Very happy. c:'
         ]
         happy_message = random.choice(happy_quotes)
-
-        # set initals to embed
+        # *********
+        # | embed |
+        # *********
         embed = Embed(title=happy_message,
                       colour=discord.Colour.gold())
-        # set image to embed
+        # embed image
         file = discord.File(f'resource_files/image_files/happy_images/{happy_images}', filename="image.gif")
         embed.set_image(url='attachment://image.gif')
-
+        # *************
+        # | reactions |
+        # *************
         msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😊")
 
@@ -70,14 +73,17 @@ class emotions(commands.Cog):
             'How could you?',
         ]
         sad_message = random.choice(sad_quotes)
-
-        # set initals to embed
+        # *********
+        # | embed |
+        # *********
         embed = Embed(title=sad_message,
                       colour=discord.Colour.dark_blue())
-        # set image to embed
+        # embed image
         file = discord.File(f'resource_files/image_files/sad_images/{sad_images}', filename="image.gif")
         embed.set_image(url='attachment://image.gif')
-
+        # *************
+        # | reactions |
+        # *************
         msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😔")
 
@@ -103,14 +109,17 @@ class emotions(commands.Cog):
             ':angry:'
         ]
         angry_message = random.choice(angry_quotes)
-
-        # set initals to embed
+        # *********
+        # | embed |
+        # *********
         embed = Embed(title=angry_message,
                       colour=discord.Colour.red())
-        # set image to embed
+        # embed image
         file = discord.File(f'resource_files/image_files/angry_images/{angry_images}', filename="image.gif")
         embed.set_image(url='attachment://image.gif')
-
+        # *************
+        # | reactions |
+        # *************
         msg = await ctx.send(file=file, embed=embed)
         await msg.add_reaction("😡")
 

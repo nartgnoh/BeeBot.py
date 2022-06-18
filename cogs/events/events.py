@@ -18,9 +18,12 @@ role_specific_command_name = 'Bot Commander'
 owner_specific_command_name = 'Server Owner'
 
 # events class
+
+
 class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
     # *********************************************************************************************************************
     # bot command template
     # *********************************************************************************************************************
@@ -30,6 +33,7 @@ class events(commands.Cog):
     async def command_name(self, ctx):
         # send message in discord chat
         await ctx.send('Send message in chat!')
+
 
 def setup(bot):
     bot.add_cog(events(bot))

@@ -16,12 +16,12 @@ all_extensions = [
                 'cogs.games.league_of_legends.lolteamcomp',
                 'cogs.games.games',
                 # 'cogs.games.teamfight_tactics',
-                # 'cogs.music.basic',
+                'cogs.music.basic',
                 # 'cogs.music.play',
                 # 'cogs.music.view',
-                'cogs.reactions.emotions',
-                'cogs.reactions.poll',
-                'cogs.reactions.reactions',
+                'cogs.responses.emotions',
+                'cogs.responses.poll',
+                'cogs.responses.responses',
                 ]
                 
 
