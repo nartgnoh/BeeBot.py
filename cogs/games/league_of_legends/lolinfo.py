@@ -38,7 +38,7 @@ class lolinfo(commands.Cog):
     @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'], 
         help='🔍 Quick lookup for lol champ information. [Auto: random champ]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         versions = lol_watcher.data_dragon.versions_for_region(default_region)
@@ -75,10 +75,10 @@ class lolinfo(commands.Cog):
     # *********************************************************************************************************************
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
-    @commands.command(name='champskills', aliases=['abilitychamp', 'champability' 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'], 
+    @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'], 
         help='💥 Full lookup for lol champ information. [Auto: random champ]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         versions = lol_watcher.data_dragon.versions_for_region(default_region)

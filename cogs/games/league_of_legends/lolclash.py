@@ -236,7 +236,7 @@ class lolclash(commands.Cog):
             embed = Embed(title="The :",
                 colour=ctx.author.colour)
 
-            for teams in range(len(teams_list)):
+            for party in range(len(teams_list)):
                 team_number += 1
                 # check if element is not empty
                 if teams_list[teams]:
