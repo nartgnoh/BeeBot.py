@@ -41,7 +41,7 @@ class lolteamcomp(commands.Cog):
     @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', 'lolteams', 'teamslol', '⚖️'], 
         help='⚖️ Help balance a lol teamcomp! [Put champions with spaces in quotes ""]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def lol_balance(self, ctx, *lol_champions):
         if not lol_champions:
             await ctx.send("Sorry! You forgot to add champions! :slight_smile:")

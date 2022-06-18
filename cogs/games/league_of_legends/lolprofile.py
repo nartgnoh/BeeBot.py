@@ -40,7 +40,7 @@ class lolprofile(commands.Cog):
     @commands.command(name='lolprofile', aliases=['profilelol', 'lolp', 'plol', '👤'], 
         help='👤 Showcase a summoner\'s league of legends profile. [Put summoner names with spaces in quotes ""]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def lol_profile(self, ctx, summoner_name: str, region: Optional[str]):
         if region == None:
             region = default_region
@@ -99,7 +99,7 @@ class lolprofile(commands.Cog):
     @commands.command(name='lolrank', aliases=['ranklol', 'lolr', 'rlol', '🏆'], 
         help='🏆 Showcase a summoner\'s league of legends rank. [Put summoner names with spaces in quotes ""]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def lol_rank(self, ctx, summoner_name: str, region: Optional[str]):
         if region == None:
             region = default_region
@@ -157,7 +157,7 @@ class lolprofile(commands.Cog):
     @commands.command(name='lolmastery', aliases=['masterylol', 'lolm', 'mlol', '🎓'], 
         help='🎓 Showcase a summoner\'s league of legends mastery. [Put summoner names with spaces in quotes ""]')
     # only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(role_specific_command_name)
     async def lol_mastery(self, ctx, summoner_name: str, region: Optional[str]):
         if region == None:
             region = default_region
