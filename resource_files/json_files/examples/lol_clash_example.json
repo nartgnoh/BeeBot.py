@@ -1,0 +1,155 @@
+[{
+    "id": 4344,
+    "themeId": 19,
+    "nameKey": "zaun",
+    "nameKeySecondary": "day_2",
+    "schedule": [{
+        "id": 4524,
+        "registrationTime": 1659914100000,
+        "startTime": 1659924000000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4343,
+    "themeId": 3,
+    "nameKey": "demacia",
+    "nameKeySecondary": "day_3",
+    "schedule": [{
+        "id": 4523,
+        "registrationTime": 1656198900000,
+        "startTime": 1656208800000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4381,
+    "themeId": 13,
+    "nameKey": "shadow_isles",
+    "nameKeySecondary": "day_1",
+    "schedule": [{
+        "id": 4561,
+        "registrationTime": 1657408500000,
+        "startTime": 1657418400000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4382,
+    "themeId": 19,
+    "nameKey": "zaun",
+    "nameKeySecondary": "day_3",
+    "schedule": [{
+        "id": 4562,
+        "registrationTime": 1661037300000,
+        "startTime": 1661047200000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4324,
+    "themeId": 19,
+    "nameKey": "zaun",
+    "nameKeySecondary": "day_1",
+    "schedule": [{
+        "id": 4504,
+        "registrationTime": 1659827700000,
+        "startTime": 1659837600000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4421,
+    "themeId": 13,
+    "nameKey": "shadow_isles",
+    "nameKeySecondary": "day_3",
+    "schedule": [{
+        "id": 4601,
+        "registrationTime": 1658618100000,
+        "startTime": 1658628000000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4383,
+    "themeId": 10,
+    "nameKey": "noxus",
+    "nameKeySecondary": "day_1",
+    "schedule": [{
+        "id": 4563,
+        "registrationTime": 1662246900000,
+        "startTime": 1662256800000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4401,
+    "themeId": 13,
+    "nameKey": "shadow_isles",
+    "nameKeySecondary": "day_2",
+    "schedule": [{
+        "id": 4581,
+        "registrationTime": 1657494900000,
+        "startTime": 1657504800000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4361,
+    "themeId": 3,
+    "nameKey": "demacia",
+    "nameKeySecondary": "day_4",
+    "schedule": [{
+        "id": 4541,
+        "registrationTime": 1656285300000,
+        "startTime": 1656295200000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4325,
+    "themeId": 19,
+    "nameKey": "zaun",
+    "nameKeySecondary": "day_4",
+    "schedule": [{
+        "id": 4505,
+        "registrationTime": 1661123700000,
+        "startTime": 1661133600000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4403,
+    "themeId": 10,
+    "nameKey": "noxus",
+    "nameKeySecondary": "day_4",
+    "schedule": [{
+        "id": 4583,
+        "registrationTime": 1663542900000,
+        "startTime": 1663552800000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4422,
+    "themeId": 10,
+    "nameKey": "noxus",
+    "nameKeySecondary": "day_2",
+    "schedule": [{
+        "id": 4602,
+        "registrationTime": 1662333300000,
+        "startTime": 1662343200000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4402,
+    "themeId": 13,
+    "nameKey": "shadow_isles",
+    "nameKeySecondary": "day_4",
+    "schedule": [{
+        "id": 4582,
+        "registrationTime": 1658704500000,
+        "startTime": 1658714400000,
+        "cancelled": "False"
+    }]
+}, {
+    "id": 4283,
+    "themeId": 10,
+    "nameKey": "noxus",
+    "nameKeySecondary": "day_3",
+    "schedule": [{
+        "id": 4463,
+        "registrationTime": 1663456500000,
+        "startTime": 1663466400000,
+        "cancelled": "False"
+    }]
+}]

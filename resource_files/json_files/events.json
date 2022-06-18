@@ -1,3 +1,17 @@
 {
-    "Clash": {"start_utc_date": "now", "end_utc_date": "27-06-2022 2:00"}
+    "clash": {
+        "id": 4361,
+        "themeId": 3,
+        "nameKey": "demacia",
+        "nameKeySecondary": "day_4",
+        "schedule": [{
+            "id": 4541,
+            "registrationTime": 1656285300000,
+            "startTime": 1656295200000,
+            "cancelled": false
+        }],
+        "participants": [{
+            "test": {"sat": 1, "sun": 1}
+        }]
+    }
 }

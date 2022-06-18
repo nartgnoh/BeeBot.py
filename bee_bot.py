@@ -12,7 +12,7 @@ all_extensions = [
                 'cogs.games.league_of_legends.lolinfo',
                 'cogs.games.league_of_legends.lolprofile',
                 'cogs.games.league_of_legends.lolskins',
-                # 'cogs.games.league_of_legends.lolclash',
+                'cogs.games.league_of_legends.lolclash',
                 'cogs.games.league_of_legends.lolteamcomp',
                 'cogs.games.games',
                 # 'cogs.games.teamfight_tactics',
