@@ -5,6 +5,8 @@
 # Riot Constants
 def riot_regions(): return ['br1', 'eun1', 'euw1',
                             'jp1', 'kr', 'la1', 'la2', 'na1', 'oc1', 'tr1', 'ru']
+
+
 def riot_ranks(): return {1: {'tier': 'IRON', 'rank': 'I'},
                           2: {'tier': 'IRON', 'rank': 'II'},
                           3: {'tier': 'IRON', 'rank': 'III'},
@@ -41,7 +43,13 @@ def riot_ranks(): return {1: {'tier': 'IRON', 'rank': 'I'},
                           34: {'tier': 'CHALLENGER', 'rank': 'II'},
                           35: {'tier': 'CHALLENGER', 'rank': 'III'},
                           36: {'tier': 'CHALLENGER', 'rank': 'IV'}
-                         }
+                          }
 
-# League of Legends Cosntants
-def lol_tags(): return ['Fighter', 'Tank', 'Mage', 'Assassin', 'Marksman', 'Support']
+# League of Legends Constants
+
+
+def lol_keys(): return ['Q', 'W', 'E', 'R']
+
+
+def lol_tags(): return ['Fighter', 'Tank', 'Mage',
+                        'Assassin', 'Marksman', 'Support']

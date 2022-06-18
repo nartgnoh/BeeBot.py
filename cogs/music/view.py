@@ -1,6 +1,6 @@
 # *********************************************************************************************************************
 # view.py
-# - wip
+# - (wip)
 # *********************************************************************************************************************
 
 import os
@@ -25,8 +25,8 @@ class view(commands.Cog):
     # bot command template
     # *********************************************************************************************************************
     @commands.command(name='command_name', aliases=['add_aliases'], help='~ Add description')
-    # OPTIONAL: only specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    # only specific roles can use this command
+    # @commands.has_role(owner_specific_command_name)
     async def command_name(self, ctx):
         # send message in discord chat
         await ctx.send('Send message in chat!')

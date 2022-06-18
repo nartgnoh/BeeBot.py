@@ -137,7 +137,4 @@ dmypy.json
 
 # specific files
 /old
-/resource_files/clash_files
-/resource_files/text_files/event_dictionary.txt
-/resource_files/text_files/suggestions_for_bot.txt
-
+/resource_files/json_files/events.json

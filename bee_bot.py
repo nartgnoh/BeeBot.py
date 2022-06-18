@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # get all cog extensions
 all_extensions = [
+                'cogs.admin.admin_beebot_reset',
                 # 'cogs.events.events',
                 'cogs.games.league_of_legends.lolinfo',
                 'cogs.games.league_of_legends.lolprofile',
@@ -19,9 +20,9 @@ all_extensions = [
                 # 'cogs.music.basic',
                 # 'cogs.music.play',
                 # 'cogs.music.view',
-                'cogs.reactions.emotions',
-                'cogs.reactions.poll',
-                'cogs.reactions.reactions',
+                'cogs.responses.emotions',
+                'cogs.responses.poll',
+                'cogs.responses.responses',
                 ]
                 
 
