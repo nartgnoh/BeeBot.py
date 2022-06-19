@@ -69,7 +69,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
         with open(beebot_profile_json, 'w') as outfile:
             json.dump({}, outfile)
         await ctx.send('Reset BeeBot profiles file.')
-    
+
     # # *********************************************************************************************************************
     # # bot command admin beebot reset ALL BEEBOT FILES
     # # *********************************************************************************************************************

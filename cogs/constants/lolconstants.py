@@ -51,7 +51,7 @@ def riot_ranks(): return {1: {'tier': 'IRON', 'rank': 'I'},
 def lol_keys(): return ['Q', 'W', 'E', 'R']
 
 
-def lol_roles(): return ['Top', 'Jung', 'Mid', 'Adc', 'Sup']
+def lol_roles(): return ['Top', 'Jung', 'Mid', 'Adc', 'Sup', 'Fill']
 
 
 def lol_tags(): return ['Fighter', 'Tank', 'Mage',
