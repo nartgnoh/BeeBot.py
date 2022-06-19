@@ -26,7 +26,7 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Bot Admin'
+admin_specific_command_name = 'Bot Admin'
 
 # lolteamsmodule class
 
@@ -109,7 +109,7 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
                 # *********
                 # | embed |
                 # *********
-                embed = Embed(title="Team Comp Balance!",
+                embed = Embed(title="Teamcomp Balance",
                               description="Check if your team is well balanced! :D",
                               colour=ctx.author.colour)
                 # embed thumbnail

@@ -9,11 +9,12 @@
 import os
 import discord
 import json
+import cogs.constants.lolconstants as lolconstants
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from riotwatcher import LolWatcher, ApiError
 
@@ -27,7 +28,7 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Bot Admin'
+admin_specific_command_name = 'Bot Admin'
 
 # lolclashmodule class
 
@@ -39,11 +40,13 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # *********************************************************************************************************************
     # bot command to add author from availability list
     # *********************************************************************************************************************
-    @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable'],
-                      help='➕ Add your clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
+    @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable', 'clash+', '+clash', 'lol➕'],
+                      help=f"➕ Add your Clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']\n\n"
+                      f"[Add your preferred roles with \" <main_role> <secondary_role(s)>\" either after your availability or just after 'BB']"
+                      f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def clash_add(self, ctx, availability: Optional[str]):
+    async def clash_add(self, ctx, availability: Optional[str], *roles):
         # read events.json file
         event_json = "/".join(list(current_directory.split('/')
                               [0:-3])) + '/resource_files/json_files/events.json'
@@ -62,27 +65,59 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                     await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
                 else:
                     availability = availability.lower().title()
-                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
-                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
+                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lolconstants.lol_roles():
+                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\', \'Both\', or role(s) '
                                        'after command! :smile:')
                     else:
-                        # check if member already registered
                         available_member = str(ctx.message.author)
                         participants = clash_event['participants']
-                        if availability == 'Both':
+                        roles = list(roles)
+                        avail_dict = {}
+                        if availability in lolconstants.lol_roles():
+                            roles = [availability.lower()] + roles
+                        elif availability == 'Both':
                             avail_dict = {'Sat': 1, 'Sun': 1}
                         else:
                             avail_dict = {availability: 1}
+                        # add roles
+                        roles_list = []
+                        if roles:
+                            for role in roles:
+                                if role.title() in lolconstants.lol_roles():
+                                    roles_list.append(role.lower())
+                            roles_list = list(dict.fromkeys(roles_list))
+                        # check if member already registered
                         if available_member in participants:
                             member = participants[available_member]
-                            if member['Sat'] == 1 and member['Sun'] == 1:
-                                await ctx.send('Your name was already added to the list for both days! :open_mouth:')
-                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
-                                await ctx.send('Your name was already added to the list for this day! :open_mouth:')
+                            if not roles_list:
+                                if member['Sat'] == 1 and member['Sun'] == 1:
+                                    await ctx.send('Your name was already added to the list for both days! :open_mouth:')
+                                elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
+                                    await ctx.send('Your name was already added to the list for this day! :open_mouth:')
+                                else:
+                                    participants[available_member].update(
+                                        avail_dict)
+                                    await ctx.send("Your availability has been added to the list! :white_check_mark:")
                             else:
+                                # read beebot_profiles.json file
+                                beebot_profiles_json = "/".join(list(current_directory.split('/')
+                                                                     [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
+                                with open(beebot_profiles_json) as f:
+                                    beebot_profiles_data = json.load(f)
+                                # add member's roles
+                                if available_member not in beebot_profiles_data:
+                                    beebot_profiles_data[available_member] = {}
+                                if "league_of_legends" not in beebot_profiles_data[available_member]:
+                                    beebot_profiles_data[available_member]["league_of_legends"] = {
+                                    }
+                                beebot_profiles_data[available_member]["league_of_legends"][
+                                    'preferred_role(s)'] = roles_list
+                                # write to beebot_profiles.json file
+                                with open(beebot_profiles_json, 'w') as outfile:
+                                    json.dump(beebot_profiles_data, outfile)
                                 participants[available_member].update(
                                     avail_dict)
-                                await ctx.send("Your availability has been added to the list! :white_check_mark:")
+                                await ctx.send("Your role(s) have been updated! :white_check_mark:")
                         else:
                             participants[available_member] = {
                                 'Sat': 0, 'Sun': 0}
@@ -95,8 +130,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # *********************************************************************************************************************
     # bot command to remove author from availability list
     # *********************************************************************************************************************
-    @commands.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr'],
-                      help='➖ Remove your clash availability!')
+    @commands.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr', 'clash-', '-clash', '➖'],
+                      help='➖ Remove your Clash availability!')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_remove(self, ctx, availability: Optional[str]):
@@ -143,14 +178,13 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                                 # write to events.json file
                                 with open(event_json, 'w') as outfile:
                                     json.dump(data, outfile)
-                                await ctx.send('Your name was removed from the availability list. :slight_smile:')
+                                await ctx.send('Your name was removed from the availability list for this day(s). :slight_smile:')
 
     # *********************************************************************************************************************
     # bot command to view clash availability list
     # *********************************************************************************************************************
-
-    @commands.command(name='clashview', aliases=['viewclash', 'clashv', 'vclash'],
-                      help='📜 View list of people available for clash.')
+    @commands.command(name='clashview', aliases=['viewclash', 'clashv', 'vclash', 'clashavailability', '📜'],
+                      help='📜 View list of people available for Clash.')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_view(self, ctx):
@@ -168,17 +202,39 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
         else:
             available_days = {'Saturday': [], 'Sunday': []}
             for member in clash['participants']:
+                # member fields
+                # read beebot_profiles.json file
+                beebot_profiles_json = "/".join(list(current_directory.split('/')
+                                                     [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
+                with open(beebot_profiles_json) as f:
+                    beebot_profiles_data = json.load(f)
+                fields = []
+                if member in beebot_profiles_data:
+                    if 'league_of_legends' in beebot_profiles_data[member]:
+                        # add role(s)
+                        if 'preferred_role(s)' in beebot_profiles_data[member]['league_of_legends']:
+                            if beebot_profiles_data[member]['league_of_legends']['preferred_role(s)']:
+                                fields.append(
+                                    f"preferred role(s): *{', '.join(beebot_profiles_data[member]['league_of_legends']['preferred_role(s)'])}*")
+                # set fields
+                if not fields:
+                    fields = ''
+                else:
+                    fields = f"[{' | '.join(fields)}]"
                 # format string
                 member_name = '#'.join(member.split("#")[:-1])
                 if clash['participants'][member]['Sat'] == 1:
-                    available_days['Saturday'].append(member_name)
+                    available_days['Saturday'].append(
+                        f"***{member_name}*** {fields}")
                 if clash['participants'][member]['Sun'] == 1:
-                    available_days['Sunday'].append(member_name)
+                    available_days['Sunday'].append(
+                        f"***{member_name}*** {fields}")
             # *********
             # | embed |
             # *********
-            embed = Embed(title="Clash List!",
-                          description="Here are the people that signed up for Clash weekend! :D",
+            embed = Embed(title="Clash List",
+                          description=f"Here are the signups for the next Clash weekend!\n"
+                          f"Last day to signup is; *{date.strftime('%A, %B %-d, %Y @ %-I:%M')}*!",
                           colour=ctx.author.colour)
             # embed thumbnail
             file = discord.File(
@@ -187,7 +243,11 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             # embed fields
             for day in available_days:
                 if available_days[day]:
-                    embed.add_field(name=f"{day}:", value=', '.join(
+                    if day == 'Saturday':
+                        clash_date = date - timedelta(days=1)
+                    else:
+                        clash_date = date
+                    embed.add_field(name=clash_date.strftime('%A, %B %-d, %Y:'), value='\n'.join(
                         available_days[day]), inline=False)
             await ctx.send(file=file, embed=embed)
 
@@ -195,9 +255,9 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # bot command to set clash date
     # *********************************************************************************************************************
     @commands.command(name='clashset', aliases=['setclash', 'sclash', 'clashs'],
-                      help='~ Set next clash. [Format: DD-MM-YYYY HH:MM, Role Specific]')
+                      help='Setup next Clash. [Admin Specific]')
     # only VERY specific roles can use this command
-    @commands.has_role(owner_specific_command_name)
+    @commands.has_role(admin_specific_command_name)
     async def clash_set(self, ctx):
         # API call
         clash_data = lol_watcher.clash.tournaments(default_region)

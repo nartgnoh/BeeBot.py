@@ -25,7 +25,7 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Bot Admin'
+admin_specific_command_name = 'Bot Admin'
 
 # lolprofilemodule class
 
@@ -103,7 +103,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Profile!",
+                    embed = Embed(title=f"{summoner['name']}'s LOL Profile",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
                     # embed thumbnail
@@ -183,7 +183,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Rank!",
+                    embed = Embed(title=f"{summoner['name']}'s LOL Rank",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
                     # embed thumbnails
@@ -287,7 +287,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Mastery!",
+                    embed = Embed(title=f"{summoner['name']}'s LOL Mastery",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
                     # embed image
