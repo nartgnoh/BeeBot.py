@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# lolclash.py
+# lolclashmodule.py
 # - (wip)
 # *********************************************************************************************************************
 
@@ -25,12 +25,15 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# lolclash class
-class lolclash(commands.Cog):
+# lolclashmodule class
+
+
+class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd, clashremove, clashview"):
     def __init__(self, bot):
         self.bot = bot
+
     # # *********************************************************************************************************************
     # # bot command to add author from availability list
     # # *********************************************************************************************************************
@@ -141,7 +144,6 @@ class lolclash(commands.Cog):
     #     except:
     #         await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
 
-
     # # bot command to remove author from availability list
     # @bot.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr'],
     #              help='Remove your clash availability!')
@@ -213,13 +215,15 @@ class lolclash(commands.Cog):
     # *********************************************************************************************************************
     # bot command to view clash availability list
     # *********************************************************************************************************************
+
     @commands.command(name='clashview', aliases=['viewclash', 'clashv', 'vclash'],
-                 help='~ View list of people available for clash.')
+                      help='~ View list of people available for clash.')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_view(self, ctx):
         # read events.json file
-        event_json = "/".join(list(current_directory.split('/')[0:-3])) + '/resource_files/json_files/events.json'
+        event_json = "/".join(list(current_directory.split('/')
+                              [0:-3])) + '/resource_files/json_files/events.json'
         with open(event_json) as f:
             data = json.load(f)
 
@@ -234,17 +238,17 @@ class lolclash(commands.Cog):
 
             # set initals to embed
             embed = Embed(title="The :",
-                colour=ctx.author.colour)
+                          colour=ctx.author.colour)
 
             for party in range(len(teams_list)):
                 team_number += 1
                 # check if element is not empty
                 if teams_list[teams]:
                     # add a new "Team" field to the embed
-                    embed.add_field(name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
+                    embed.add_field(
+                        name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
 
             await ctx.send(embed=embed)
-
 
         #     # check if "clash_dates.txt" has a valid date
         #     new_clash_date = clash_dates_file.readline()
@@ -270,13 +274,14 @@ class lolclash(commands.Cog):
         #             # add "saturday" and "sunday" to "clash_message"
         #             clash_message = saturday[:-2] + '\n' + sunday[:-2]
         #             await ctx.send('The people available for clash are:\n{}'.format(clash_message))
-        #     
+        #
 
     # *********************************************************************************************************************
     # bot command to set clash date
     # *********************************************************************************************************************
+
     @commands.command(name='clashset', aliases=['setclash', 'sclash', 'clashs'],
-                 help='~ Set next clash. [Format: DD-MM-YYYY HH:MM, Role Specific]')
+                      help='~ Set next clash. [Format: DD-MM-YYYY HH:MM, Role Specific]')
     # only VERY specific roles can use this command
     @commands.has_role(owner_specific_command_name)
     async def clash_set(self, ctx):
@@ -287,7 +292,8 @@ class lolclash(commands.Cog):
         for clash in clash_data:
             clash_dict[clash['id']] = (clash['schedule'][0]['startTime'])
         # sort dictionary and only keep the next tournament's "Sunday" dates
-        clash_sorted = dict(sorted(clash_dict.items(), key=lambda item: item[1]))
+        clash_sorted = dict(
+            sorted(clash_dict.items(), key=lambda item: item[1]))
         deadline_current_clash = list(clash_sorted.items())[1]
         # get all clash data using the 'id' for the upcoming tournament
         current_clash = {}
@@ -299,14 +305,16 @@ class lolclash(commands.Cog):
         current_clash['participants'] = []
 
         # read events.json file
-        event_json = "/".join(list(current_directory.split('/')[0:-3])) + '/resource_files/json_files/events.json'
+        event_json = "/".join(list(current_directory.split('/')
+                              [0:-3])) + '/resource_files/json_files/events.json'
         with open(event_json) as f:
             data = json.load(f)
 
         # check if 'clash' key exists
         if 'clash' in data.keys():
             # update current clash with the next clash
-            date = datetime.fromtimestamp(data['clash']['schedule'][0]['startTime'] / 1e3)
+            date = datetime.fromtimestamp(
+                data['clash']['schedule'][0]['startTime'] / 1e3)
             if date < datetime.now():
                 data['clash'] = current_clash
                 with open(event_json, 'w') as outfile:
@@ -321,5 +329,6 @@ class lolclash(commands.Cog):
                 json.dump(data, outfile)
             await ctx.send("New clash key!")
 
+
 def setup(bot):
-    bot.add_cog(lolclash(bot))
+    bot.add_cog(lolclashmodule(bot))

@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# events.py
+# eventsmodule.py
 # - wip
 # *********************************************************************************************************************
 
@@ -15,12 +15,12 @@ from typing import Optional
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# events class
+# eventsmodule class
 
 
-class events(commands.Cog):
+class eventsmodule(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,4 +36,4 @@ class events(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(events(bot))
+    bot.add_cog(eventsmodule(bot))

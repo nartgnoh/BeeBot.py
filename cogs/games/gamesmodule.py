@@ -1,6 +1,6 @@
 # *********************************************************************************************************************
-# games.py
-# - split_team command
+# gamesmodule.py
+# - split_teams command
 # - pick_game command
 # *********************************************************************************************************************
 
@@ -19,21 +19,21 @@ from typing import Optional
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# games class
+# gamesmodule class
 
 
-class games(commands.Cog):
+class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pickgame"):
     def __init__(self, bot):
         self.bot = bot
 
     # *********************************************************************************************************************
     # bot command to split teams
     # *********************************************************************************************************************
-    @commands.command(name='splitteam', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team', '📋'],
-                      help='📋 Splits members in voice channel into teams. [Auto: 2, Max teams: 101]')
-    async def split_team(self, ctx, number_of_teams: Optional[int]):
+    @commands.command(name='splitteams', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team', '📋'],
+                      help='📋 Splits members in voice channel into teams.\n[Auto: 2, Max teams: 101]')
+    async def split_teams(self, ctx, number_of_teams: Optional[int]):
         # check for members in voice call
         if ctx.message.author.voice is None:
             await ctx.send('An error has occurred! :confounded: Try joining a voice channel! :slight_smile:')
@@ -77,7 +77,7 @@ class games(commands.Cog):
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'], help='🎮 Picks a game to play. [Auto: Number of people in voice call]')
+    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'], help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
             if ctx.message.author.voice is not None:
@@ -124,4 +124,4 @@ class games(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(games(bot))
+    bot.add_cog(gamesmodule(bot))

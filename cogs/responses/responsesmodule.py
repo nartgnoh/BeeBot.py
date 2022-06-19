@@ -1,8 +1,8 @@
 # *********************************************************************************************************************
-# responses.py
+# responsesmodule.py
 # - bee_facts command
 # - colour command
-# - hbd command
+# - happy_birthday command
 # - coin_flip command
 # - dice_roll command
 # - gif command
@@ -27,12 +27,12 @@ TENOR_KEY = os.getenv('TENOR_KEY')
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# responses class
+# responsesmodule class
 
 
-class responses(commands.Cog):
+class responsesmodule(commands.Cog, name="ResponsesModule", description="beefacts, colour, happybirthday, coinflip, diceroll, gif"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -88,7 +88,7 @@ class responses(commands.Cog):
     # *********************************************************************************************************************
     @commands.command(name='happybirthday', aliases=['hbd', 'birthday', '🎂'],
                       help='🎂 Wishes someone a Happy Birthday! Try a mention!')
-    async def hbd(self, ctx, *, member_name: Optional[str]):
+    async def happy_birthday(self, ctx, *, member_name: Optional[str]):
         if member_name == None:
             member_name = ''
         else:
@@ -139,8 +139,8 @@ class responses(commands.Cog):
             # | embed |
             # *********
             embed = Embed(title=cf_message,
-                            colour=discord.Colour.gold(),
-                            description=cf_results[:-2])
+                          colour=discord.Colour.gold(),
+                          description=cf_results[:-2])
 
             await ctx.send(embed=embed)
 
@@ -227,4 +227,4 @@ class responses(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(responses(bot))
+    bot.add_cog(responsesmodule(bot))

@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# lolinfo.py
+# lolinfomodule.py
 # - champ_lookup command
 # - champ_skills command
 # *********************************************************************************************************************
@@ -8,7 +8,7 @@ import os
 import discord
 import random
 import requests
-import cogs.games.league_of_legends.lolconstants as lolconstants
+import cogs.constants.lolconstants as lolconstants
 
 from discord.ext import commands
 from discord import Embed
@@ -26,12 +26,12 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# lolinfo class
+# lolinfomodule class
 
 
-class lolinfo(commands.Cog):
+class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup, champskills"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -129,4 +129,4 @@ class lolinfo(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(lolinfo(bot))
+    bot.add_cog(lolinfomodule(bot))
