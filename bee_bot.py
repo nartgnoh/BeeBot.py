@@ -26,7 +26,6 @@ all_extensions = [
     'cogs.responses.responsesmodule'
 ]
 
-
 # get from .env file
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
@@ -39,14 +38,12 @@ intents.members = True
 def get_prefix(bot, message):
     prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
     # prefixes = ['BT ', 'bt ', 'B ', 'b ']  # BeeBot-Testing exclusive
-
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 
-# setup bot
+# bot setup
 bot = commands.Bot(command_prefix=get_prefix, description='🐝 Hello! I am BeeBot! 🐝',
                    case_insensitive=True, intents=intents, help_command=PrettyHelp())
-
 
 # load extensions(cogs) listed above in [all_extensions].
 if __name__ == '__main__':
