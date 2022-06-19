@@ -56,7 +56,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # *********************************************************************************************************************
     # bot command admin beebot profiles events
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_beebot_profiles', help='🛡️ Reset BeeBot Profiles file.')
+    @commands.command(name='admin_beebot_reset_all_beebot_profiles', help='🛡️ Reset BeeBot profiles file.')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def admin_beebot_reset_all_beebot_profiles(self, ctx):
@@ -65,7 +65,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
                                             [0:-2])) + '/resource_files/json_files/beebot_profiles.json'
         with open(beebot_profile_json, 'w') as outfile:
             json.dump({}, outfile)
-        await ctx.send('Reset BeeBot Profiles file.')
+        await ctx.send('Reset BeeBot profiles file.')
 
 
 def setup(bot):
