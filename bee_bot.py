@@ -11,6 +11,7 @@ from pretty_help import PrettyHelp
 # get all cog extensions
 all_extensions = [
     'cogs.admin.admin_beebot_reset_module',
+    'cogs.beebot_profile.lolbeebotprofilemodule',
     # 'cogs.events.eventsmodule',
     'cogs.games.league_of_legends.lolinfomodule',
     'cogs.games.league_of_legends.lolprofilemodule',

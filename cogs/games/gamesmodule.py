@@ -19,7 +19,7 @@ from typing import Optional
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Bot Admin'
+admin_specific_command_name = 'Bot Admin'
 
 # gamesmodule class
 

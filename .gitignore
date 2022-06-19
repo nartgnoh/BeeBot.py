@@ -138,3 +138,4 @@ dmypy.json
 # specific files
 /old
 /resource_files/json_files/events.json
+/resource_files/json_files/beebot_profiles.json
