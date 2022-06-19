@@ -108,21 +108,21 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         # check if member already registered
                         if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
                             member = participants[available_member]
-                            if member['Sat'] == 1 and member['Sun'] == 1:
+                            if member['Sat'] == 1 and member['Sun'] == 1 and not roles_list:
                                 await ctx.send('Your name was already added to the list for both days! :open_mouth:')
-                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
+                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun') and not roles_list:
                                 await ctx.send('Your name was already added to the list for this day! :open_mouth:')
                             else:
                                 participants[available_member].update(
                                     avail_dict)
-                                await ctx.send(f"Your availability {role_msg}has been added! :white_check_mark:")
+                                await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
                         elif availability in lolconstants.lol_roles() and roles_list:
                             await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
                         else:
                             participants[available_member] = {
                                 'Sat': 0, 'Sun': 0}
                             participants[available_member].update(avail_dict)
-                            await ctx.send(f"Your availability {role_msg}has been added! :white_check_mark:")
+                            await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
                         # write to events.json file
                         with open(event_json, 'w') as outfile:
                             json.dump(data, outfile)
