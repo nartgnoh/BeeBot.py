@@ -77,20 +77,19 @@ $ chmod +x bee_bot.py
 ```
 * These commands will be helpful with navigating the running processes of BeeBot.py:
 ```
-### CD into BeeBot.py directory
+<!-- CD into BeeBot.py directory -->
 $ cd BeeBot.py
 
-### Run bee_bot.py
+<!-- Run bee_bot.py -->
 $ nohup python3 -u bee_bot.py &>> activity.log &
 
-### Lookup all python3 processes
+<!-- Lookup all python3 processes -->
 $ ps -ef | grep python3
 
-### To kill bee_bot.py process
-### First lookup bee_bot.py process
+<!-- To kill bee_bot.py process -->
+<!-- First lookup bee_bot.py process -->
 $ ps -ef | grep python3
-### Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py
-### Using the number of the process, kill the process
+<!-- Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py -->
 <!-- Using the number of the process, kill the process -->
 $ kill 1224
 ```
