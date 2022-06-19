@@ -216,7 +216,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 current_clash = clash
                 break
         # add 'participants' field
-        current_clash['participants'] = {'Sat': [], 'Sun': []}
+        current_clash['participants'] = {}
         # read events.json file
         event_json = "/".join(list(current_directory.split('/')
                               [0:-3])) + '/resource_files/json_files/events.json'
