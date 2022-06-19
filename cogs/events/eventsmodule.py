@@ -27,8 +27,8 @@ class eventsmodule(commands.Cog):
     # *********************************************************************************************************************
     # bot command template
     # *********************************************************************************************************************
-    @commands.command(name='command_name', aliases=['add_aliases'], help='~ Add description')
-    # OPTIONAL: only specific roles can use this command
+    @commands.command(name='command_name', aliases=['add_aliases'], help='🛡️ Add description')
+    # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def command_name(self, ctx):
         # send message in discord chat

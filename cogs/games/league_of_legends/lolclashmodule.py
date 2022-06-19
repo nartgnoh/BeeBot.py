@@ -254,7 +254,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # bot command to set clash date
     # *********************************************************************************************************************
     @commands.command(name='clashset', aliases=['setclash', 'sclash', 'clashs'],
-                      help='Setup next Clash. [Admin Specific]')
+                      help='🛡️ Setup next Clash. [Admin Specific]')
     # only VERY specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def clash_set(self, ctx):
