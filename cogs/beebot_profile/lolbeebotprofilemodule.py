@@ -21,7 +21,7 @@ admin_specific_command_name = 'Bot Admin'
 # lolbeebotprofilemodule class
 
 
-class lolbeebotprofilemodule(commands.Cog, name="LoL BeeBot Profile Module", description="Setup your League of Legends BeeBot profile!"):
+class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", description="Setup your League of Legends BeeBot profile!"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,7 +29,8 @@ class lolbeebotprofilemodule(commands.Cog, name="LoL BeeBot Profile Module", des
     # bot command to set league of legends roles for beebot profile
     # *********************************************************************************************************************
     @commands.command(name='lolroles', aliases=['roleslol', 'lolrole', 'rolelol', '🤸'],
-                      help='🤸 Set LoL preferred role(s) to your BeeBot profile!')
+                      help="🤸 Set LoL preferred role(s) to your BeeBot profile!\n\n"
+                      f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_roles(self, ctx, *roles):

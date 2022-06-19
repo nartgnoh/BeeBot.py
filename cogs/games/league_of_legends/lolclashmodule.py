@@ -40,9 +40,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # *********************************************************************************************************************
     # bot command to add author from availability list
     # *********************************************************************************************************************
-    @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable', 'clash+', '+clash', 'lol➕'],
+    @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable', 'clash+', '+clash', '➕'],
                       help=f"➕ Add your Clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']\n\n"
-                      f"[Add your preferred roles with \" <main_role> <secondary_role(s)>\" either after your availability or just after 'BB']"
                       f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
@@ -91,7 +90,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                             role_msg = 'and preferred role(s) '
                             # read beebot_profiles.json file
                             beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                                    [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
+                                                                 [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
                             with open(beebot_profiles_json) as f:
                                 beebot_profiles_data = json.load(f)
                             # add member's roles
@@ -106,7 +105,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                             with open(beebot_profiles_json, 'w') as outfile:
                                 json.dump(beebot_profiles_data, outfile)
                         # check if member already registered
-                        if available_member in participants and (availability == 'Sat' or availability == 'Sun'or availability == 'Both'):
+                        if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
                             member = participants[available_member]
                             if member['Sat'] == 1 and member['Sun'] == 1:
                                 await ctx.send('Your name was already added to the list for both days! :open_mouth:')
@@ -225,10 +224,10 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 member_name = '#'.join(member.split("#")[:-1])
                 if clash['participants'][member]['Sat'] == 1:
                     available_days['Saturday'].append(
-                        f"***{member_name}*** {fields}")
+                        f"- ***{member_name}*** {fields}")
                 if clash['participants'][member]['Sun'] == 1:
                     available_days['Sunday'].append(
-                        f"***{member_name}*** {fields}")
+                        f"- ***{member_name}*** {fields}")
             # *********
             # | embed |
             # *********
