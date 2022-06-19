@@ -10,6 +10,7 @@ import os
 import discord
 import json
 import cogs.constants.lolconstants as lolconstants
+import cogs.functions.timezone_functions as timezone_functions
 
 from discord.ext import commands
 from discord import Embed
@@ -233,7 +234,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             # *********
             embed = Embed(title="Clash List",
                           description=f"Here are the signups for the next Clash weekend!\n"
-                          f"Last day to signup is; *{date.strftime('%A, %B %-d, %Y @ %-I:%M')}*!",
+                          f"Last day to signup is; "
+                          f"*{date.astimezone(timezone_functions.get_local_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p')}*!",
                           colour=ctx.author.colour)
             # embed thumbnail
             file = discord.File(
@@ -246,7 +248,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         clash_date = date - timedelta(days=1)
                     else:
                         clash_date = date
-                    embed.add_field(name=clash_date.strftime('%A, %B %-d, %Y:'), value='\n'.join(
+                    embed.add_field(name=clash_date.astimezone(timezone_functions.get_local_timezone()).strftime('%A, %B %-d, %Y:'), value='\n'.join(
                         available_days[day]), inline=False)
             await ctx.send(file=file, embed=embed)
 
