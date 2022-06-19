@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# lolteamcomp.py
+# lolteamsmodule.py
 # - lol_balance command
 # *********************************************************************************************************************
 
@@ -8,7 +8,7 @@ import os
 from pydoc import describe
 import discord
 import random
-import cogs.games.league_of_legends.lolconstants as lolconstants
+import cogs.constants.lolconstants as lolconstants
 
 from discord.ext import commands
 from discord import Embed
@@ -26,12 +26,12 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# lolteamcomp class
+# lolteamsmodule class
 
 
-class lolteamcomp(commands.Cog):
+class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalance"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -39,7 +39,7 @@ class lolteamcomp(commands.Cog):
     # bot command to balance a league of legends team comp
     # *********************************************************************************************************************
     @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', 'lolteams', 'teamslol', '⚖️'],
-                      help='⚖️ Help balance a lol teamcomp! [Put champions with spaces in quotes ""]')
+                      help='⚖️ Help balance a lol teamcomp! [Champions with spaces need quotes ""]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_balance(self, ctx, *lol_champions):
@@ -131,4 +131,4 @@ class lolteamcomp(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(lolteamcomp(bot))
+    bot.add_cog(lolteamsmodule(bot))

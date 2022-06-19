@@ -22,12 +22,12 @@ from typing import Optional
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
 # new_cog_template class
 
 
-class new_cog_template(commands.Cog):
+class new_cog_template(commands.Cog, name="new_cog_template", description=""):
     def __init__(self, bot):
         self.bot = bot
 

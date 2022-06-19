@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# lolskins.py
+# lolskinsmodule.py
 # - pick_skin command
 # *********************************************************************************************************************
 
@@ -24,12 +24,12 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# lolskins class
+# lolskinsmodule class
 
 
-class lolskins(commands.Cog):
+class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -77,4 +77,4 @@ class lolskins(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(lolskins(bot))
+    bot.add_cog(lolskinsmodule(bot))

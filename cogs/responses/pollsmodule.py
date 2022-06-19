@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# poll.py
+# pollsmodule.py
 # - poll command
 # - giveaway command (wip)
 # *********************************************************************************************************************
@@ -16,12 +16,12 @@ from datetime import datetime, timedelta
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# poll class
+# pollsmodule class
 
 
-class poll(commands.Cog):
+class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,7 +29,7 @@ class poll(commands.Cog):
     # bot command to make a poll in chat
     # *********************************************************************************************************************
     @commands.command(name='poll', aliases=['createpoll', 'makepoll', 'polls', '💈'],
-                      help='💈 Make a poll! [Max options: 9, Put your question and any options with multiple words in quotes "",]')
+                      help='💈 Make a poll! [Max options: 9, Questions and Options with spaces need quotes ""]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def create_poll(self, ctx, question: str, *options):
@@ -107,4 +107,4 @@ class poll(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(poll(bot))
+    bot.add_cog(pollsmodule(bot))

@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# admin_beebot_reset.py
+# admin_beebot_reset_module.py
 # - admin_beebot_reset_events command
 # *********************************************************************************************************************
 
@@ -16,12 +16,12 @@ from datetime import datetime
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# admin_beebot_reset class
+# admin_beebot_reset_module class
 
 
-class admin_beebot_reset(commands.Cog):
+class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", description="Type \"BB help Admin_BeeBot_Reset_Module\" for options"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -41,4 +41,4 @@ class admin_beebot_reset(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(admin_beebot_reset(bot))
+    bot.add_cog(admin_beebot_reset_module(bot))

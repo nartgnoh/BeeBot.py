@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# lolprofile.py
+# lolprofilemodule.py
 # - lol_profile command
 # - lol_rank command
 # - lol_mastery command
@@ -7,7 +7,7 @@
 
 import os
 import discord
-import cogs.games.league_of_legends.lolconstants as lolconstants
+import cogs.constants.lolconstants as lolconstants
 
 from discord.ext import commands
 from discord import Embed
@@ -25,12 +25,12 @@ default_region = 'na1'
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# lolprofile class
+# lolprofilemodule class
 
 
-class lolprofile(commands.Cog):
+class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolprofile, lolrank, lolmastery"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -38,8 +38,8 @@ class lolprofile(commands.Cog):
     # bot command to show the full profile of a given summoner name (shows rank and mastery)
     # *********************************************************************************************************************
     @commands.command(name='lolprofile', aliases=['profilelol', 'lolp', 'plol', '👤'],
-                      help=f"👤 Showcase a summoner\'s league of legends profile.\n"
-                      f"[To input a region, type \"region:<region>\" (ex: region:kr)]\n"
+                      help=f"👤 Showcase a summoner\'s league of legends profile.\n\n"
+                      f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
@@ -131,8 +131,8 @@ class lolprofile(commands.Cog):
     # bot command to show the rank of a given summoner name
     # *********************************************************************************************************************
     @commands.command(name='lolrank', aliases=['ranklol', 'lolr', 'rlol', '🏆'],
-                      help=f"🏆 Showcase a summoner\'s league of legends rank.\n"
-                      f"[To input a region, type \"region:<region>\" (ex: region:kr)]\n"
+                      help=f"🏆 Showcase a summoner\'s league of legends rank.\n\n"
+                      f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
@@ -223,8 +223,8 @@ class lolprofile(commands.Cog):
     # bot command to show the mastery of a given summoner name
     # *********************************************************************************************************************
     @commands.command(name='lolmastery', aliases=['masterylol', 'lolm', 'mlol', '🎓'],
-                      help=f"🎓 Showcase a summoner\'s league of legends mastery. \n"
-                      f"[To input a region, type \"region:<region>\" (ex: region:kr)]\n"
+                      help=f"🎓 Showcase a summoner\'s league of legends mastery.\n\n"
+                      f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
@@ -309,4 +309,4 @@ class lolprofile(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(lolprofile(bot))
+    bot.add_cog(lolprofilemodule(bot))

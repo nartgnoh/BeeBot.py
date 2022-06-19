@@ -1,5 +1,5 @@
 # *********************************************************************************************************************
-# view.py
+# viewmusicmodule.py
 # - (wip)
 # *********************************************************************************************************************
 
@@ -15,12 +15,15 @@ from typing import Optional
 current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
-owner_specific_command_name = 'Server Owner'
+owner_specific_command_name = 'Bot Admin'
 
-# view class
-class view(commands.Cog):
+# viewmusicmodule class
+
+
+class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
     def __init__(self, bot):
         self.bot = bot
+
     # *********************************************************************************************************************
     # bot command template
     # *********************************************************************************************************************
@@ -31,5 +34,6 @@ class view(commands.Cog):
         # send message in discord chat
         await ctx.send('Send message in chat!')
 
+
 def setup(bot):
-    bot.add_cog(view(bot))
+    bot.add_cog(viewmusicmodule(bot))
