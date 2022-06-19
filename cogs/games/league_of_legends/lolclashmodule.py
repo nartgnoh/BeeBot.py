@@ -235,7 +235,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             embed = Embed(title="Clash List",
                           description=f"Here are the signups for the next Clash weekend!\n"
                           f"Last day to signup is; "
-                          f"*{date.astimezone(timezone_functions.get_local_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p')}*!",
+                          f"*{date.astimezone(timezone_functions.get_local_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p (%Z)')}*!",
                           colour=ctx.author.colour)
             # embed thumbnail
             file = discord.File(

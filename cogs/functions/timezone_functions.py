@@ -1,6 +1,6 @@
 from dateutil import tz
-import pytz
+from pytz import timezone
 
 
 def get_local_timezone():
-    return tz.tzlocal()
+    return timezone('US/Eastern')
