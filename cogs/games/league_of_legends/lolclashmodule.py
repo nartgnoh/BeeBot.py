@@ -86,43 +86,43 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                                 if role.title() in lolconstants.lol_roles():
                                     roles_list.append(role.lower())
                             roles_list = list(dict.fromkeys(roles_list))
+                        role_msg = ''
+                        if roles_list:
+                            role_msg = 'and preferred role(s) '
+                            # read beebot_profiles.json file
+                            beebot_profiles_json = "/".join(list(current_directory.split('/')
+                                                                    [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
+                            with open(beebot_profiles_json) as f:
+                                beebot_profiles_data = json.load(f)
+                            # add member's roles
+                            if available_member not in beebot_profiles_data:
+                                beebot_profiles_data[available_member] = {}
+                            if "league_of_legends" not in beebot_profiles_data[available_member]:
+                                beebot_profiles_data[available_member]["league_of_legends"] = {
+                                }
+                            beebot_profiles_data[available_member]["league_of_legends"][
+                                'preferred_role(s)'] = roles_list
+                            # write to beebot_profiles.json file
+                            with open(beebot_profiles_json, 'w') as outfile:
+                                json.dump(beebot_profiles_data, outfile)
                         # check if member already registered
-                        if available_member in participants:
+                        if available_member in participants and (availability == 'Sat' or availability == 'Sun'or availability == 'Both'):
                             member = participants[available_member]
-                            if not roles_list:
-                                if member['Sat'] == 1 and member['Sun'] == 1:
-                                    await ctx.send('Your name was already added to the list for both days! :open_mouth:')
-                                elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
-                                    await ctx.send('Your name was already added to the list for this day! :open_mouth:')
-                                else:
-                                    participants[available_member].update(
-                                        avail_dict)
-                                    await ctx.send("Your availability has been added to the list! :white_check_mark:")
+                            if member['Sat'] == 1 and member['Sun'] == 1:
+                                await ctx.send('Your name was already added to the list for both days! :open_mouth:')
+                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
+                                await ctx.send('Your name was already added to the list for this day! :open_mouth:')
                             else:
-                                # read beebot_profiles.json file
-                                beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                                     [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
-                                with open(beebot_profiles_json) as f:
-                                    beebot_profiles_data = json.load(f)
-                                # add member's roles
-                                if available_member not in beebot_profiles_data:
-                                    beebot_profiles_data[available_member] = {}
-                                if "league_of_legends" not in beebot_profiles_data[available_member]:
-                                    beebot_profiles_data[available_member]["league_of_legends"] = {
-                                    }
-                                beebot_profiles_data[available_member]["league_of_legends"][
-                                    'preferred_role(s)'] = roles_list
-                                # write to beebot_profiles.json file
-                                with open(beebot_profiles_json, 'w') as outfile:
-                                    json.dump(beebot_profiles_data, outfile)
                                 participants[available_member].update(
                                     avail_dict)
-                                await ctx.send("Your role(s) have been updated! :white_check_mark:")
+                                await ctx.send(f"Your availability {role_msg}has been added! :white_check_mark:")
+                        elif availability in lolconstants.lol_roles() and roles_list:
+                            await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
                         else:
                             participants[available_member] = {
                                 'Sat': 0, 'Sun': 0}
                             participants[available_member].update(avail_dict)
-                            await ctx.send("Your availability has been added to the list! :white_check_mark:")
+                            await ctx.send(f"Your availability {role_msg}has been added! :white_check_mark:")
                         # write to events.json file
                         with open(event_json, 'w') as outfile:
                             json.dump(data, outfile)
