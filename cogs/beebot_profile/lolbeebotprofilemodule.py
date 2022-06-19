@@ -4,7 +4,6 @@
 # *********************************************************************************************************************
 
 import os
-from time import time
 import discord
 import json
 import cogs.constants.lolconstants as lolconstants
