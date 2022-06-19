@@ -1,11 +1,13 @@
 # *********************************************************************************************************************
 # lolclashmodule.py
-# - (wip)
+# - clashadd command
+# - clashremove command
+# - clashview command
+# - clashset command
 # *********************************************************************************************************************
 
 import os
 import discord
-import random
 import json
 
 from discord.ext import commands
@@ -34,183 +36,114 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     def __init__(self, bot):
         self.bot = bot
 
-    # # *********************************************************************************************************************
-    # # bot command to add author from availability list
-    # # *********************************************************************************************************************
-    # @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable'],
-    #             help='Add your clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
-    # # only specific roles can use this command
-    # @commands.has_role(role_specific_command_name)
-    # async def clash_add(ctx, *, date: Optional[str]):
-    #     try:
-    #         # available member for clash
-    #         available_member = ctx.message.author
-    #         if date == None:
-    #             await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :smile:')
-    #         else:
-    #             # help case sensitivity
-    #             date = date.lower()
-    #             # if not sun or sat (the usual clash days)
-    #             if not date == 'sat' and not date == 'sun' and not date == 'both':
-    #                 await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
-    #                             'after command! :smile:')
-    #             else:
-    #                 json_functions.read_json_file()
-    #                 # with open('resource_files/clash_files/clash_available.txt') as f:
-    #                 #     data = f.read()
-    #                 # avail_dict = ast.literal_eval(data)
+    # *********************************************************************************************************************
+    # bot command to add author from availability list
+    # *********************************************************************************************************************
+    @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable'],
+                      help='Add your clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def clash_add(self, ctx, availability: Optional[str]):
+        # read events.json file
+        event_json = "/".join(list(current_directory.split('/')
+                              [0:-3])) + '/resource_files/json_files/events.json'
+        with open(event_json) as f:
+            data = json.load(f)
+        if 'clash' not in data:
+            await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        else:
+            clash_event = data['clash']
+            clash_date = datetime.fromtimestamp(
+                clash_event['schedule'][0]['startTime'] / 1e3)
+            if clash_date < datetime.now():
+                await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+            else:
+                if availability == None:
+                    await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
+                else:
+                    availability = availability.lower().title()
+                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
+                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
+                                       'after command! :smile:')
+                    else:
+                        # check if member already registered
+                        available_member = str(ctx.message.author)
+                        participants = clash_event['participants']
+                        if availability == 'Both':
+                            avail_dict = {'Sat': 1, 'Sun': 1}
+                        else:
+                            avail_dict = {availability: 1}
+                        if available_member in participants:
+                            member = participants[available_member]
+                            if member['Sat'] == 1 and member['Sun'] == 1:
+                                await ctx.send('Your name was already added to the list for both days! :open_mouth:')
+                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun'):
+                                await ctx.send('Your name was already added to the list for this day! :open_mouth:')
+                            else:
+                                participants[available_member].update(
+                                    avail_dict)
+                                await ctx.send("Your availability has been added to the list! :white_check_mark:")
+                        else:
+                            participants[available_member] = {
+                                'Sat': 0, 'Sun': 0}
+                            participants[available_member].update(avail_dict)
+                            await ctx.send("Your availability has been added to the list! :white_check_mark:")
+                        # write to events.json file
+                        with open(event_json, 'w') as outfile:
+                            json.dump(data, outfile)
 
-    #                 # # read the "clash_dates.txt" file and check if the given date >= present
-    #                 # clash_dates_file = open("resource_files/clash_files/clash_dates.txt")
-    #                 # clash_dates_file.flush()
-    #                 # new_clash_date = clash_dates_file.readline()
-    #                 # clash_date_convert = datetime.strptime(new_clash_date, '%d-%m-%Y %H:%M')
-    #                 # if clash_date_convert >= present:
-    #                 #     if not date == 'both':
-    #                 #         # check if member is already in the "clash_available.txt" file
-    #                 #         check = False
-    #                 #         # capitalize "Sun" or "Sat"
-    #                 #         date = date.capitalize()
-    #                 #         text_input = str(available_member.id) + date + ' : ' + str(available_member.display_name) + '\n'
-    #                 #         check_input = str(available_member.id) + date
-    #                 #         clash_available_file = open("resource_files/clash_files/clash_available.txt")
-    #                 #         check_txt = clash_available_file.readlines()
-    #                 #         # check if member is already in the "clash_available.txt" file
-    #                 #         for lines in check_txt:
-    #                 #             # look at only the id and date from "lines"
-    #                 #             only_id = re.sub("\D", "", lines)
-    #                 #             after_id = lines[len(only_id):]
-    #                 #             only_date = after_id[:3]
-    #                 #             # new line
-    #                 #             new_line = only_id + only_date
-    #                 #             if check_input == new_line:
-    #                 #                 check = True
-    #                 #         # if member is already in the "clash_available.txt" file
-    #                 #         if check is True:
-    #                 #             await ctx.send('Your name was already added to the list for this day! :open_mouth:')
-    #                 #         # if member is NOT in the document, add them to the "clash_available.txt" file
-    #                 #         else:
-    #                 #             clash_available_file_a = open("resource_files/clash_files/clash_available.txt", "a")
-    #                 #             clash_available_file_a.write(text_input)
-    #                 #             clash_available_file_a.close()
-    #                 #             await ctx.send('Your availability has been added to the list! :white_check_mark:')
-    #                 #     else:
-    #                 #         date = 'Sat'
-    #                 #         # check specific days
-    #                 #         check_sat = False
-    #                 #         check_sun = False
-    #                 #         text_sat = str(available_member.id) + 'Sat' + ' : ' + str(available_member.display_name) + '\n'
-    #                 #         text_sun = str(available_member.id) + 'Sun' + ' : ' + str(available_member.display_name) + '\n'
-    #                 #         # check if sat and/or sun already exist
-    #                 #         for x in range(0, 2):
-    #                 #             check_input = str(available_member.id) + date
-    #                 #             clash_available_file = open("resource_files/clash_files/clash_available.txt")
-    #                 #             check_txt = clash_available_file.readlines()
-    #                 #             # check if member is already in the "clash_available.txt" file
-    #                 #             for lines in check_txt:
-    #                 #                 # look at only the id and date from "lines"
-    #                 #                 only_id = re.sub("\D", "", lines)
-    #                 #                 after_id = lines[len(only_id):]
-    #                 #                 only_date = after_id[:3]
-    #                 #                 # new line
-    #                 #                 new_line = only_id + only_date
-    #                 #                 if check_input == new_line and date == 'Sat':
-    #                 #                     check_sat = True
-    #                 #                 if check_input == new_line and date == 'Sun':
-    #                 #                     check_sun = True
-    #                 #             date = 'Sun'
-    #                 #         # if member is already in the "clash_available.txt" file
-    #                 #         if check_sat is True and check_sun is True:
-    #                 #             await ctx.send('Your name was already added to the list for these days! :open_mouth:')
-    #                 #         # if member is NOT in the document for SUN, add them to the "clash_available.txt" file
-    #                 #         elif check_sat is True and check_sun is False:
-    #                 #             clash_available_file_a = open("resource_files/clash_files/clash_available.txt", "a")
-    #                 #             clash_available_file_a.write(text_sun)
-    #                 #             clash_available_file_a.close()
-    #                 #             await ctx.send('Your availability has been added to the list! :white_check_mark:')
-    #                 #         # if member is NOT in the document for SAT, add them to the "clash_available.txt" file
-    #                 #         elif check_sat is False and check_sun is True:
-    #                 #             clash_available_file_a = open("resource_files/clash_files/clash_available.txt", "a")
-    #                 #             clash_available_file_a.write(text_sat)
-    #                 #             clash_available_file_a.close()
-    #                 #             await ctx.send('Your availability has been added to the list! :white_check_mark:')
-    #                 #         # if member is NOT in the document for BOTH, add them to the "clash_available.txt" file
-    #                 #         else:
-    #                 #             clash_available_file_a = open("resource_files/clash_files/clash_available.txt", "a")
-    #                 #             clash_available_file_a.write(text_sat)
-    #                 #             clash_available_file_a.write(text_sun)
-    #                 #             clash_available_file_a.close()
-    #                             await ctx.send('Your availability has been added to the list! :white_check_mark:')
-    #     except:
-    #         await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
-
-    # # bot command to remove author from availability list
-    # @bot.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr'],
-    #              help='Remove your clash availability!')
-    # # only specific roles can use this command
-    # @commands.has_role(role_specific_command_name)
-    # async def clash_remove(ctx, *, date: Optional[str]):
-    #     try:
-    #         # available member for clash
-    #         available_member = ctx.message.author
-    #         if date == None:
-    #             await ctx.send('Please specify either \'Sat\' or \'Sun\' after command! :smile:')
-    #         else:
-    #             # check if member is in the "clash_available.txt" file
-    #             check = False
-    #             # help case sensitivity
-    #             date = date.lower()
-    #             # if not sun or sat (the usual clash days)
-    #             if not date == 'sat' and not date == 'sun':
-    #                 await ctx.send('Invalid input! :flushed: Please specify either \'Sat\' or \'Sun\' '
-    #                                'after command! :smile:')
-    #             else:
-    #                 # read the "clash_dates.txt" file and check if the given date >= present
-    #                 clash_dates_file = open("resource_files/clash_files/clash_dates.txt")
-    #                 clash_dates_file.flush()
-    #                 new_clash_date = clash_dates_file.readline()
-    #                 clash_date_convert = datetime.strptime(new_clash_date, '%d-%m-%Y %H:%M')
-    #                 if clash_date_convert >= present:
-    #                     # capitalize "Sun" and "Sat"
-    #                     date = date.capitalize()
-    #                     text_input = str(available_member.id) + date + ' : ' + str(available_member.display_name) + '\n'
-    #                     check_input = str(available_member.id) + date
-    #                     clash_available_file = open("resource_files/clash_files/clash_available.txt")
-    #                     check_txt = clash_available_file.readlines()
-    #                     # check if member is in the "clash_available.txt" file
-    #                     for lines in check_txt:
-    #                         # look at only the id and date from "lines"
-    #                         only_id = re.sub("\D", "", lines)
-    #                         after_id = lines[len(only_id):]
-    #                         only_date = after_id[:3]
-    #                         # new line
-    #                         new_line = only_id + only_date
-    #                         if check_input == new_line:
-    #                             check = True
-    #                     # if member is in the "clash_available.txt" file
-    #                     if check == True:
-    #                         # new array to store file
-    #                         new_array_with_remove = []
-    #                         # find the member and delete them
-    #                         for lines in check_txt:
-    #                             if text_input == lines:
-    #                                 lines = lines.replace(lines, "")
-    #                             # add the other names from the text file into "new_array_with_remove"
-    #                             new_array_with_remove.append(lines)
-    #                         # close file
-    #                         clash_available_file.close()
-    #                         # create new text file with the same name
-    #                         new_clash_available_file = open('resource_files/clash_files/clash_available.txt', 'w')
-    #                         # write array into new file
-    #                         for lines in new_array_with_remove:
-    #                             new_clash_available_file.write(lines)
-    #                         new_clash_available_file.close()
-    #                         await ctx.send('Your name was removed from the availability list. :slight_smile:')
-    #                     else:
-    #                         await ctx.send('Your name wasn\'t on the availability list. :thinking: '
-    #                                        'Add it with the "addclash" command! :smile:')
-    #     except:
-    #         await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+    # *********************************************************************************************************************
+    # bot command to remove author from availability list
+    # *********************************************************************************************************************
+    @commands.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr'],
+                      help='Remove your clash availability!')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def clash_remove(self, ctx, availability: Optional[str]):
+        # read events.json file
+        event_json = "/".join(list(current_directory.split('/')
+                              [0:-3])) + '/resource_files/json_files/events.json'
+        with open(event_json) as f:
+            data = json.load(f)
+        if 'clash' not in data:
+            await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        else:
+            clash_event = data['clash']
+            clash_date = datetime.fromtimestamp(
+                clash_event['schedule'][0]['startTime'] / 1e3)
+            if clash_date < datetime.now():
+                await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+            else:
+                if availability == None:
+                    await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
+                else:
+                    availability = availability.lower().title()
+                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
+                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
+                                       'after command! :smile:')
+                    else:
+                        # check if member already registered
+                        available_member = str(ctx.message.author)
+                        participants = clash_event['participants']
+                        if availability == 'Both':
+                            avail_dict = {'Sat': 0, 'Sun': 0}
+                        else:
+                            avail_dict = {availability: 0}
+                        if available_member not in participants:
+                            await ctx.send('Your name wasn\'t on the list. :thinking: Add it with the "addclash" command! :smile:')
+                        else:
+                            member = participants[available_member]
+                            if (member['Sat'] == 0 and availability == 'Sat') or (member['Sun'] == 0 and availability == 'Sun'):
+                                await ctx.send('You\'re already not signed up for this day! :open_mouth:')
+                            else:
+                                participants[available_member].update(
+                                    avail_dict)
+                                if participants[available_member] == {'Sat': 0, 'Sun': 0}:
+                                    participants.pop(available_member)
+                                # write to events.json file
+                                with open(event_json, 'w') as outfile:
+                                    json.dump(data, outfile)
+                                await ctx.send('Your name was removed from the availability list. :slight_smile:')
 
     # *********************************************************************************************************************
     # bot command to view clash availability list
@@ -226,60 +159,41 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                               [0:-3])) + '/resource_files/json_files/events.json'
         with open(event_json) as f:
             data = json.load(f)
-
         clash = data['clash']
         date = datetime.fromtimestamp(clash['schedule'][0]['startTime'] / 1e3)
-
         if not clash['participants']:
             await ctx.send('No one has added their availability yet! :cry: Add yours with the \"addclash\" command! :smile:')
-        elif date > datetime.now():
+        elif date < datetime.now():
             await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         else:
-
-            # set initals to embed
-            embed = Embed(title="The :",
+            available_days = {'Saturday': [], 'Sunday': []}
+            for member in clash['participants']:
+                # format string
+                member_name = '#'.join(member.split("#")[:-1])
+                if clash['participants'][member]['Sat'] == 1:
+                    available_days['Saturday'].append(member_name)
+                if clash['participants'][member]['Sun'] == 1:
+                    available_days['Sunday'].append(member_name)
+            # *********
+            # | embed |
+            # *********
+            embed = Embed(title="Clash List!",
+                          description="Here are the people that signed up for Clash weekend! :D",
                           colour=ctx.author.colour)
-
-            for party in range(len(teams_list)):
-                team_number += 1
-                # check if element is not empty
-                if teams_list[teams]:
-                    # add a new "Team" field to the embed
-                    embed.add_field(
-                        name=f"Team {team_number}:", value=f"{teams_list[teams][:-2]}", inline=False)
-
-            await ctx.send(embed=embed)
-
-        #     # check if "clash_dates.txt" has a valid date
-        #     new_clash_date = clash_dates_file.readline()
-        #     clash_date_convert = datetime.strptime(new_clash_date, '%d-%m-%Y %H:%M')
-        #     if clash_date_convert >= present:
-        #         # check that "clash_availability.txt" file is not empty
-        #         ca_check = Path(r'{}/resource_files/clash_files/clash_available.txt'.format(parent_dir))
-        #         if not ca_check.stat().st_size == 0:
-        #             # add lines in "clash_availability.txt" to a "clash_array"
-        #             for lines in clash_available_file:
-        #                 lines = lines.rstrip().lstrip('0123456789')
-        #                 clash_array.append(lines)
-        #             # alphabetize "clash_array"
-        #             clash_array = sorted(clash_array, key=str.lower)
-        #             # sort "clash_array" into "saturday" and "sunday"
-        #             saturday = 'Saturday : '
-        #             sunday = 'Sunday : '
-        #             for key in clash_array:
-        #                 if key.startswith('Sat :'):
-        #                     saturday = saturday + key[6:] + ', '
-        #                 elif key.startswith('Sun : '):
-        #                     sunday = sunday + key[6:] + ', '
-        #             # add "saturday" and "sunday" to "clash_message"
-        #             clash_message = saturday[:-2] + '\n' + sunday[:-2]
-        #             await ctx.send('The people available for clash are:\n{}'.format(clash_message))
-        #
+            # embed thumbnail
+            file = discord.File(
+                f"resource_files/image_files/thumbnails/lolclash_thumb.png", filename="image.png")
+            embed.set_thumbnail(url='attachment://image.png')
+            # embed fields
+            for day in available_days:
+                if available_days[day]:
+                    embed.add_field(name=f"{day}:", value=', '.join(
+                        available_days[day]), inline=False)
+            await ctx.send(file=file, embed=embed)
 
     # *********************************************************************************************************************
     # bot command to set clash date
     # *********************************************************************************************************************
-
     @commands.command(name='clashset', aliases=['setclash', 'sclash', 'clashs'],
                       help='~ Set next clash. [Format: DD-MM-YYYY HH:MM, Role Specific]')
     # only VERY specific roles can use this command
@@ -302,14 +216,12 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 current_clash = clash
                 break
         # add 'participants' field
-        current_clash['participants'] = []
-
+        current_clash['participants'] = {'Sat': [], 'Sun': []}
         # read events.json file
         event_json = "/".join(list(current_directory.split('/')
                               [0:-3])) + '/resource_files/json_files/events.json'
         with open(event_json) as f:
             data = json.load(f)
-
         # check if 'clash' key exists
         if 'clash' in data.keys():
             # update current clash with the next clash
