@@ -91,6 +91,7 @@ $ ps -ef | grep python3
 $ ps -ef | grep python3
 ### Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py
 ### Using the number of the process, kill the process
+<!-- Using the number of the process, kill the process -->
 $ kill 1224
 ```
 * ## Authors
