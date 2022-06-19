@@ -22,17 +22,13 @@ $ sudo apt-get update
 $ sudo apt-get install python3.8
 ```
 
-* Install discord.py
+* Install dependencies
+(includes; discord.py, dotenv, discord-pretty-help, Riotwatcher)
 ```
-$ python3 -m pip install -U discord.py
-```
-* Install dotenv
-```
+$ pip install discord.py
 $ pip install python-dotenv
-```
-* Install Riotwatcher
-```
-$ pip3 install riotwatcher
+$ pip install riotwatcher
+$ pip install discord-pretty-help
 ```
   
 ### Installing
@@ -62,6 +58,7 @@ Click [here](https://developer.riotgames.com/) to find steps for a Riot API key,
 You can either run BeeBot.py locally or on a Google Cloud VM
 ### Running Locally
 
+* Go through the "Getting Started" section above
 * Run locally using;
 ```
 $ cd BeeBot.py
@@ -71,7 +68,7 @@ $ python3 bee_bot.py
 ### Running on Google Cloud Platform VM
 
 * Create an instances the on [Google Cloud Platform](https://console.cloud.google.com/compute/instances)
-* Setup an SSH connection
+* Setup an [SSH connection](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 * Go through the "Getting Started" section above
 * First make sure bee_bot.py is in an executable state
 ```
@@ -80,20 +77,20 @@ $ chmod +x bee_bot.py
 ```
 * These commands will be helpful with navigating the running processes of BeeBot.py:
 ```
-### CD into BeeBot.py directory
+<!-- CD into BeeBot.py directory -->
 $ cd BeeBot.py
 
-### Run bee_bot.py
+<!-- Run bee_bot.py -->
 $ nohup python3 -u bee_bot.py &>> activity.log &
 
-### Lookup all python3 processes
+<!-- Lookup all python3 processes -->
 $ ps -ef | grep python3
 
-### To kill bee_bot.py process
-### First lookup bee_bot.py process
+<!-- To kill bee_bot.py process -->
+<!-- First lookup bee_bot.py process -->
 $ ps -ef | grep python3
-### Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py
-### Using the number of the process, kill the process
+<!-- Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py -->
+<!-- Using the number of the process, kill the process -->
 $ kill 1224
 ```
 * ## Authors
