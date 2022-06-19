@@ -40,7 +40,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # bot command to add author from availability list
     # *********************************************************************************************************************
     @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable'],
-                      help='Add your clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
+                      help='➕ Add your clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_add(self, ctx, availability: Optional[str]):
@@ -96,7 +96,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # bot command to remove author from availability list
     # *********************************************************************************************************************
     @commands.command(name='clashremove', aliases=['removeclash', 'rclash', 'clashr'],
-                      help='Remove your clash availability!')
+                      help='➖ Remove your clash availability!')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_remove(self, ctx, availability: Optional[str]):
@@ -150,7 +150,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # *********************************************************************************************************************
 
     @commands.command(name='clashview', aliases=['viewclash', 'clashv', 'vclash'],
-                      help='~ View list of people available for clash.')
+                      help='📜 View list of people available for clash.')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_view(self, ctx):
@@ -216,7 +216,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 current_clash = clash
                 break
         # add 'participants' field
-        current_clash['participants'] = {'Sat': [], 'Sun': []}
+        current_clash['participants'] = {}
         # read events.json file
         event_json = "/".join(list(current_directory.split('/')
                               [0:-3])) + '/resource_files/json_files/events.json'
