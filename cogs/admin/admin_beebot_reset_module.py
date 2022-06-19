@@ -31,7 +31,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # *********************************************************************************************************************
     # bot command admin beebot reset events
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_events', help='🛡️ Reset BeeBot events file.')
+    @commands.command(name='admin_beebot_reset_all_events', help='🛡️ Reset BeeBot events file. [Admin Specific]')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def admin_beebot_reset_all_events(self, ctx):
@@ -45,7 +45,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # # *********************************************************************************************************************
     # # bot command admin beebot reset urls
     # # *********************************************************************************************************************
-    # @commands.command(name='admin_beebot_reset_all_urls', help='🛡️ Reset BeeBot urls file.')
+    # @commands.command(name='admin_beebot_reset_all_urls', help='🛡️ Reset BeeBot urls file. [Admin Specific]')
     # # only specific roles can use this command
     # @commands.has_role(admin_specific_command_name)
     # async def admin_beebot_reset_all_events(self, ctx):
@@ -59,7 +59,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_beebot_profiles', help='🛡️ Reset BeeBot profiles file.')
+    @commands.command(name='admin_beebot_reset_all_beebot_profiles', help='🛡️ Reset BeeBot profiles file. [Admin Specific]')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def admin_beebot_reset_all_beebot_profiles(self, ctx):
@@ -73,7 +73,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # # *********************************************************************************************************************
     # # bot command admin beebot reset ALL BEEBOT FILES
     # # *********************************************************************************************************************
-    # @commands.command(name='(CAUTION)ADMIN_BEEBOT_RESET_ALL_BEEBOT_FILES', help='🛡️ Reset BeeBot ALL BEEBOT FILES.')
+    # @commands.command(name='(CAUTION)ADMIN_BEEBOT_RESET_ALL_BEEBOT_FILES', help='🛡️ Reset BeeBot ALL BEEBOT FILES. [Admin Specific]')
     # # only specific roles can use this command
     # @commands.has_role(admin_specific_command_name)
     # async def ADMIN_BEEBOT_RESET_ALL_BEEBOT_FILES(self, ctx):
