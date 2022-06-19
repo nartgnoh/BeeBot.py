@@ -44,6 +44,9 @@ class new_cog_template(commands.Cog, name="new_cog_template", description=""):
         # embed = Embed(title="Title",
         #         description="description",
         #         colour=ctx.author.colour)
+        # # embed fields
+        # embed.add_field(name="name", value="value", inline=False)
+
         # # *************
         # # | reactions |
         # # *************

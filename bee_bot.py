@@ -15,7 +15,7 @@ all_extensions = [
     'cogs.games.league_of_legends.lolinfomodule',
     'cogs.games.league_of_legends.lolprofilemodule',
     'cogs.games.league_of_legends.lolskinsmodule',
-    # 'cogs.games.league_of_legends.lolclashmodule',
+    'cogs.games.league_of_legends.lolclashmodule',
     'cogs.games.league_of_legends.lolteamsmodule',
     'cogs.games.gamesmodule',
     # 'cogs.games.teamfight_tactics',
