@@ -29,8 +29,8 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
     # *********************************************************************************************************************
     # bot command setup local timezone of user
     # *********************************************************************************************************************
-    @commands.command(name='timezone', aliases=['tz', 'timezones'],
-                      help="🤸 Set your timezone to your BeeBot profile!\n\n"
+    @commands.command(name='timezone', aliases=['tz', 'timezones', 'bbtz', 'bbtimezone', 'bbtimezones', '🌐'],
+                      help="🌐 Set your timezone to your BeeBot profile!\n\n"
                       f"[Valid timezones can be found @ https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568 ]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
