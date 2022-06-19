@@ -24,7 +24,7 @@ $ sudo apt-get install python3.8
 
 * Install discord.py
 ```
-$ python3 -m pip install -U discord.py
+$ pip install discord.py
 ```
 * Install dotenv
 ```
@@ -32,7 +32,11 @@ $ pip install python-dotenv
 ```
 * Install Riotwatcher
 ```
-$ pip3 install riotwatcher
+$ pip install riotwatcher
+```
+* Install discord-pretty-help
+```
+$ pip install discord-pretty-help
 ```
   
 ### Installing
