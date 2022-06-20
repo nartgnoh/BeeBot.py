@@ -41,23 +41,19 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
             # API champion info
             champion_info = champ_list[lol_champion]
-            champ_url = champion_info['name'].replace(
-                "'", '-').replace(" ", '-').lower()
             # *********
             # | embed |
             # *********
             embed = Embed(title=champion_info['name'],
                           description=champion_info['title'],
                           colour=discord.Colour.random(),
-                          url=f"https://www.leagueoflegends.com/en-us/champions/{champ_url}/")
+                          url=lol_api.champion_url_by_name(champion_info['name']))
             # embed thumbnail
             thumb_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{lol_champion}.png'
             embed.set_thumbnail(url=thumb_url)
@@ -84,9 +80,7 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
@@ -94,15 +88,13 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
             response = requests.get(
                 f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/champion/{lol_champion}.json')
             champion_info = response.json()['data'][lol_champion]
-            champ_url = champion_info['name'].replace(
-                "'", '-').replace(" ", '-').lower()
             # *********
             # | embed |
             # *********
             embed = Embed(title=champion_info['name'],
                           description=champion_info['title'],
                           colour=discord.Colour.random(),
-                          url=f"https://www.leagueoflegends.com/en-us/champions/{champ_url}/")
+                          url=lol_api.champion_url_by_name(champion_info['name']))
             # embed image
             img_url = f'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{lol_champion}_0.jpg'
             embed.set_image(url=img_url)

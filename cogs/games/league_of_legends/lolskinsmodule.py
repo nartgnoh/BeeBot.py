@@ -39,9 +39,7 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:

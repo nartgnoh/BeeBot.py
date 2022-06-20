@@ -21,3 +21,12 @@ def get_version(region=default_region):
 
 def get_champion_list(champions_version=get_version(default_region)):
     return lol_watcher.data_dragon.champions(champions_version)
+
+
+def champion_string_formatting(champion):
+    return champion.replace("'", '').lower().title().replace(' ', '').strip('"')
+
+
+def champion_url_by_name(champ_name):
+    formatting = champ_name.replace("'", '-').replace(" ", '-').lower()
+    return f"https://www.leagueoflegends.com/en-us/champions/{formatting}/"
