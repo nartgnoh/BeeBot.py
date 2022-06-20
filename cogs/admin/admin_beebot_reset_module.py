@@ -10,6 +10,7 @@ import os
 import discord
 import cogs.helper.helper_functions.events as events
 import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
+import cogs.helper.helper_functions.urls as urls
 
 from discord.ext import commands
 from discord import Embed
@@ -37,10 +38,6 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
         events.set_events_json({})
         await ctx.send('Reset BeeBot events file.')
 
-    # # *********************************************************************************************************************
-    # # bot command admin beebot reset urls
-    # # *********************************************************************************************************************
-
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles
     # *********************************************************************************************************************
@@ -50,6 +47,16 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     async def admin_beebot_reset_all_beebot_profiles(self, ctx):
         beebot_profiles.set_beebot_profiles_json({})
         await ctx.send('Reset BeeBot profiles file.')
+
+    # *********************************************************************************************************************
+    # bot command admin beebot reset urls
+    # *********************************************************************************************************************
+    @commands.command(name='admin_beebot_reset_all_urls', help='🛡️ Reset BeeBot urls file. [Admin Specific]')
+    # only specific roles can use this command
+    @commands.has_role(admin_specific_command_name)
+    async def admin_beebot_reset_all_urls(self, ctx):
+        urls.set_urls_json({})
+        await ctx.send('Reset BeeBot urls file.')
 
     # # *********************************************************************************************************************
     # # bot command admin beebot reset ALL BEEBOT FILES

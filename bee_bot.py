@@ -38,8 +38,8 @@ intents.members = True
 
 
 def get_prefix(bot, message):
-    prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
-    # prefixes = ['BT ', 'bt ', 'B ', 'b ']  # BeeBot-Testing exclusive
+    # prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
+    prefixes = ['B ', 'b ']  # BeeBot-Testing exclusive
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 

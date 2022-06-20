@@ -43,9 +43,9 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
             roles_list = list(dict.fromkeys(roles_list))
             profile = str(ctx.message.author)
             beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-            beebot_profiles.beebot_profile_exists(
+            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
                 beebot_profiles_data, profile)
-            beebot_profiles.beebot_profile_key_exists(
+            beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
                 beebot_profiles_data, profile, "league_of_legends")
             beebot_profiles_data[profile]["league_of_legends"][
                 'preferred_role(s)'] = roles_list

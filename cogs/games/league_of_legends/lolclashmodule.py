@@ -86,13 +86,13 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                             role_msg = 'and preferred role(s) '
                             beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
                             # add member's roles
-                            beebot_profiles.beebot_profile_exists(
+                            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
                                 available_member, beebot_profiles_data)
-                            beebot_profiles.beebot_profile_key_exists(
+                            beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
                                 beebot_profiles_data, available_member, "league_of_legends")
                             beebot_profiles_data[available_member]["league_of_legends"][
                                 'preferred_role(s)'] = roles_list
-                            beebot_profiles.set_beebot_profiles_json(
+                            beebot_profiles_data = beebot_profiles.set_beebot_profiles_json(
                                 beebot_profiles_data)
                         # check if member already registered
                         if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
@@ -265,7 +265,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 await ctx.send("Hold your horses.. The upcoming clash hasn't even happened yet!")
         # add 'clash' key if it doesn't exist
         else:
-            events.new_event(events_data, 'clash', current_clash)
+            events_data['clash'] = current_clash
             events.set_events_json(events_data)
             await ctx.send("New clash key!")
 
