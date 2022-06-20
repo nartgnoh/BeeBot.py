@@ -4,10 +4,6 @@
 # *********************************************************************************************************************
 
 import os
-import json
-
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 def cute_animals(): return ['🦍 Gorilla', '🦧 Orangutan', '🐶 Dog', '🐺 Wolf', '🦊 Fox', '🦝 Raccoon', '🐱 Cat', '🦁 Lion', '🐯 Tiger', '🐴 Horse',
@@ -20,12 +16,3 @@ def cute_animals(): return ['🦍 Gorilla', '🦧 Orangutan', '🐶 Dog', '🐺 
 
 
 def hearts(): return ["❤️", "🧡", "💛", "💚", "💙", "💜", "🤎", "🖤", "🤍"]
-
-
-def emojis_list():
-    # read emojis.json file
-    emojis_json = "/".join(list(current_directory.split('/')
-                                [0:-3])) + '/resource_files/json_files/emojis.json'
-    with open(emojis_json, "r") as f:
-        emojis_list = json.load(f)
-    return emojis_list

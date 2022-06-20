@@ -8,6 +8,7 @@ from time import time
 import discord
 import json
 import cogs.helper.helper_functions.timezones as timezones
+import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
 from discord.ext import commands
 from discord import Embed
@@ -40,19 +41,12 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
         elif timezone not in timezones.list_all_timezones():
             await ctx.send("Sorry! You need to add a valid timezone! :open_mouth:")
         else:
-            # read beebot_profiles.json file
-            beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                 [0:-2])) + '/resource_files/json_files/beebot_profiles.json'
-            with open(beebot_profiles_json) as f:
-                beebot_profiles_data = json.load(f)
-            # add profile's timezone
             profile = str(ctx.message.author)
-            if profile not in beebot_profiles_data:
-                beebot_profiles_data[profile] = {}
+            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+            beebot_profiles.beebot_profile_exists(
+                profile, beebot_profiles_data)
             beebot_profiles_data[profile]["timezone"] = timezone
-            # write to beebot_profiles.json file
-            with open(beebot_profiles_json, 'w') as outfile:
-                json.dump(beebot_profiles_data, outfile)
+            beebot_profiles.update_beebot_profiles_json(beebot_profiles_data)
             await ctx.send("Your timezone has been updated! :white_check_mark:")
 
 

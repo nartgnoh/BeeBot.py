@@ -4,14 +4,22 @@
 # *********************************************************************************************************************
 
 import os
-import cogs.helper.constants.emoji_constants as emoji_constants
+import json
 
 # get current directory
 current_directory = os.path.dirname(os.path.realpath(__file__))
+emojis_json = "/".join(list(current_directory.split('/')
+                            [0:-3])) + '/resource_files/json_files/emojis.json'
 
 
-def check_emoji_exists(emoji):
-    emojis_list = emoji_constants.emojis_list()
+def get_emojis_list():
+    with open(emojis_json, "r") as f:
+        emojis_list = json.load(f)
+    return emojis_list
+
+
+def check_emoji(emoji):
+    emojis_list = get_emojis_list()
     if any(d['emoji'] == emoji for d in emojis_list):
         return True
     else:

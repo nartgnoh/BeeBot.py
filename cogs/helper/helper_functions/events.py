@@ -8,15 +8,21 @@ import json
 
 # get current directory
 current_directory = os.path.dirname(os.path.realpath(__file__))
+events_json = "/".join(list(current_directory.split('/')
+                            [0:-3])) + '/resource_files/json_files/events.json'
 
 
-def check_event_exists(event):
-    # read events.json file
-    events_json = "/".join(list(current_directory.split('/')
-                                [0:-3])) + '/resource_files/json_files/events.json'
+def get_events_json():
     with open(events_json, "r") as f:
         events = json.load(f)
-    if event in events:
-        return True
-    else:
-        return False
+    return events
+
+
+def update_events_json(data):
+    with open(events_json, 'w') as outfile:
+        json.dump(data, outfile)
+
+
+def event_exists(event, events):
+    if event not in events:
+        events[event] = {}
