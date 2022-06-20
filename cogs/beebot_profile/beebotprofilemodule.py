@@ -20,7 +20,7 @@ admin_specific_command_name = 'Bot Admin'
 # beebotprofilemodule class
 
 
-class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description="Setup your BeeBot profile!"):
+class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description="timezone"):
     def __init__(self, bot):
         self.bot = bot
 

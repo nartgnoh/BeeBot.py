@@ -22,15 +22,9 @@ $ sudo apt-get update
 $ sudo apt-get install python3.8
 ```
 
-* Install dependencies
-(includes; discord.py, dotenv, discord-pretty-help, Riotwatcher, dateutil, pytz)
+* Install requirements
 ```
-$ pip install discord.py
-$ pip install python-dotenv
-$ pip install riotwatcher
-$ pip install discord-pretty-help
-$ pip install python-dateutil
-$ pip install pytz
+$ pip install -r requirements.txt
 ```
   
 ### Installing

@@ -9,18 +9,12 @@ import discord
 import random
 import requests
 import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.api.league_of_legends_api as lol_api
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
-from dotenv import load_dotenv
-from riotwatcher import LolWatcher, ApiError
 
-# get riot_lol_key from .env file
-load_dotenv()
-LOL_KEY = os.getenv('RIOT_LOL_KEY')
-lol_watcher = LolWatcher(LOL_KEY)
-default_region = 'na1'
 
 # role specific names
 role_specific_command_name = 'Bot Commander'
@@ -37,35 +31,29 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # bot command to lookup basic league of legends champion info
     # *********************************************************************************************************************
     @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'],
-                      help='🔍 Quick lookup for lol champ information. [Auto: random champ]')
+                      help='🔍 Quick lookup for lol champion. [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)[
-            'data']
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
             # API champion info
             champion_info = champ_list[lol_champion]
-            champ_url = champion_info['name'].replace(
-                "'", '-').replace(" ", '-').lower()
             # *********
             # | embed |
             # *********
             embed = Embed(title=champion_info['name'],
                           description=champion_info['title'],
                           colour=discord.Colour.random(),
-                          url=f"https://www.leagueoflegends.com/en-us/champions/{champ_url}/")
+                          url=lol_api.champion_url_by_name(champion_info['name']))
             # embed thumbnail
             thumb_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{lol_champion}.png'
             embed.set_thumbnail(url=thumb_url)
@@ -80,22 +68,20 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # *********************************************************************************************************************
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
-    @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'],
-                      help='💥 Full lookup for lol champ information. [Auto: random champ]')
+    @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp',
+                                                   'schamp', 'champskill', 'skillschamp', '💥'],
+                      help='💥 Full skills lookup for lol champion. [Auto: random champ]\n\n'
+                      '[Add an "❌" reaction to delete]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)[
-            'data']
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
@@ -103,15 +89,13 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
             response = requests.get(
                 f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/champion/{lol_champion}.json')
             champion_info = response.json()['data'][lol_champion]
-            champ_url = champion_info['name'].replace(
-                "'", '-').replace(" ", '-').lower()
             # *********
             # | embed |
             # *********
             embed = Embed(title=champion_info['name'],
                           description=champion_info['title'],
                           colour=discord.Colour.random(),
-                          url=f"https://www.leagueoflegends.com/en-us/champions/{champ_url}/")
+                          url=lol_api.champion_url_by_name(champion_info['name']))
             # embed image
             img_url = f'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{lol_champion}_0.jpg'
             embed.set_image(url=img_url)
@@ -121,9 +105,11 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
             spells = champion_info['spells']
             for (spell, game_key) in zip(spells, lol_constants.lol_keys()):
                 embed.add_field(name=f"{game_key}: {spell['name']}",
-                                value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\nRange: {spell['rangeBurn']}\nDescription: {spell['description']}",
+                                value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\n"
+                                "Range: {spell['rangeBurn']}\nDescription: {spell['description']}",
                                 inline=False)
-            await ctx.send(embed=embed)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction("❌")
 
 
 def setup(bot):

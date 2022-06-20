@@ -7,18 +7,12 @@ import os
 import discord
 import random
 import requests
+import cogs.helper.api.league_of_legends_api as lol_api
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
-from dotenv import load_dotenv
-from riotwatcher import LolWatcher, ApiError
 
-# get riot_lol_key from .env file
-load_dotenv()
-LOL_KEY = os.getenv('RIOT_LOL_KEY')
-lol_watcher = LolWatcher(LOL_KEY)
-default_region = 'na1'
 
 # role specific names
 role_specific_command_name = 'Bot Commander'
@@ -34,22 +28,19 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
     # *********************************************************************************************************************
     # bot command pick a random skin for champion
     # *********************************************************************************************************************
-    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp', '👗'],
+    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp',
+                                                'skinschamp', 'champskins' '👗'],
                       help='👗 Pick a random skin for a champion! [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def pick_skin(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)[
-            'data']
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
-            # format string
-            lol_champion = lol_champion.replace(
-                "'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_api.champion_string_formatting(lol_champion)
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
@@ -69,9 +60,9 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
             embed = Embed(title=num_dict.get(skin_key),
                           description=champion_info['title'],
                           colour=discord.Colour.random())
-            # embed image
+            # embed thumbnail
             img_url = f'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/{lol_champion}_{skin_key}.jpg'
-            embed.set_image(url=img_url)
+            embed.set_thumbnail(url=img_url)
             await ctx.send(embed=embed)
 
 

@@ -24,7 +24,8 @@ admin_specific_command_name = 'Bot Admin'
 # admin_beebot_reset_module class
 
 
-class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", description="Type \"BB help Admin_BeeBot_Reset_Module\" for options"):
+class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
+                                description="Type \"BB help Admin_BeeBot_Reset_Module\" for options"):
     def __init__(self, bot):
         self.bot = bot
 
