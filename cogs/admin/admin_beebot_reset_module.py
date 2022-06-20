@@ -40,16 +40,6 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # # *********************************************************************************************************************
     # # bot command admin beebot reset urls
     # # *********************************************************************************************************************
-    # @commands.command(name='admin_beebot_reset_all_urls', help='🛡️ Reset BeeBot urls file. [Admin Specific]')
-    # # only specific roles can use this command
-    # @commands.has_role(admin_specific_command_name)
-    # async def admin_beebot_reset_all_events(self, ctx):
-    #     # read events.json file
-    #     event_json = "/".join(list(current_directory.split('/')
-    #                           [0:-2])) + '/resource_files/json_files/events.json'
-    #     with open(event_json, 'w') as outfile:
-    #         json.dump({}, outfile)
-    #     await ctx.send('Reset BeeBot event files.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles
