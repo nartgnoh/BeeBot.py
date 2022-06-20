@@ -1,0 +1,6 @@
+discord.py
+python-dotenv
+riotwatcher
+discord-pretty-help
+python-dateutil
+pytz
