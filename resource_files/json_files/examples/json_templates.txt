@@ -1,5 +1,12 @@
 # emojis.json
-group: {sub_group: emoji}
+# using emoji version 13.1
+# https://unicode.org/emoji/charts-13.1/full-emoji-list.html#1f635_200d_1f4ab
+# https://unicode.org/Public/emoji/13.1/emoji-test.txt
+group: {sub_group: {name: emoji}}
+
+# emojis_all.json
+# using emoji version 13.1
+{name: emoji}
 
 # games.json
 "Game Name": {"url": url, "min": min, "max": max},
