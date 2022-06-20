@@ -9,18 +9,12 @@ import discord
 import random
 import requests
 import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.api.league_of_legends_api as lolapi
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
-from dotenv import load_dotenv
-from riotwatcher import LolWatcher, ApiError
 
-# get riot_lol_key from .env file
-load_dotenv()
-LOL_KEY = os.getenv('RIOT_LOL_KEY')
-lol_watcher = LolWatcher(LOL_KEY)
-default_region = 'na1'
 
 # role specific names
 role_specific_command_name = 'Bot Commander'
@@ -42,10 +36,8 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     @commands.has_role(role_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)[
-            'data']
+        champions_version = lolapi.get_version()['n']['champion']
+        champ_list = lolapi.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
@@ -86,10 +78,8 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     @commands.has_role(role_specific_command_name)
     async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        versions = lol_watcher.data_dragon.versions_for_region(default_region)
-        champions_version = versions['n']['champion']
-        champ_list = lol_watcher.data_dragon.champions(champions_version)[
-            'data']
+        champions_version = lolapi.get_version()['n']['champion']
+        champ_list = lolapi.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:

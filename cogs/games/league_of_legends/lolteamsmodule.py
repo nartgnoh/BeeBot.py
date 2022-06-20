@@ -9,18 +9,12 @@ from pydoc import describe
 import discord
 import random
 import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.api.league_of_legends_api as lolapi
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
-from dotenv import load_dotenv
-from riotwatcher import LolWatcher, ApiError
 
-# get riot_lol_key from .env file
-load_dotenv()
-LOL_KEY = os.getenv('RIOT_LOL_KEY')
-lol_watcher = LolWatcher(LOL_KEY)
-default_region = 'na1'
 
 # role specific names
 role_specific_command_name = 'Bot Commander'
@@ -45,11 +39,8 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
             await ctx.send("Sorry! You forgot to add champions! :slight_smile:")
         else:
             # get current lol version for region
-            versions = lol_watcher.data_dragon.versions_for_region(
-                default_region)
-            champions_version = versions['n']['champion']
-            champ_list = lol_watcher.data_dragon.champions(champions_version)[
-                'data']
+            champions_version = lolapi.get_version()['n']['champion']
+            champ_list = lolapi.get_champion_list(champions_version)['data']
             check = True
             # iterate through champion tags and info (affinity)
             tags_list = []
