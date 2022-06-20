@@ -7,7 +7,7 @@ import os
 from time import time
 import discord
 import json
-import cogs.helper.helper_functions.timezone_functions as timezone_functions
+import cogs.helper.helper_functions.timezones as timezones
 
 from discord.ext import commands
 from discord import Embed
@@ -37,7 +37,7 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
     async def timezone(self, ctx, timezone: Optional[str]):
         if timezone == None:
             await ctx.send("Sorry! You need to add your timezone! :open_mouth:")
-        elif timezone not in timezone_functions.list_all_timezones():
+        elif timezone not in timezones.list_all_timezones():
             await ctx.send("Sorry! You need to add a valid timezone! :open_mouth:")
         else:
             # read beebot_profiles.json file
