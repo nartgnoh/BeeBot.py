@@ -182,8 +182,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
                 fields = []
                 if beebot_profiles.check_beebot_profile(beebot_profiles_data, member):
-                    if beebot_profiles.check_beebot_profile('league_of_legends', beebot_profiles_data[member]):
-                        if beebot_profiles.check_beebot_profile('preferred_role(s)', beebot_profiles_data[member]['league_of_legends']):
+                    if beebot_profiles.check_beebot_profile(beebot_profiles_data[member], 'league_of_legends'):
+                        if beebot_profiles.check_beebot_profile(beebot_profiles_data[member]['league_of_legends'], 'preferred_role(s)'):
                             if beebot_profiles_data[member]['league_of_legends']['preferred_role(s)']:
                                 # add roles
                                 fields.append(
