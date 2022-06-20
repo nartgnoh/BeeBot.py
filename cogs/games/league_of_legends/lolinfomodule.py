@@ -8,7 +8,7 @@ import os
 import discord
 import random
 import requests
-import cogs.constants.lolconstants as lolconstants
+import cogs.helper.constants.lol_constants as lol_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -22,8 +22,6 @@ LOL_KEY = os.getenv('RIOT_LOL_KEY')
 lol_watcher = LolWatcher(LOL_KEY)
 default_region = 'na1'
 
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'
@@ -121,7 +119,7 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
             embed.add_field(name=f"Passive: {champion_info['passive']['name']}",
                             value=f"Description: {champion_info['passive']['description']}", inline=False)
             spells = champion_info['spells']
-            for (spell, game_key) in zip(spells, lolconstants.lol_keys()):
+            for (spell, game_key) in zip(spells, lol_constants.lol_keys()):
                 embed.add_field(name=f"{game_key}: {spell['name']}",
                                 value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\nRange: {spell['rangeBurn']}\nDescription: {spell['description']}",
                                 inline=False)

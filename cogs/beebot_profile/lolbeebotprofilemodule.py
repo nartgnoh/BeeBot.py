@@ -5,15 +5,13 @@
 
 import os
 import discord
-import json
-import cogs.constants.lolconstants as lolconstants
+import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
 
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'
@@ -30,7 +28,7 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
     # *********************************************************************************************************************
     @commands.command(name='lolroles', aliases=['roleslol', 'lolrole', 'rolelol', '🤸'],
                       help="🤸 Set LoL preferred role(s) to your BeeBot profile!\n\n"
-                      f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
+                      f"[Valid Roles: {', '.join(lol_constants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_roles(self, ctx, *roles):
@@ -40,26 +38,18 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
         else:
             roles_list = []
             for role in roles:
-                if role.title() in lolconstants.lol_roles():
+                if role.title() in lol_constants.lol_roles():
                     roles_list.append(role.lower())
             roles_list = list(dict.fromkeys(roles_list))
-            # read beebot_profiles.json file
-            beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                 [0:-2])) + '/resource_files/json_files/beebot_profiles.json'
-            with open(beebot_profiles_json) as f:
-                beebot_profiles_data = json.load(f)
-            # add profile's lol roles
             profile = str(ctx.message.author)
-            if profile not in beebot_profiles_data:
-                beebot_profiles_data[profile] = {}
-            if "league_of_legends" not in beebot_profiles_data[profile]:
-                beebot_profiles_data[profile]["league_of_legends"] = {
-                }
+            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+            beebot_profiles.beebot_profile_exists(
+                beebot_profiles_data, profile)
+            beebot_profiles.beebot_profile_key_exists(
+                beebot_profiles_data, profile, "league_of_legends")
             beebot_profiles_data[profile]["league_of_legends"][
                 'preferred_role(s)'] = roles_list
-            # write to beebot_profiles.json file
-            with open(beebot_profiles_json, 'w') as outfile:
-                json.dump(beebot_profiles_data, outfile)
+            beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
             await ctx.send("Your role(s) have been updated! :white_check_mark:")
 
 

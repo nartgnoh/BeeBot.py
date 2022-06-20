@@ -20,8 +20,6 @@ LOL_KEY = os.getenv('RIOT_LOL_KEY')
 lol_watcher = LolWatcher(LOL_KEY)
 default_region = 'na1'
 
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'
@@ -50,7 +48,8 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
             lol_champion = random.choice(list(champ_list))
         else:
             # format string
-            lol_champion = lol_champion.replace("'", '').lower().title().replace(' ', '').strip('"')
+            lol_champion = lol_champion.replace(
+                "'", '').lower().title().replace(' ', '').strip('"')
         if lol_champion not in champ_list:
             await ctx.send("Sorry! An error has occurred! :cry: Check your spelling and try again! :slight_smile:")
         else:
@@ -63,7 +62,7 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
             for skin in champion_info['skins']:
                 num_dict[skin['num']] = skin['name']
             skin_key = random.choice(list(num_dict))
-            
+
             # *********
             # | embed |
             # *********
