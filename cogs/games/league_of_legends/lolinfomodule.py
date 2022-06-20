@@ -69,7 +69,7 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
     @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp',
-                                                   'schamp', 'champskill', 'champskills', 'skillschamp', '💥'],
+                                                   'schamp', 'champskill', 'skillschamp', '💥'],
                       help='💥 Full skills lookup for lol champion. [Auto: random champ]\n\n'
                       '[Add an "❌" reaction to delete]')
     # only specific roles can use this command
