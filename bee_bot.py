@@ -66,11 +66,11 @@ async def on_ready():
           '\n----------------------------------------------')
 
 
-# delete message on additional "❌" reaction
-# add to help: '\n\n' '[Add an "❌" reaction to delete]'
-# await msg.add_reaction("❌")
 @bot.event
 async def on_reaction_add(reaction, user):
+    # delete message on additional "❌" reaction
+    # add to help: '\n\n' '[Add an "❌" reaction to delete]'
+    # await msg.add_reaction("❌")
     if reaction.count > 1 and reaction.emoji == "❌":
         await reaction.message.delete()
 
