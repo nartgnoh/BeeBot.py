@@ -7,7 +7,7 @@
 
 import os
 import discord
-import cogs.constants.lolconstants as lolconstants
+import cogs.helper.constants.lol_constants as lol_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -40,7 +40,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     @commands.command(name='lolprofile', aliases=['profilelol', 'lolp', 'plol', '👤'],
                       help=f"👤 Showcase a summoner\'s league of legends profile.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
-                      f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                      f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_profile(self, ctx, region: Optional[str], *summoner_name):
@@ -52,10 +52,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         else:
             if ":" in region:
                 region = region[7:]
-                if region not in lolconstants.riot_regions():
+                if region not in lol_constants.riot_regions():
                     region_check = False
                     await ctx.send(f"Sorry! An error has occurred! :cry: Check that you have a valid region! :slight_smile:\n"
-                                   f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                                   f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
             else:
                 if summoner_name == None:
                     summoner_name = region
@@ -133,7 +133,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     @commands.command(name='lolrank', aliases=['ranklol', 'lolr', 'rlol', '🏆'],
                       help=f"🏆 Showcase a summoner\'s league of legends rank.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
-                      f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                      f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_rank(self, ctx, region: Optional[str], *summoner_name):
@@ -145,10 +145,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         else:
             if ":" in region:
                 region = region[7:]
-                if region not in lolconstants.riot_regions():
+                if region not in lol_constants.riot_regions():
                     region_check = False
                     await ctx.send(f"Sorry! An error has occurred! :cry: Check that you have a valid region! :slight_smile:\n"
-                                   f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                                   f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
             else:
                 if summoner_name == None:
                     summoner_name = region
@@ -191,7 +191,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     embed.set_thumbnail(url=thumb_url)
                     # embed fields
                     if ranks:
-                        riot_ranks = lolconstants.riot_ranks()
+                        riot_ranks = lol_constants.riot_ranks()
                         total_rank = 0
                         for rank in ranks:
                             embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
@@ -225,7 +225,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     @commands.command(name='lolmastery', aliases=['masterylol', 'lolm', 'mlol', '🎓'],
                       help=f"🎓 Showcase a summoner\'s league of legends mastery.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
-                      f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                      f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_mastery(self, ctx, region: Optional[str], *summoner_name):
@@ -237,10 +237,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         else:
             if ":" in region:
                 region = region[7:]
-                if region not in lolconstants.riot_regions():
+                if region not in lol_constants.riot_regions():
                     region_check = False
                     await ctx.send(f"Sorry! An error has occurred! :cry: Check that you have a valid region! :slight_smile:\n"
-                                   f"[Valid Regions: {', '.join(lolconstants.riot_regions())}]")
+                                   f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
             else:
                 if summoner_name == None:
                     summoner_name = region

@@ -9,8 +9,8 @@
 import os
 import discord
 import json
-import cogs.constants.lolconstants as lolconstants
-import cogs.functions.timezone_functions as timezone_functions
+import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.helper_functions.timezone_functions as timezone_functions
 
 from discord.ext import commands
 from discord import Embed
@@ -43,7 +43,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # *********************************************************************************************************************
     @commands.command(name='clashadd', aliases=['addclash', 'aclash', 'clasha', 'clashavailable', 'clash+', '+clash', '➕'],
                       help=f"➕ Add your Clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']\n\n"
-                      f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
+                      f"[Valid Roles: {', '.join(lol_constants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_add(self, ctx, availability: Optional[str], *roles):
@@ -65,7 +65,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                     await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
                 else:
                     availability = availability.lower().title()
-                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lolconstants.lol_roles():
+                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lol_constants.lol_roles():
                         await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\', \'Both\', or role(s) '
                                        'after command! :smile:')
                     else:
@@ -73,7 +73,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         participants = clash_event['participants']
                         roles = list(roles)
                         avail_dict = {}
-                        if availability in lolconstants.lol_roles():
+                        if availability in lol_constants.lol_roles():
                             roles = [availability.lower()] + roles
                         elif availability == 'Both':
                             avail_dict = {'Sat': 1, 'Sun': 1}
@@ -83,7 +83,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         roles_list = []
                         if roles:
                             for role in roles:
-                                if role.title() in lolconstants.lol_roles():
+                                if role.title() in lol_constants.lol_roles():
                                     roles_list.append(role.lower())
                             roles_list = list(dict.fromkeys(roles_list))
                         role_msg = ''
@@ -116,7 +116,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                                 participants[available_member].update(
                                     avail_dict)
                                 await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
-                        elif availability in lolconstants.lol_roles() and roles_list:
+                        elif availability in lol_constants.lol_roles() and roles_list:
                             await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
                         else:
                             participants[available_member] = {

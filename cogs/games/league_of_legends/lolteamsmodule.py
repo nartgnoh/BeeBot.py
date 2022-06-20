@@ -8,7 +8,7 @@ import os
 from pydoc import describe
 import discord
 import random
-import cogs.constants.lolconstants as lolconstants
+import cogs.helper.constants.lol_constants as lol_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -80,7 +80,7 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
                                "Don't forget to put champions with spaces in quotes \"\"! "
                                "(ex; \"Miss Fortune\") :slight_smile:")
             else:
-                all_tags = lolconstants.lol_tags()
+                all_tags = lol_constants.lol_tags()
                 # drop duplicates in list
                 new_tags_list = list(dict.fromkeys(tags_list))
                 # all_tags - new_tags_list

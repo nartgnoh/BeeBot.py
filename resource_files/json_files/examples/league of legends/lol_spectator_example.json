@@ -1,0 +1,205 @@
+{
+    "gameId": 4347985371,
+    "mapId": 11,
+    "gameMode": "CLASSIC",
+    "gameType": "MATCHED_GAME",
+    "gameQueueConfigId": 400,
+    "participants": [{
+        "teamId": 100,
+        "spell1Id": 4,
+        "spell2Id": 14,
+        "championId": 166,
+        "profileIconId": 5030,
+        "summonerName": "Bully Maguìre",
+        "bot": "False",
+        "summonerId": "XLXH7mi2lGf55vzkUQlipdh9uMdMhZEiRBgs38X2hscoGBk",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8005, 8009, 9104, 8014, 8429, 8451, 5005, 5008, 5002],
+            "perkStyle": 8000,
+            "perkSubStyle": 8400
+        }
+    }, {
+        "teamId": 100,
+        "spell1Id": 3,
+        "spell2Id": 4,
+        "championId": 145,
+        "profileIconId": 4895,
+        "summonerName": "Riot slowpoooke",
+        "bot": "False",
+        "summonerId": "nxnnM2aGj1UdFQGvoII8iSzHQQMPuq98Ym84S8E2QQG2ZJ0",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [9923, 8139, 8138, 8135, 8304, 8345, 5005, 5008, 5002],
+            "perkStyle": 8100,
+            "perkSubStyle": 8300
+        }
+    }, {
+        "teamId": 100,
+        "spell1Id": 4,
+        "spell2Id": 14,
+        "championId": 89,
+        "profileIconId": 5316,
+        "summonerName": "GenkaiW",
+        "bot": "False",
+        "summonerId": "fTkMOsXuLX2cpfcxmlAEoF5XgDpbaekRYnDpehoQ5SdUxmI",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8351, 8306, 8345, 8347, 8242, 8444, 5007, 5003, 5002],
+            "perkStyle": 8300,
+            "perkSubStyle": 8400
+        }
+    }, {
+        "teamId": 100,
+        "spell1Id": 4,
+        "spell2Id": 11,
+        "championId": 106,
+        "profileIconId": 3546,
+        "summonerName": "Dulsweet",
+        "bot": "False",
+        "summonerId": "RWznvbBw-9BWaWK0fgIW92vnwAo8aHgEHBvRD4DyewgAuEyfJ8FwHuO3hw",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8005, 9111, 9105, 8299, 8234, 8232, 5005, 5008, 5002],
+            "perkStyle": 8000,
+            "perkSubStyle": 8200
+        }
+    }, {
+        "teamId": 100,
+        "spell1Id": 12,
+        "spell2Id": 4,
+        "championId": 26,
+        "profileIconId": 4495,
+        "summonerName": "SchackeL1",
+        "bot": "False",
+        "summonerId": "kWF7C6ErjDmzPaetiO4SlZV5J-LDbE6TQzwbfuw_9NnGIjE",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8214, 8224, 8210, 8236, 8410, 8316, 5005, 5008, 5003],
+            "perkStyle": 8200,
+            "perkSubStyle": 8300
+        }
+    }, {
+        "teamId": 200,
+        "spell1Id": 4,
+        "spell2Id": 11,
+        "championId": 200,
+        "profileIconId": 588,
+        "summonerName": "Doruk",
+        "bot": "False",
+        "summonerId": "JUKbE44wgJAflLmPvQ1VXKrkTZNc_O9FRJM5sK9uQwc4Nsw",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8008, 9111, 9105, 8299, 8304, 8347, 5005, 5008, 5001],
+            "perkStyle": 8000,
+            "perkSubStyle": 8300
+        }
+    }, {
+        "teamId": 200,
+        "spell1Id": 4,
+        "spell2Id": 14,
+        "championId": 69,
+        "profileIconId": 1113,
+        "summonerName": "Ch4d Thund3rC0ck",
+        "bot": "False",
+        "summonerId": "_E3tdYdkb2waKQ_Ni7LEz9ijidgmKhNCz0a6NK3_9-9EtNE",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8230, 8226, 8210, 8236, 8139, 8138, 5008, 5008, 5002],
+            "perkStyle": 8200,
+            "perkSubStyle": 8100
+        }
+    }, {
+        "teamId": 200,
+        "spell1Id": 4,
+        "spell2Id": 6,
+        "championId": 122,
+        "profileIconId": 3478,
+        "summonerName": "get large",
+        "bot": "False",
+        "summonerId": "v0T8eAj1NRAzHtiHiwgDvbXsQFTrCoZuhKMuEyKu7m5JIfY",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8010, 9111, 9105, 8299, 8444, 8242, 5005, 5008, 5002],
+            "perkStyle": 8000,
+            "perkSubStyle": 8400
+        }
+    }, {
+        "teamId": 200,
+        "spell1Id": 4,
+        "spell2Id": 1,
+        "championId": 16,
+        "profileIconId": 5371,
+        "summonerName": "Señor Reyes",
+        "bot": "False",
+        "summonerId": "_p_wEfuyDH2dF_DJ9Ie27F-E-sHihec6U_Ekl4_mOo-6VNM",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8214, 8226, 8210, 8237, 8473, 8453, 5008, 5008, 5002],
+            "perkStyle": 8200,
+            "perkSubStyle": 8400
+        }
+    }, {
+        "teamId": 200,
+        "spell1Id": 3,
+        "spell2Id": 4,
+        "championId": 21,
+        "profileIconId": 5371,
+        "summonerName": "Tiduzz",
+        "bot": "False",
+        "summonerId": "pg3LrRiBB8gYfn-f3_hNiowTQKHuOA_wShgnIjoxgseeT2w",
+        "gameCustomizationObjects": [],
+        "perks": {
+            "perkIds": [8005, 9101, 9103, 8017, 8233, 8236, 5005, 5008, 5002],
+            "perkStyle": 8000,
+            "perkSubStyle": 8200
+        }
+    }],
+    "observers": {
+        "encryptionKey": "xV2/E2Dk8PZsx6rBbroTFB2uyXTMWH4e"
+    },
+    "platformId": "NA1",
+    "bannedChampions": [{
+        "championId": 238,
+        "teamId": 100,
+        "pickTurn": 1
+    }, {
+        "championId": 154,
+        "teamId": 100,
+        "pickTurn": 2
+    }, {
+        "championId": 350,
+        "teamId": 100,
+        "pickTurn": 3
+    }, {
+        "championId": 39,
+        "teamId": 100,
+        "pickTurn": 4
+    }, {
+        "championId": 235,
+        "teamId": 100,
+        "pickTurn": 5
+    }, {
+        "championId": 350,
+        "teamId": 200,
+        "pickTurn": 6
+    }, {
+        "championId": 157,
+        "teamId": 200,
+        "pickTurn": 7
+    }, {
+        "championId": 235,
+        "teamId": 200,
+        "pickTurn": 8
+    }, {
+        "championId": 114,
+        "teamId": 200,
+        "pickTurn": 9
+    }, {
+        "championId": 27,
+        "teamId": 200,
+        "pickTurn": 10
+    }],
+    "gameStartTime": 1655675654032,
+    "gameLength": 1367
+}

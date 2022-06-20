@@ -31,7 +31,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
     # *********************************************************************************************************************
     # bot command to split teams
     # *********************************************************************************************************************
-    @commands.command(name='splitteams', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team', '📋'],
+    @commands.command(name='splitteams', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team', 'bbb', '📋'],
                       help='📋 Splits members in voice channel into teams.\n[Auto: 2, Max teams: 101]')
     async def split_teams(self, ctx, number_of_teams: Optional[int]):
         # check for members in voice call

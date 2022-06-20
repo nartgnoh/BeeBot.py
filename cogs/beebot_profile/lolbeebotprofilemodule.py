@@ -6,7 +6,7 @@
 import os
 import discord
 import json
-import cogs.constants.lolconstants as lolconstants
+import cogs.helper.constants.lol_constants as lol_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -30,7 +30,7 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
     # *********************************************************************************************************************
     @commands.command(name='lolroles', aliases=['roleslol', 'lolrole', 'rolelol', '🤸'],
                       help="🤸 Set LoL preferred role(s) to your BeeBot profile!\n\n"
-                      f"[Valid Roles: {', '.join(lolconstants.lol_roles())}]")
+                      f"[Valid Roles: {', '.join(lol_constants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_roles(self, ctx, *roles):
@@ -40,7 +40,7 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
         else:
             roles_list = []
             for role in roles:
-                if role.title() in lolconstants.lol_roles():
+                if role.title() in lol_constants.lol_roles():
                     roles_list.append(role.lower())
             roles_list = list(dict.fromkeys(roles_list))
             # read beebot_profiles.json file

@@ -7,7 +7,7 @@ import os
 from time import time
 import discord
 import json
-import cogs.functions.timezone_functions as timezone_functions
+import cogs.helper.helper_functions.timezone_functions as timezone_functions
 
 from discord.ext import commands
 from discord import Embed

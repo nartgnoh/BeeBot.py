@@ -1,8 +1,8 @@
-# events.json
-"Game Name": {"url": url, "min": min, "max": max},
+# emojis.json
+group: {sub_group: emoji}
 
 # games.json
-"Event Name": {"start_utc_date": date, "end_utc_date": end},
+"Game Name": {"url": url, "min": min, "max": max},
 
 # lol_champ_example.json
 Contains an example json for league of legends champ: Miss Fortune <3

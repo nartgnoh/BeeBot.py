@@ -6,6 +6,7 @@
 
 import os
 import discord
+import cogs.helper.constants.emoji_constants as emoji_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -33,7 +34,7 @@ class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def create_poll(self, ctx, question: Optional[str], *options):
-        poll_hearts = ("❤️", "🧡", "💛", "💚", "💙", "💜", "🤎", "🖤", "🤍")
+        poll_hearts = emoji_constants.hearts()
         if question == None:
             await ctx.send("Please add a question and option(s)! :slight_smile:")
         else:
@@ -45,15 +46,15 @@ class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
                 # *********
                 # | embed |
                 # *********
-                embed = Embed(title="Poll",
-                            description=question,
-                            colour=ctx.author.colour)
+                embed = Embed(title="Polls",
+                              description=question,
+                              colour=ctx.author.colour)
                 # embed footer
                 embed.set_footer(
                     text=f'Poll created by: {ctx.author.display_name}', icon_url=ctx.author.avatar_url)
                 # embed fields
                 fields = [("Options", "\n".join([f"{poll_hearts[idx]} {option}" for idx, option in enumerate(options)]), False),
-                        ("Instructions", "React to cast a vote!", False)]
+                          ("Instructions", "React to cast a vote!", False)]
                 for name, value, inline in fields:
                     embed.add_field(name=name, value=value, inline=inline)
                 # *************
