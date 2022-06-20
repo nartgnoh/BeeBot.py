@@ -13,8 +13,6 @@ from discord import Embed
 from typing import Optional
 from datetime import datetime, timedelta
 
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'

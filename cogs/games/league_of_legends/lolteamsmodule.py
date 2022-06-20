@@ -22,8 +22,6 @@ LOL_KEY = os.getenv('RIOT_LOL_KEY')
 lol_watcher = LolWatcher(LOL_KEY)
 default_region = 'na1'
 
-# get current directory
-current_directory = os.path.dirname(os.path.realpath(__file__))
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'

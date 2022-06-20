@@ -4,7 +4,6 @@
 # - pick_game command
 # *********************************************************************************************************************
 
-from ast import alias
 import os
 import discord
 import random
