@@ -51,7 +51,7 @@ class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", descri
                 "league_of_legends", profile, beebot_profiles_data)
             beebot_profiles_data[profile]["league_of_legends"][
                 'preferred_role(s)'] = roles_list
-            beebot_profiles.update_beebot_profiles_json(beebot_profiles_data)
+            beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
             await ctx.send("Your role(s) have been updated! :white_check_mark:")
 
 

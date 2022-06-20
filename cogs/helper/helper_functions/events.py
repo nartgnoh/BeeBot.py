@@ -18,7 +18,7 @@ def get_events_json():
     return events
 
 
-def update_events_json(data):
+def set_events_json(data):
     with open(events_json, 'w') as outfile:
         json.dump(data, outfile)
 
@@ -26,3 +26,8 @@ def update_events_json(data):
 def event_exists(event, events):
     if event not in events:
         events[event] = {}
+
+
+def events_key_exists(key, event, events):
+    if key not in events[event]:
+        events[event][key] = {}

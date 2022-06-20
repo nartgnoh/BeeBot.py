@@ -8,7 +8,8 @@
 
 import os
 import discord
-import json
+import cogs.helper.helper_functions.events as events
+import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
 from discord.ext import commands
 from discord import Embed
@@ -35,11 +36,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def admin_beebot_reset_all_events(self, ctx):
-        # read events.json file
-        event_json = "/".join(list(current_directory.split('/')
-                              [0:-2])) + '/resource_files/json_files/events.json'
-        with open(event_json, 'w') as outfile:
-            json.dump({}, outfile)
+        events.set_events_json({})
         await ctx.send('Reset BeeBot events file.')
 
     # # *********************************************************************************************************************
@@ -63,11 +60,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module", 
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
     async def admin_beebot_reset_all_beebot_profiles(self, ctx):
-        # read beebot_profiles.json file
-        beebot_profile_json = "/".join(list(current_directory.split('/')
-                                            [0:-2])) + '/resource_files/json_files/beebot_profiles.json'
-        with open(beebot_profile_json, 'w') as outfile:
-            json.dump({}, outfile)
+        beebot_profiles.set_beebot_profiles_json({})
         await ctx.send('Reset BeeBot profiles file.')
 
     # # *********************************************************************************************************************

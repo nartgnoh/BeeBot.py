@@ -18,7 +18,7 @@ def get_beebot_profiles_json():
     return beebot_profiles
 
 
-def update_beebot_profiles_json(data):
+def set_beebot_profiles_json(data):
     with open(beebot_profiles_json, 'w') as outfile:
         json.dump(data, outfile)
 
