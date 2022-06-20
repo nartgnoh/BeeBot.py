@@ -28,7 +28,8 @@ class lolskinsmodule(commands.Cog, name="LoLSkinsModule", description="pickskin"
     # *********************************************************************************************************************
     # bot command pick a random skin for champion
     # *********************************************************************************************************************
-    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp', 'skinschamp', 'champskins' '👗'],
+    @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp',
+                                                'skinschamp', 'champskins' '👗'],
                       help='👗 Pick a random skin for a champion! [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)

@@ -30,7 +30,8 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
     # *********************************************************************************************************************
     # bot command to balance a league of legends team comp
     # *********************************************************************************************************************
-    @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', 'lolteams', 'teamslol', '⚖️'],
+    @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam',
+                                                  'teamlol', 'lolteams', 'teamslol', '⚖️'],
                       help='⚖️ Help balance a lol teamcomp! [Champions with spaces need quotes ""]\n\n'
                       '[Add an "❌" reaction to delete]')
     # only specific roles can use this command

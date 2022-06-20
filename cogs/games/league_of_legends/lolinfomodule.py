@@ -68,7 +68,8 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # *********************************************************************************************************************
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
-    @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'],
+    @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp',
+                                                   'schamp', 'champskill', 'champskills', 'skillschamp', '💥'],
                       help='💥 Full skills lookup for lol champion. [Auto: random champ]\n\n'
                       '[Add an "❌" reaction to delete]')
     # only specific roles can use this command
@@ -104,7 +105,8 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
             spells = champion_info['spells']
             for (spell, game_key) in zip(spells, lol_constants.lol_keys()):
                 embed.add_field(name=f"{game_key}: {spell['name']}",
-                                value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\nRange: {spell['rangeBurn']}\nDescription: {spell['description']}",
+                                value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\n"
+                                "Range: {spell['rangeBurn']}\nDescription: {spell['description']}",
                                 inline=False)
             msg = await ctx.send(embed=embed)
             await msg.add_reaction("❌")

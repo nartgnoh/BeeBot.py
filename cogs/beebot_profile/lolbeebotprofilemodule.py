@@ -19,7 +19,8 @@ admin_specific_command_name = 'Bot Admin'
 # lolbeebotprofilemodule class
 
 
-class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule", description="Setup your League of Legends BeeBot profile!"):
+class lolbeebotprofilemodule(commands.Cog, name="LoLBeeBotProfileModule",
+                             description="lol_roles"):
     def __init__(self, bot):
         self.bot = bot
 

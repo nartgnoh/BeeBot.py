@@ -203,8 +203,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                         embed.add_field(
                             name=f"Average Rank:", value=f"{final_rank['tier'].title()} {final_rank['rank']}", inline=False)
                         # embed image
-                        file = discord.File(f"resource_files/image_files/riot_images/ranked_emblems/Emblem_{final_rank['tier'].title()}.png",
-                                            filename="image.png")
+                        file = discord.File(
+                            f"resource_files/image_files/riot_images/ranked_emblems/Emblem_{final_rank['tier'].title()}.png", filename="image.png")
                         embed.set_image(url='attachment://image.png')
                         await ctx.send(file=file, embed=embed)
                     else:

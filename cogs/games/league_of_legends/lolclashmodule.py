@@ -221,8 +221,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         clash_date = date - timedelta(days=1)
                     else:
                         clash_date = date
-                    embed.add_field(name=clash_date.astimezone(timezones.get_pacific_timezone()).strftime('%A, %B %-d, %Y:'), value='\n'.join(
-                        available_days[day]), inline=False)
+                    embed.add_field(name=clash_date.astimezone(timezones.get_pacific_timezone()).strftime(
+                        '%A, %B %-d, %Y:'), value='\n'.join(available_days[day]), inline=False)
             await ctx.send(file=file, embed=embed)
 
     # *********************************************************************************************************************

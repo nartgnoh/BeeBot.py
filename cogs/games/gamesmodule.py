@@ -31,7 +31,8 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
     # *********************************************************************************************************************
     # bot command to split teams
     # *********************************************************************************************************************
-    @commands.command(name='splitteams', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam', 'teams', 'team', 'bbb', '📋'],
+    @commands.command(name='splitteams', aliases=['teamsplit', 'maketeams', 'maketeam', 'pickteams', 'pickteam',
+                                                  'teams', 'team', 'bbb', '📋'],
                       help='📋 Splits members in voice channel into teams.\n[Auto: 2, Max teams: 101]')
     async def split_teams(self, ctx, number_of_teams: Optional[int]):
         # check for members in voice call
@@ -88,7 +89,8 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'], help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
+    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'],
+                      help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
             if ctx.message.author.voice is not None:

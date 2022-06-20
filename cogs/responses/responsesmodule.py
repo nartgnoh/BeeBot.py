@@ -32,7 +32,8 @@ admin_specific_command_name = 'Bot Admin'
 # responsesmodule class
 
 
-class responsesmodule(commands.Cog, name="ResponsesModule", description="beefacts, colour, happybirthday, coinflip, diceroll, gif"):
+class responsesmodule(commands.Cog, name="ResponsesModule",
+                      description="beefacts, colour, happybirthday, coinflip, diceroll, gif"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -111,7 +112,8 @@ class responsesmodule(commands.Cog, name="ResponsesModule", description="beefact
     # *********************************************************************************************************************
     # bot command to flip coin
     # *********************************************************************************************************************
-    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'], help='🟡 Simulates coin flip. [Max coins: 100]')
+    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'],
+                      help='🟡 Simulates coin flip. [Max coins: 100]')
     async def coin_flip(self, ctx, number_of_coins: Optional[int]):
         cf_results = ''
         # default 1 coin
