@@ -23,11 +23,18 @@ def set_beebot_profiles_json(data):
         json.dump(data, outfile)
 
 
-def beebot_profile_exists(discord_username, beebot_profiles):
+def beebot_profile_exists(beebot_profiles, discord_username):
     if discord_username not in beebot_profiles:
         beebot_profiles[discord_username] = {}
 
 
-def beebot_profile_key_exists(key, discord_username, beebot_profiles):
+def beebot_profile_key_exists(beebot_profiles, discord_username, key):
     if key not in beebot_profiles[discord_username]:
         beebot_profiles[discord_username][key] = {}
+
+
+def check_beebot_profile(beebot_profiles, discord_username):
+    if discord_username in beebot_profiles:
+        return True
+    else:
+        return False

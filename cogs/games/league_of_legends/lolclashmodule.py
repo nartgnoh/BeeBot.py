@@ -8,9 +8,10 @@
 
 import os
 import discord
-import json
 import cogs.helper.constants.lol_constants as lol_constants
 import cogs.helper.helper_functions.timezones as timezones
+import cogs.helper.helper_functions.events as events
+import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
 from discord.ext import commands
 from discord import Embed
@@ -47,15 +48,11 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_add(self, ctx, availability: Optional[str], *roles):
-        # read events.json file
-        event_json = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/json_files/events.json'
-        with open(event_json) as f:
-            data = json.load(f)
-        if 'clash' not in data:
+        events_data = events.get_events_json()
+        if events.check_event(events_data, 'clash'):
             await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         else:
-            clash_event = data['clash']
+            clash_event = events_data['clash']
             clash_date = datetime.fromtimestamp(
                 clash_event['schedule'][0]['startTime'] / 1e3)
             if clash_date < datetime.now():
@@ -89,22 +86,16 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                         role_msg = ''
                         if roles_list:
                             role_msg = 'and preferred role(s) '
-                            # read beebot_profiles.json file
-                            beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                                 [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
-                            with open(beebot_profiles_json) as f:
-                                beebot_profiles_data = json.load(f)
+                            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
                             # add member's roles
-                            if available_member not in beebot_profiles_data:
-                                beebot_profiles_data[available_member] = {}
-                            if "league_of_legends" not in beebot_profiles_data[available_member]:
-                                beebot_profiles_data[available_member]["league_of_legends"] = {
-                                }
+                            beebot_profiles.beebot_profile_exists(
+                                available_member, beebot_profiles_data)
+                            beebot_profiles.beebot_profile_key_exists(
+                                beebot_profiles_data, available_member, "league_of_legends")
                             beebot_profiles_data[available_member]["league_of_legends"][
                                 'preferred_role(s)'] = roles_list
-                            # write to beebot_profiles.json file
-                            with open(beebot_profiles_json, 'w') as outfile:
-                                json.dump(beebot_profiles_data, outfile)
+                            beebot_profiles.set_beebot_profiles_json(
+                                beebot_profiles_data)
                         # check if member already registered
                         if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
                             member = participants[available_member]
@@ -123,9 +114,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                                 'Sat': 0, 'Sun': 0}
                             participants[available_member].update(avail_dict)
                             await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
-                        # write to events.json file
-                        with open(event_json, 'w') as outfile:
-                            json.dump(data, outfile)
+                        events.set_events_json(events_data)
 
     # *********************************************************************************************************************
     # bot command to remove author from availability list
@@ -135,15 +124,11 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_remove(self, ctx, availability: Optional[str]):
-        # read events.json file
-        event_json = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/json_files/events.json'
-        with open(event_json) as f:
-            data = json.load(f)
-        if 'clash' not in data:
+        events_data = events.get_events_json()
+        if events.check_event(events_data, 'clash'):
             await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         else:
-            clash_event = data['clash']
+            clash_event = events_data['clash']
             clash_date = datetime.fromtimestamp(
                 clash_event['schedule'][0]['startTime'] / 1e3)
             if clash_date < datetime.now():
@@ -175,9 +160,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                                     avail_dict)
                                 if participants[available_member] == {'Sat': 0, 'Sun': 0}:
                                     participants.pop(available_member)
-                                # write to events.json file
-                                with open(event_json, 'w') as outfile:
-                                    json.dump(data, outfile)
+                                events.set_events_json(events_data)
                                 await ctx.send('Your name was removed from the availability list for this day(s). :slight_smile:')
 
     # *********************************************************************************************************************
@@ -188,12 +171,8 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def clash_view(self, ctx):
-        # read events.json file
-        event_json = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/json_files/events.json'
-        with open(event_json) as f:
-            data = json.load(f)
-        clash = data['clash']
+        events_data = events.get_events_json()
+        clash = events_data['clash']
         date = datetime.fromtimestamp(clash['schedule'][0]['startTime'] / 1e3)
         if not clash['participants']:
             await ctx.send('No one has added their availability yet! :cry: Add yours with the \"addclash\" command! :smile:')
@@ -202,18 +181,13 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
         else:
             available_days = {'Saturday': [], 'Sunday': []}
             for member in clash['participants']:
-                # member fields
-                # read beebot_profiles.json file
-                beebot_profiles_json = "/".join(list(current_directory.split('/')
-                                                     [0:-3])) + '/resource_files/json_files/beebot_profiles.json'
-                with open(beebot_profiles_json) as f:
-                    beebot_profiles_data = json.load(f)
+                beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
                 fields = []
-                if member in beebot_profiles_data:
-                    if 'league_of_legends' in beebot_profiles_data[member]:
-                        # add role(s)
-                        if 'preferred_role(s)' in beebot_profiles_data[member]['league_of_legends']:
+                if beebot_profiles.check_beebot_profile(beebot_profiles_data, member):
+                    if beebot_profiles.check_beebot_profile('league_of_legends', beebot_profiles_data[member]):
+                        if beebot_profiles.check_beebot_profile('preferred_role(s)', beebot_profiles_data[member]['league_of_legends']):
                             if beebot_profiles_data[member]['league_of_legends']['preferred_role(s)']:
+                                # add roles
                                 fields.append(
                                     f"preferred role(s): *{', '.join(beebot_profiles_data[member]['league_of_legends']['preferred_role(s)'])}*")
                 # set fields
@@ -279,28 +253,22 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                 break
         # add 'participants' field
         current_clash['participants'] = {}
-        # read events.json file
-        event_json = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/json_files/events.json'
-        with open(event_json) as f:
-            data = json.load(f)
+        events_data = events.get_events_json()
         # check if 'clash' key exists
-        if 'clash' in data.keys():
+        if events.check_event(events_data, 'clash'):
             # update current clash with the next clash
             date = datetime.fromtimestamp(
-                data['clash']['schedule'][0]['startTime'] / 1e3)
+                events_data['clash']['schedule'][0]['startTime'] / 1e3)
             if date < datetime.now():
-                data['clash'] = current_clash
-                with open(event_json, 'w') as outfile:
-                    json.dump(data, outfile)
+                events_data['clash'] = current_clash
+                events.set_events_json(events_data)
                 await ctx.send("Updated clash!")
             else:
                 await ctx.send("Hold your horses.. The upcoming clash hasn't even happened yet!")
         # add 'clash' key if it doesn't exist
         else:
-            data['clash'] = current_clash
-            with open(event_json, 'w') as outfile:
-                json.dump(data, outfile)
+            events.new_event(events_data, 'clash', current_clash)
+            events.set_events_json(events_data)
             await ctx.send("New clash key!")
 
 

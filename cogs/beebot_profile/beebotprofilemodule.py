@@ -43,7 +43,7 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
             profile = str(ctx.message.author)
             beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
             beebot_profiles.beebot_profile_exists(
-                profile, beebot_profiles_data)
+                beebot_profiles_data, profile)
             beebot_profiles_data[profile]["timezone"] = timezone
             beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
             await ctx.send("Your timezone has been updated! :white_check_mark:")

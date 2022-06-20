@@ -23,11 +23,22 @@ def set_events_json(data):
         json.dump(data, outfile)
 
 
-def event_exists(event, events):
+def new_event(events, event, data):
+    events[event] = data
+
+
+def event_exists(events, event):
     if event not in events:
         events[event] = {}
 
 
-def events_key_exists(key, event, events):
+def events_key_exists(events, event, key):
     if key not in events[event]:
         events[event][key] = {}
+
+
+def check_event(events, event):
+    if event in events:
+        return True
+    else:
+        return False
