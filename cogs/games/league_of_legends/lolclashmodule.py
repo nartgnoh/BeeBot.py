@@ -47,7 +47,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     @commands.has_role(role_specific_command_name)
     async def clash_add(self, ctx, availability: Optional[str], *roles):
         events_data = events.get_events_json()
-        if events.check_event(events_data, 'clash'):
+        if not events.check_event(events_data, 'clash'):
             await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         else:
             clash_event = events_data['clash']
@@ -123,7 +123,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     @commands.has_role(role_specific_command_name)
     async def clash_remove(self, ctx, availability: Optional[str]):
         events_data = events.get_events_json()
-        if events.check_event(events_data, 'clash'):
+        if not events.check_event(events_data, 'clash'):
             await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         else:
             clash_event = events_data['clash']
