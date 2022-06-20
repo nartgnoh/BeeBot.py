@@ -9,6 +9,7 @@ import discord
 import random
 import numpy as np
 import json
+import cogs.helper.constants.emoji_constants as emoji_constants
 
 from discord.ext import commands
 from discord import Embed
@@ -57,21 +58,32 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                 team_split = np.array_split(players_list, number_of_teams)
                 teams_dict = {}
                 team_number = 0
+                players_num = len(players_list)
                 for team in team_split:
-                    team_number += 1
-                    teams_dict[team_number] = list(team)
+                    if players_num > 0:
+                        team_number += 1
+                        teams_dict[team_number] = list(team)
+                        players_num -= 1
+                    else:
+                        break
                 # *********
                 # | embed |
                 # *********
-                embed = Embed(title="The Teams:",
+                embed = Embed(title="Teams",
                               colour=ctx.author.colour)
+                # embed thumbnail
+                file = discord.File(
+                    f'resource_files/image_files/thumbnails/team_animals_thumb.png', filename="image.png")
+                embed.set_thumbnail(url='attachment://image.png')
+                emoji_list = random.sample(
+                    emoji_constants.cute_animals(), len(teams_dict))
+                random.shuffle(emoji_list)
                 for team in teams_dict:
-                    # check if list is empty
-                    if teams_dict[team]:
-                        # embed fields
-                        embed.add_field(
-                            name=f"Team {team}:", value=f"{', '.join(teams_dict[team])}", inline=False)
-                await ctx.send(embed=embed)
+                    emoji, name = emoji_list[team-1].split()
+                    # embed fields
+                    embed.add_field(
+                        name=f"{emoji} Team {name}:", value=f"{', '.join(teams_dict[team])}", inline=False)
+                await ctx.send(file=file, embed=embed)
 
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
