@@ -1,9 +1,9 @@
 # *********************************************************************************************************************
 # emojis.py
+# import cogs.helper.helper_functions.emojis as emojis
 # *********************************************************************************************************************
 
 import os
-import json
 import cogs.helper.constants.emoji_constants as emoji_constants
 
 # get current directory

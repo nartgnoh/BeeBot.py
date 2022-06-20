@@ -1,10 +1,10 @@
 # *********************************************************************************************************************
 # events.py
+# import cogs.helper.helper_functions.events as events
 # *********************************************************************************************************************
 
 import os
 import json
-import cogs.helper.constants.emoji_constants as emoji_constants
 
 # get current directory
 current_directory = os.path.dirname(os.path.realpath(__file__))
