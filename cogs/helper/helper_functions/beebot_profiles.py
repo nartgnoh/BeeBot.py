@@ -26,3 +26,8 @@ def update_beebot_profiles_json(data):
 def beebot_profile_exists(discord_username, beebot_profiles):
     if discord_username not in beebot_profiles:
         beebot_profiles[discord_username] = {}
+
+
+def beebot_profile_key_exists(key, discord_username, beebot_profiles):
+    if key not in beebot_profiles[discord_username]:
+        beebot_profiles[discord_username][key] = {}

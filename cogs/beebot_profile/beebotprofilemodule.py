@@ -6,7 +6,6 @@
 import os
 from time import time
 import discord
-import json
 import cogs.helper.helper_functions.timezones as timezones
 import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
