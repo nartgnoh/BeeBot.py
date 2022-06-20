@@ -9,7 +9,7 @@ from pydoc import describe
 import discord
 import random
 import cogs.helper.constants.lol_constants as lol_constants
-import cogs.helper.api.league_of_legends_api as lolapi
+import cogs.helper.api.league_of_legends_api as lol_api
 
 from discord.ext import commands
 from discord import Embed
@@ -31,7 +31,8 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
     # bot command to balance a league of legends team comp
     # *********************************************************************************************************************
     @commands.command(name='lolbalance', aliases=['balancelol', 'lolteamcomp', 'teamcomplol', 'lolteam', 'teamlol', 'lolteams', 'teamslol', '⚖️'],
-                      help='⚖️ Help balance a lol teamcomp! [Champions with spaces need quotes ""]')
+                      help='⚖️ Help balance a lol teamcomp! [Champions with spaces need quotes ""]\n\n'
+                      '[Add an "❌" reaction to delete]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_balance(self, ctx, *lol_champions):
@@ -39,8 +40,8 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
             await ctx.send("Sorry! You forgot to add champions! :slight_smile:")
         else:
             # get current lol version for region
-            champions_version = lolapi.get_version()['n']['champion']
-            champ_list = lolapi.get_champion_list(champions_version)['data']
+            champions_version = lol_api.get_version()['n']['champion']
+            champ_list = lol_api.get_champion_list(champions_version)['data']
             check = True
             # iterate through champion tags and info (affinity)
             tags_list = []
@@ -116,7 +117,8 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
                 if not missing_tags:
                     embed.add_field(name=f':tada: Congrats! Your team covers all of the available tags! :tada:',
                                     value='Now you\'re ready to hit the rift!', inline=False)
-                await ctx.send(file=file, embed=embed)
+                msg = await ctx.send(file=file, embed=embed)
+                await msg.add_reaction("❌")
 
 
 def setup(bot):

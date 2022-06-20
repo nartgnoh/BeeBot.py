@@ -65,4 +65,13 @@ async def on_ready():
     print(f'BeeBot successfully logged in and booted! :D'
           '\n----------------------------------------------')
 
+
+# delete message on additional "❌" reaction
+# add to help: '\n\n' '[Add an "❌" reaction to delete]'
+# await msg.add_reaction("❌")
+@bot.event
+async def on_reaction_add(reaction, user):
+    if reaction.count > 1 and reaction.emoji == "❌":
+        await reaction.message.delete()
+
 bot.run(DISCORD_TOKEN, bot=True, reconnect=True)

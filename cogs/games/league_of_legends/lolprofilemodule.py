@@ -8,7 +8,7 @@
 import os
 import discord
 import cogs.helper.constants.lol_constants as lol_constants
-import cogs.helper.api.league_of_legends_api as lolapi
+import cogs.helper.api.league_of_legends_api as lol_api
 
 from discord.ext import commands
 from discord import Embed
@@ -77,7 +77,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                                        "Please try again with a real lol summoner! :slight_smile:")
                 if summoner_check:
                     # get current lol version for region
-                    champions_version = lolapi.get_version(region)[
+                    champions_version = lol_api.get_version(region)[
                         'n']['champion']
                     # get summoner ranks
                     ranks = lol_watcher.league.by_summoner(
@@ -89,7 +89,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     top_mastery = lol_watcher.champion_mastery.by_summoner(region, summoner['id'])[
                         0]
                     # get top mastery champ
-                    champ_list = lolapi.get_champion_list(
+                    champ_list = lol_api.get_champion_list(
                         champions_version)['data']
                     top_master_champ_info = ''
                     for champion in champ_list:
@@ -168,7 +168,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                                        "Please try again with a real lol summoner! :slight_smile:")
                 if summoner_check:
                     # get current lol version for region
-                    champions_version = lolapi.get_version(region)[
+                    champions_version = lol_api.get_version(region)[
                         'n']['champion']
                     # get summoner info
                     summoner = lol_watcher.summoner.by_name(
@@ -259,7 +259,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                                        "Please try again with a real lol summoner! :slight_smile:")
                 if summoner_check:
                     # get current lol version for region
-                    champions_version = lolapi.get_version()['n']['champion']
+                    champions_version = lol_api.get_version()['n']['champion']
                     # get summoner info
                     summoner = lol_watcher.summoner.by_name(
                         region, summoner_name)
@@ -270,7 +270,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     top_mastery = lol_watcher.champion_mastery.by_summoner(region, summoner['id'])[
                         0]
                     # get top mastery champ
-                    champ_list = lolapi.get_champion_list(
+                    champ_list = lol_api.get_champion_list(
                         champions_version)['data']
                     top_master_champ_info = ''
                     for champion in champ_list:

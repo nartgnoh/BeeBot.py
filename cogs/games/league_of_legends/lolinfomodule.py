@@ -9,7 +9,7 @@ import discord
 import random
 import requests
 import cogs.helper.constants.lol_constants as lol_constants
-import cogs.helper.api.league_of_legends_api as lolapi
+import cogs.helper.api.league_of_legends_api as lol_api
 
 from discord.ext import commands
 from discord import Embed
@@ -31,13 +31,13 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # bot command to lookup basic league of legends champion info
     # *********************************************************************************************************************
     @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'],
-                      help='🔍 Quick lookup for lol champ information. [Auto: random champ]')
+                      help='🔍 Quick lookup for lol champion. [Auto: random champ]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        champions_version = lolapi.get_version()['n']['champion']
-        champ_list = lolapi.get_champion_list(champions_version)['data']
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
@@ -73,13 +73,14 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
     # bot command lookup abilities of league of legends champion
     # *********************************************************************************************************************
     @commands.command(name='champskills', aliases=['abilitychamp', 'champability', 'champabilities', 'abilitieschamp', 'schamp', 'champskill', '💥'],
-                      help='💥 Full lookup for lol champ information. [Auto: random champ]')
+                      help='💥 Full skills lookup for lol champion. [Auto: random champ]\n\n'
+                      '[Add an "❌" reaction to delete]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
-        champions_version = lolapi.get_version()['n']['champion']
-        champ_list = lolapi.get_champion_list(champions_version)['data']
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         if lol_champion == None:
             lol_champion = random.choice(list(champ_list))
         else:
@@ -113,7 +114,8 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule", description="champlookup
                 embed.add_field(name=f"{game_key}: {spell['name']}",
                                 value=f"Cooldown: {spell['cooldownBurn']}\nCost: {spell['costBurn']}\nRange: {spell['rangeBurn']}\nDescription: {spell['description']}",
                                 inline=False)
-            await ctx.send(embed=embed)
+            msg = await ctx.send(embed=embed)
+            await msg.add_reaction("❌")
 
 
 def setup(bot):

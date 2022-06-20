@@ -1,6 +1,6 @@
 # *********************************************************************************************************************
-# beebot_profiles.py
-# import cogs.helper.api.league_of_legends_api as lolapi
+# league_of_legends_api.py
+# import cogs.helper.api.league_of_legends_api as lol_api
 # *********************************************************************************************************************
 
 import os
