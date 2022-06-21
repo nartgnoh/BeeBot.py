@@ -12,25 +12,25 @@ from dotenv import load_dotenv
 from pretty_help import PrettyHelp
 
 # get all cog extensions
-all_extensions = [
-    'cogs.admin.admin_beebot_reset_module',
-    'cogs.beebot_profile.beebotprofilemodule',
-    'cogs.beebot_profile.lolbeebotprofilemodule',
-    # 'cogs.events.eventsmodule',
-    'cogs.games.league_of_legends.lolinfomodule',
-    'cogs.games.league_of_legends.lolprofilemodule',
-    'cogs.games.league_of_legends.lolskinsmodule',
-    'cogs.games.league_of_legends.lolclashmodule',
-    'cogs.games.league_of_legends.lolteamsmodule',
-    'cogs.games.gamesmodule',
-    # 'cogs.games.teamfight_tactics',
-    'cogs.helper.reactions_helper',
-    # 'cogs.music.playmusicmodule',
-    # 'cogs.music.viewmusicmodule',
-    'cogs.responses.emotionsmodule',
-    'cogs.responses.pollsmodule',
-    'cogs.responses.responsesmodule'
-]
+all_extensions = ['cogs.admin.admin_beebot_reset_module',
+                  'cogs.beebot_profile.beebotprofilemodule',
+                  'cogs.beebot_profile.lolbeebotprofilemodule',
+                  # 'cogs.events.eventsmodule',
+                  'cogs.games.league_of_legends.lolinfomodule',
+                  'cogs.games.league_of_legends.lolprofilemodule',
+                  'cogs.games.league_of_legends.lolskinsmodule',
+                  'cogs.games.league_of_legends.lolclashmodule',
+                  'cogs.games.league_of_legends.lolteamsmodule',
+                  'cogs.games.gamesmodule',
+                  # 'cogs.games.teamfight_tactics',
+                  'cogs.helper.listeners.reactions_listener',
+                  # 'cogs.music.playmusicmodule',
+                  # 'cogs.music.viewmusicmodule',
+                  'cogs.responses.emotionsmodule',
+                #   'cogs.responses.giveawaymodule',
+                  'cogs.responses.pollsmodule',
+                  'cogs.responses.responsesmodule'
+                  ]
 
 
 def get_prefix(bot, message):

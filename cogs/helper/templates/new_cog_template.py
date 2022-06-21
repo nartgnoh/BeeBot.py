@@ -49,6 +49,7 @@ class new_cog_template_module(commands.Cog, name="new_cog_template_module", desc
         # # | reactions |
         # # *************
         # msg = await ctx.send('Send message in chat!')
+        # await msg.add_reaction(emoji)
 
         # send message in discord chat
         await ctx.send('Send message in chat!')
