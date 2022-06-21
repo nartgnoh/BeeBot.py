@@ -72,10 +72,6 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                 # *********
                 embed = Embed(title="Teams",
                               colour=ctx.author.colour)
-                # embed thumbnail
-                file = discord.File(
-                    f'resource_files/image_files/thumbnails/team_animals_thumb.png', filename="image.png")
-                embed.set_thumbnail(url='attachment://image.png')
                 emoji_list = random.sample(
                     emoji_constants.cute_animals(), len(teams_dict))
                 random.shuffle(emoji_list)
@@ -84,7 +80,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                     # embed fields
                     embed.add_field(
                         name=f"{emoji} Team {name}:", value=f"{', '.join(teams_dict[team])}", inline=False)
-                await ctx.send(file=file, embed=embed)
+                await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
