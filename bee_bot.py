@@ -27,6 +27,7 @@ all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   # 'cogs.music.playmusicmodule',
                   # 'cogs.music.viewmusicmodule',
                   'cogs.responses.emotionsmodule',
+                  'cogs.responses.giveawaymodule',
                   'cogs.responses.pollsmodule',
                   'cogs.responses.responsesmodule'
                   ]

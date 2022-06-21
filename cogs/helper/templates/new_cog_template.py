@@ -15,7 +15,6 @@ import os
 import discord
 
 from discord.ext import commands
-# from discord.ext.commands import Cog
 from discord import Embed
 from typing import Optional
 
@@ -54,9 +53,6 @@ class new_cog_template_module(commands.Cog, name="new_cog_template_module", desc
 
         # send message in discord chat
         await ctx.send('Send message in chat!')
-
-    # @Cog.listener()
-    # async def on_raw_reaction_add(self, payload):
 
 
 def setup(bot):
