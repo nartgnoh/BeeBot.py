@@ -4,22 +4,45 @@
 # *********************************************************************************************************************
 
 import os
-import discord
 import json
-import urllib
-import urllib.request
-import subprocess
 import youtube_dl
 
+from datetime import datetime
 from youtube_search import YoutubeSearch
 
 # get current directory
 current_directory = os.path.dirname(os.path.realpath(__file__))
 ytlinks_json = "/".join(list(current_directory.split('/')
                              [0:-3])) + '/resource_files/music_files/yt_links.json'
+song_mp3_path = "/".join(list(current_directory.split('/')
+                              [0:-3])) + '/resource_files/music_files/song.mp3'
 
 
-# # get ytlinks_json first element
+# check if ytlinks_json is empty
+def check_current_song():
+    with open(ytlinks_json) as f:
+        if json.load(f)[0]:
+            return True
+        else:
+            return False
+
+
+# check if ytlinks_json is empty without the first element (current)
+def check_rest_songs_list():
+    with open(ytlinks_json) as f:
+        if json.load(f)[1:]:
+            return True
+        else:
+            return False
+
+
+# check duration of song is under 15mins
+def check_duration(yt_json):
+    duration = datetime.strptime(yt_json['duration'], '%M:%S')
+    # if yt_json[]
+
+
+# get ytlinks_json first element
 def get_current_song():
     with open(ytlinks_json) as f:
         return json.load(f)[0]
@@ -32,18 +55,25 @@ def get_next_song():
 
 
 # get ytlinks_json entire list
-def all_songs_list():
+def get_songs_list():
     with open(ytlinks_json) as f:
         return json.load(f)
 
 
+def reset_songs_list():
+    with open(ytlinks_json, 'w') as outfile:
+        json.dump([], outfile)
+
+
 # if "url" is not a real url link, then "YoutubeSearch" and create new a YouTube url link
 def add_url(yt_search_or_link):
-    new_yt = YoutubeSearch(yt_search_or_link, max_results=1).to_json()
-    yt_links_json = all_songs_list()
-    data = yt_links_json + [json.loads(new_yt)["videos"][0]]
+    yt_search = YoutubeSearch(yt_search_or_link, max_results=1).to_json()
+    new_yt_json = json.loads(yt_search)["videos"][0]
+    yt_links_json = get_songs_list()
+    data = yt_links_json + [new_yt_json]
     with open(ytlinks_json, 'w') as outfile:
         json.dump(data, outfile)
+    return new_yt_json
 
 
 # delete first url from ytlinks_txt
@@ -72,27 +102,11 @@ def download_song():
         ydl.download([youtube_url])
     # move .mp3 file to song.mp3
     for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            os.rename(file, "resource_files/music_files/song.mp3")
+        if file.endswith(".mp3") or file.endswith(".webm"):
+            os.rename(file, song_mp3_path)
 
 
-# download next_song.mp3
+# go next
 def download_next_song():
-    next_song = get_next_song()
-    youtube_url = "https://www.youtube.com/" + next_song["url_suffix"]
-    # download audio into "next_song.mp3"
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }]
-    }
-    # download .mp3
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([youtube_url])
-    # move .mp3 file to next_song.mp3
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            os.rename(file, "resource_files/music_files/next_song.mp3")
+    delete_first_song()
+    download_song()
