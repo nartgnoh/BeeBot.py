@@ -4,3 +4,5 @@ riotwatcher
 discord-pretty-help
 python-dateutil
 pytz
+youtube_dl
+youtube-search
