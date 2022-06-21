@@ -24,12 +24,20 @@ all_extensions = [
     'cogs.games.league_of_legends.lolteamsmodule',
     'cogs.games.gamesmodule',
     # 'cogs.games.teamfight_tactics',
+    'cogs.helper.reactions_helper',
     # 'cogs.music.playmusicmodule',
     # 'cogs.music.viewmusicmodule',
     'cogs.responses.emotionsmodule',
     'cogs.responses.pollsmodule',
     'cogs.responses.responsesmodule'
 ]
+
+
+def get_prefix(bot, message):
+    prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
+    # prefixes = ['B ', 'b ']  # BeeBot-Testing exclusive
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+
 
 # get from .env file
 load_dotenv()
@@ -38,13 +46,6 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 # connecting with discord with "discord intents"
 intents = discord.Intents.default()
 intents.members = True
-
-
-def get_prefix(bot, message):
-    prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
-    # prefixes = ['B ', 'b ']  # BeeBot-Testing exclusive
-    return commands.when_mentioned_or(*prefixes)(bot, message)
-
 
 # bot setup
 bot = commands.Bot(command_prefix=get_prefix, description='🐝 Hello! I am BeeBot! 🐝',
@@ -65,13 +66,5 @@ async def on_ready():
     print(f'BeeBot successfully logged in and booted! :D'
           '\n----------------------------------------------')
 
-
-# delete message on additional "❌" reaction
-# add to help: '\n\n' '[Add an "❌" reaction to delete]'
-# await msg.add_reaction("❌")
-@bot.event
-async def on_reaction_add(reaction, user):
-    if reaction.count > 1 and reaction.emoji == "❌":
-        await reaction.message.delete()
 
 bot.run(DISCORD_TOKEN, bot=True, reconnect=True)
