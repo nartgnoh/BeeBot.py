@@ -1,7 +1,6 @@
 # *********************************************************************************************************************
-# pollsmodule.py
-# - poll command
-# - giveaway command (wip)
+# giveawaymodule.py
+# - giveaway command
 # *********************************************************************************************************************
 
 import os
@@ -18,17 +17,17 @@ from datetime import datetime, timedelta
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'
 
-# pollsmodule class
+# giveawaymodule class
 
 
-class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
+class giveawaymodule(commands.Cog, name="GiveawayModule", description="poll"):
     def __init__(self, bot):
         self.bot = bot
 
     # *********************************************************************************************************************
     # bot command to make a poll in chat
     # *********************************************************************************************************************
-    @commands.command(name='giveaway', aliases=['createpoll', 'makepoll', 'polls', '💈'],
+    @commands.command(name='giveaway', aliases=['createpoll', 'makepoll', 'giveaway', '💈'],
                       help='💈 Make a poll! [Max options: 9, Questions and Options with spaces need quotes ""]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
@@ -61,7 +60,7 @@ class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
 	# 	most_voted = max(message.reactions, key=lambda r: r.count)
 
 	# 	await message.channel.send(f"The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!")
-	# 	self.polls.remove((message.channel.id, message.id))
+	# 	self.giveaway.remove((message.channel.id, message.id))
 
 	# async def complete_giveaway(self, channel_id, message_id):
 	# 	message = await self.bot.get_channel(channel_id).fetch_message(message_id)
@@ -83,7 +82,7 @@ class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
 		# 	await payload.member.add_roles(self.colours[payload.emoji.name], reason="Colour role reaction.")
 		# 	await self.reaction_message.remove_reaction(payload.emoji, payload.member)
 
-		# elif payload.message_id in (poll[1] for poll in self.polls):
+		# elif payload.message_id in (poll[1] for poll in self.giveaway):
 		# 	message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 
 		# 	for reaction in message.reactions:
@@ -128,4 +127,4 @@ class pollsmodule(commands.Cog, name="PollsModule", description="poll"):
 
 
 def setup(bot):
-    bot.add_cog(pollsmodule(bot))
+    bot.add_cog(giveawaymodule(bot))
