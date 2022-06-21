@@ -9,6 +9,7 @@ import discord
 import cogs.helper.constants.emoji_constants as emoji_constants
 
 from discord.ext import commands
+from discord.ext.commands import Cog
 from discord import Embed
 from typing import Optional
 from datetime import datetime, timedelta

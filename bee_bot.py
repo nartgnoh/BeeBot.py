@@ -24,7 +24,6 @@ all_extensions = [
     'cogs.games.league_of_legends.lolteamsmodule',
     'cogs.games.gamesmodule',
     # 'cogs.games.teamfight_tactics',
-    'cogs.helper.reactions_helper',
     # 'cogs.music.playmusicmodule',
     # 'cogs.music.viewmusicmodule',
     'cogs.responses.emotionsmodule',
