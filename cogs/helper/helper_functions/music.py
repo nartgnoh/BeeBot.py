@@ -101,47 +101,63 @@ def download_song(song, path):
 
 
 # play songs with ffmpeg
-def play_song(ctx, path):
-    voice = ctx.voice_client
+def play_song(self, ctx, path):
+    voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+    voice.is_playing()
     voice.play(discord.FFmpegPCMAudio(path),
-               after=lambda e: play_next(ctx))
+               after=lambda e: play_next(self, ctx))
     voice.is_playing()
 
 
 # *********************************************************************************************************************
 # main functions
 # *********************************************************************************************************************
-# main play music
-def play_music(ctx):
+# # main play music with 2 downloads
+# def play_music(ctx):
+#     # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
+#     if os.path.isfile(current_song_mp3_path):
+#         os.remove(current_song_mp3_path)
+#     # rename "next_song.mp3" to "song.mp3" if next_song.mp3 existed -> song.mp3 exist
+#     if os.path.isfile(next_song_mp3_path):
+#         os.rename(next_song_mp3_path, current_song_mp3_path)
+#     # download songs
+#     songs_list = get_songs_list()
+#     if len(songs_list) > 0:
+#         # check if next_song.mp3 existed - play song.mp3
+#         if len(songs_list) > 1:
+#             if os.path.isfile(current_song_mp3_path):
+#                 play_song(ctx, current_song_mp3_path)
+#                 download_song(get_next_song(), next_song_mp3_path)
+#             else:
+#                 download_song(get_current_song(), current_song_mp3_path)
+#                 play_song(ctx, current_song_mp3_path)
+#                 download_song(get_next_song(), next_song_mp3_path)
+#         if len(songs_list) == 1:
+#             download_song(get_current_song(), current_song_mp3_path)
+#             play_song(ctx, current_song_mp3_path)
+#     else:
+#         print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
+#         reset_songs_list()
+
+
+# main play music with 1 download
+def play_music(self, ctx):
     # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
     if os.path.isfile(current_song_mp3_path):
         os.remove(current_song_mp3_path)
-    # rename "next_song.mp3" to "song.mp3" if next_song.mp3 existed -> song.mp3 exist
-    if os.path.isfile(next_song_mp3_path):
-        os.rename(next_song_mp3_path, current_song_mp3_path)
     # download songs
     songs_list = get_songs_list()
     if len(songs_list) > 0:
         # check if next_song.mp3 existed - play song.mp3
-        if len(songs_list) > 1:
-            if os.path.isfile(current_song_mp3_path):
-                play_song(ctx, current_song_mp3_path)
-                download_song(get_next_song(), next_song_mp3_path)
-            else:
-                download_song(get_current_song(), current_song_mp3_path)
-                play_song(ctx, current_song_mp3_path)
-                download_song(get_next_song(), next_song_mp3_path)
-        if len(songs_list) == 1:
-            download_song(get_current_song(), current_song_mp3_path)
-            play_song(ctx, current_song_mp3_path)
+        download_song(get_current_song(), current_song_mp3_path)
+        play_song(self, ctx, current_song_mp3_path)
     else:
-        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
-        voice = ctx.voice_client
+        print("---------- No more audio in queue ----------")
         reset_songs_list()
 
 
 # play next song
-def play_next(ctx):
-    print("~~~~~~~~~ Inside play_next ~~~~~~~~~")
+def play_next(self, ctx):
+    print("---------- Inside play_next ----------")
     delete_first_song()
-    play_music(ctx)
+    play_music(self, ctx)
