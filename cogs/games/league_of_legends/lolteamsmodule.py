@@ -102,7 +102,7 @@ class lolteamsmodule(commands.Cog, name="LoLTeamsModule", description="lolbalanc
                 # *********
                 embed = Embed(title="Teamcomp Balance",
                               description="Check if your team is well balanced! :D",
-                              colour=ctx.author.colour)
+                              colour=discord.Colour.random())
                 # embed thumbnail
                 file = discord.File(
                     f'resource_files/image_files/thumbnails/lolbalance_thumb.png', filename="image.png")

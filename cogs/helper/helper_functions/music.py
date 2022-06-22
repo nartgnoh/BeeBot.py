@@ -93,6 +93,7 @@ def play_songs(ctx):
         check = False
         print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
     if check:
+        print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
         youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
         ydl_opts = {'format': 'bestaudio/best',
                     'postprocessors': [{
@@ -108,9 +109,9 @@ def play_songs(ctx):
                 os.rename(file, song_mp3_path)
         voice = ctx.voice_client
 
-        # voice.play(discord.FFmpegPCMAudio(song_mp3_path),
-        #             after=lambda e: play_next(ctx))
-        # voice.is_playing()
+        voice.play(discord.FFmpegPCMAudio(song_mp3_path),
+                    after=lambda e: play_next(ctx))
+        voice.is_playing()
 
 
 def play_next(ctx):

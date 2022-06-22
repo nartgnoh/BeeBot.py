@@ -71,7 +71,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                 # | embed |
                 # *********
                 embed = Embed(title="Teams",
-                              colour=ctx.author.colour)
+                              colour=discord.Colour.random())
                 emoji_list = random.sample(
                     emoji_constants.cute_animals(), len(teams_dict))
                 random.shuffle(emoji_list)
@@ -123,12 +123,12 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
             embed = Embed(title=random_game,
                           url=url,
                           description=pg_message,
-                          colour=ctx.author.colour)
+                          colour=discord.Colour.random())
         # embed without url
         else:
             embed = Embed(title=random_game,
                           description=pg_message,
-                          colour=ctx.author.colour)
+                          colour=discord.Colour.random())
         await ctx.send(embed=embed)
 
 

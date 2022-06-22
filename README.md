@@ -14,12 +14,13 @@ Code-base for a bee-themed Discord.py bot who responds with cute and helpful rea
 
 ### Dependencies
 
-* Runs on Python3 and pip
+* Runs on Python3 and ffmpeg
 ```
 $ sudo apt-get install software-properties-common
 $ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt-get update
 $ sudo apt-get install python3.8
+$ sudo apt-get install ffmpeg
 ```
 
 * Install requirements

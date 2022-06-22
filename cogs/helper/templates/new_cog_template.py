@@ -41,7 +41,7 @@ class new_cog_template_module(commands.Cog, name="new_cog_template_module", desc
         # # *********
         # embed = Embed(title="Title",
         #         description="description",
-        #         colour=ctx.author.colour)
+        #         colour=discord.Colour.random())
         # # embed fields
         # embed.add_field(name="name", value="value", inline=False)
 
