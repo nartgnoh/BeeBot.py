@@ -38,7 +38,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
     # *********************************************************************************************************************
     # bot command pick a random skin for champion
     # *********************************************************************************************************************
-    @commands.command(name='lolspectate', aliases=['spectatelol', 'lolcurrent', 'currentlol', '🕵️'],
+    @commands.command(name='lolspectate', aliases=['spectatelol', 'lolcurrent', 'currentlol', 'lolspec', 'speclol', '🕵️'],
                       help="🕵️ Lookup a current game!\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
