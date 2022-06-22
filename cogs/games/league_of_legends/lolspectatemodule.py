@@ -228,9 +228,10 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                     # file = discord.File(
                     #     f'resource_files/image_files/riot_images/spectator/runes.png', filename="image.png")
                     # embed.set_image(url='attachment://image.png')
-                    await ctx.send(file=file, embed=embed)
+                    msg = await ctx.send(file=file, embed=embed)
                     images.delete_image(images.get_image_path(
                         'riot_images/spectator/thumbnail.png'))
+                    await msg.add_reaction("❌")
 
     # *********************************************************************************************************************
     # bot command test
