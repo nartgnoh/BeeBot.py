@@ -42,6 +42,8 @@ $ git clone git@github.com:nartgnoh/Discord_Beebot.git
 
 ### Setup
 
+* Setup a discord bot application with the [Discord Developer Portal](https://discord.com/developers/applications)
+
 * Create a .env file and add the specified tokens
 ```
 $ echo "# .env
@@ -58,6 +60,7 @@ Click [here](https://developer.riotgames.com/) to find steps for a Riot API key,
 ## Executing program
 
 You can either run BeeBot.py locally or on a Google Cloud VM
+
 ### Running Locally
 
 * Go through the "Getting Started" section above
@@ -95,6 +98,8 @@ $ ps -ef | grep python3
 <!-- Using the number of the process (the pid), kill the process (in this example, the pid=1224) -->
 $ kill -9 1224
 ```
+* Once the bot is up and running, go through the admin commands and reset each one in discord
+  
 * ## Authors
 
 * Hong Tran [@nartgnoh](https://github.com/nartgnoh)

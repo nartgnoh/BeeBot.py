@@ -52,7 +52,17 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                 else:
                     current_song = music_helper.get_current_song()
                     music_helper.play_music(ctx)
-                    await ctx.send(f':musical_note: BeeBot will now bee playing ***{current_song["title"]}!*** :musical_note:')
+                    # *********
+                    # | embed |
+                    # *********
+                    embed = Embed(title="🎵 BeeBot will now bee playing 🎵",
+                                description=f"***{current_song['title']}***",
+                                colour=ctx.author.colour)
+                    # embed thumbnail
+                    thumb_url = current_song['thumbnails'][0]
+                    embed.set_thumbnail(url=thumb_url)
+                    await ctx.send(embed=embed)
+                    # await ctx.send(f':musical_note: BeeBot will now bee playing ***{current_song["title"]}!*** :musical_note:')
 
     # # bot command to go to next audio in queue by reaction vote
     # @bot.command(name='next', aliases=['skip'], help='⏭️ Play the next audio! (Role specific) ♫')

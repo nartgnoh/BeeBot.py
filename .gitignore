@@ -143,3 +143,5 @@ dmypy.json
 # music files
 /resource_files/music_files/songs_list.json
 *.mp3
+*.webm.part
+*.webm
