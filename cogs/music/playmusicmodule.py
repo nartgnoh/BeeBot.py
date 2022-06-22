@@ -50,17 +50,22 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                     else:
                         await voice.move_to(channel)
                     voice = ctx.voice_client
+                    current_song = music_helper.get_current_song()
                     if voice.is_playing():
-                        await ctx.send(':musical_score: Your audio has been added to the queue! :musical_score:')
+                        # *********
+                        # | embed |
+                        # *********
+                        embed = Embed(title=f"{current_song['title']}\n🎶 Added to Queue! 🎶",
+                                      colour=ctx.author.colour)
+                        await ctx.send(embed=embed)
                     else:
-                        current_song = music_helper.get_current_song()
                         music_helper.play_music(ctx)
                         # *********
                         # | embed |
                         # *********
                         embed = Embed(title=f"🎵 Now Playing 🎵\n{current_song['title']}",
-                                    description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
-                                    colour=ctx.author.colour)
+                                      description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
+                                      colour=ctx.author.colour)
                         # embed thumbnail
                         thumb_url = current_song['thumbnails'][0]
                         embed.set_thumbnail(url=thumb_url)

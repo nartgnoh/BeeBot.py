@@ -105,6 +105,7 @@ def play_song(ctx, path):
     voice = ctx.voice_client
     voice.play(discord.FFmpegPCMAudio(path),
                after=lambda e: play_next(ctx))
+    voice.is_playing()
 
 
 # *********************************************************************************************************************

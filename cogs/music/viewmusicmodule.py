@@ -39,7 +39,8 @@ class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
             # *********
             # | embed |
             # *********
-            embed = Embed(title=f"🎵 Current song is ~ {current_song['title']} 🎵",
+            embed = Embed(title=f"🎵 Current song 🎵\n{current_song['title']}",
+                          description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
                           colour=ctx.author.colour)
             # embed thumbnail
             thumb_url = current_song['thumbnails'][0]
@@ -59,7 +60,8 @@ class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
             # *********
             # | embed |
             # *********
-            embed = Embed(title=f"🎼 Next song is ~ {next_song['title']} 🎼",
+            embed = Embed(title=f"🎼 Next song is 🎼\n{next_song['title']}",
+                          description=f"By: {next_song['channel']}\nDuration: {next_song['duration']}",
                           colour=ctx.author.colour)
             # embed thumbnail
             thumb_url = next_song['thumbnails'][0]
@@ -77,8 +79,10 @@ class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
         else:
             songs_list = music_helper.get_songs_list()
             song_names_list = []
+            count = 0
             for song in songs_list:
-                song_names_list.append(song['title'])
+                count += 1
+                song_names_list.append(f"{count}: {song['title']}")
             # *********
             # | embed |
             # *********
