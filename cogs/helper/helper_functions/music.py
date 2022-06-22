@@ -73,7 +73,6 @@ def add_url(yt_search_or_link):
     data = yt_links_json + [new_yt_json]
     with open(ytlinks_json, 'w') as outfile:
         json.dump(data, outfile)
-    return new_yt_json
 
 
 # delete first url from ytlinks_txt
@@ -99,11 +98,9 @@ def download_song():
     }
     # download .mp3
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([youtube_url])
-    # move .mp3 file to song.mp3
-    for file in os.listdir("./"):
-        if file.endswith(".mp3") or file.endswith(".webm"):
-            os.rename(file, song_mp3_path)
+        # ydl.download([youtube_url])
+        info = ydl.extract_info(youtube_url, download=False)
+        return info['formats'][0]['url']
 
 
 # go next

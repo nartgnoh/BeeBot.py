@@ -89,14 +89,14 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                       help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
-            if ctx.message.author.voice is not None:
+            # else number_of_players was 0
+            if ctx.message.author.voice is None:
+                await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
+                               'or joining a voice channel! :slight_smile:')
+            else:
                 # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
                 channel = ctx.message.author.voice.channel
                 number_of_players = len(channel.members)
-            # else number_of_players was 0
-            else:
-                await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
-                               'or joining a voice channel! :slight_smile:')
         # get games.json file
         games_json_path = "/".join(list(current_directory.split('/')
                                    [0:-2])) + '/resource_files/json_files/games.json'

@@ -24,10 +24,10 @@ all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   'cogs.games.gamesmodule',
                   # 'cogs.games.teamfight_tactics',
                   'cogs.helper.listeners.reactions_listener',
-                  # 'cogs.music.playmusicmodule',
+                  'cogs.music.playmusicmodule',
                   # 'cogs.music.viewmusicmodule',
                   'cogs.responses.emotionsmodule',
-                #   'cogs.responses.giveawaymodule',
+                  # 'cogs.responses.giveawaymodule',
                   'cogs.responses.pollsmodule',
                   'cogs.responses.responsesmodule'
                   ]
