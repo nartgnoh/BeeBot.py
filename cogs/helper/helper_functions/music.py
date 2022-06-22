@@ -64,6 +64,17 @@ def add_url(yt_search_or_link):
         json.dump(data, outfile)
 
 
+# check song duration under 15 mins
+def check_song_duration(song_json):
+    song_duration = song_json['duration'].split(':')
+    # get song duration in seconds (mins*60 + secs)
+    total_seconds = int(song_duration[-2]) * 60 + int(song_duration[-1])
+    if total_seconds > 900:
+        return False
+    else:
+        return True
+
+
 # *********************************************************************************************************************
 # play music helper functions
 # *********************************************************************************************************************
@@ -90,7 +101,7 @@ def play_song(ctx, path):
     voice = ctx.voice_client
     voice.play(discord.FFmpegPCMAudio(path),
                after=lambda e: play_next(ctx))
-               
+
 
 # *********************************************************************************************************************
 # main functions
