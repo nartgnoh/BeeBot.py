@@ -51,7 +51,7 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                     await ctx.send(':musical_note: Your audio has been added to the queue! :smile:')
                 else:
                     current_song = music_helper.get_current_song()
-                    music_helper.play_songs(ctx)
+                    music_helper.play_music(ctx)
                     await ctx.send(f':musical_note: BeeBot will now bee playing ***{current_song["title"]}!*** :musical_note:')
 
     # # bot command to go to next audio in queue by reaction vote

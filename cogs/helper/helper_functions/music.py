@@ -17,13 +17,13 @@ songs_list_json = "/".join(list(current_directory.split('/')
                                 [0:-3])) + '/resource_files/music_files/songs_list.json'
 music_files_directory = "/".join(list(current_directory.split('/')
                                       [0:-3])) + '/resource_files/music_files/'
-
-# song_mp3_path = "/".join(list(current_directory.split('/')
-#                               [0:-3])) + '/resource_files/music_files/song.mp3'
-# song2_mp3_path = "/".join(list(current_directory.split('/')
-#                                [0:-3])) + '/resource_files/music_files/song2.mp3'
+current_song_mp3_path = music_files_directory + 'song.mp3'
+next_song_mp3_path = music_files_directory + 'next_song.mp3'
 
 
+# *********************************************************************************************************************
+# helper functions
+# *********************************************************************************************************************
 # get songs_list_json entire list
 def get_songs_list():
     with open(songs_list_json) as f:
@@ -64,6 +64,9 @@ def add_url(yt_search_or_link):
         json.dump(data, outfile)
 
 
+# *********************************************************************************************************************
+# play music helper functions
+# *********************************************************************************************************************
 # download song using youtube_dl
 def download_song(song, path):
     print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
@@ -82,49 +85,53 @@ def download_song(song, path):
             os.rename(file, path)
 
 
-# play songs
-def play_songs(ctx):
-    song_mp3_path = music_files_directory + 'song.mp3'
-    song2_mp3_path = music_files_directory + 'song2.mp3'
-    # remove "song.mp3" file
-    try:
-        if os.path.isfile(song_mp3_path):
-            os.remove(music_files_directory + 'song.mp3')
-    except PermissionError:
-        print('~~~~~~~~~ Error in play_songs() at FIRST try/except ~~~~~~~~~ ')
-    try:
-        # rename "song2.mp3" to "song.mp3" if song2.mp3 exists
-        if os.path.isfile(song2_mp3_path):
-            os.rename(song2_mp3_path, song_mp3_path)
-    except PermissionError:
-        print('~~~~~~~~~ Error in play_songs() at SECOND try/except ~~~~~~~~~ ')
+# play songs with ffmpeg
+def play_song(ctx, path):
+    voice = ctx.voice_client
+    voice.play(discord.FFmpegPCMAudio(path),
+               after=lambda e: play_next(ctx))
+    voice.is_playing()
 
-    # playing songs
+
+# *********************************************************************************************************************
+# main functions
+# *********************************************************************************************************************
+# main play music
+def play_music(ctx):
+    # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
+    if os.path.isfile(current_song_mp3_path):
+        os.remove(current_song_mp3_path)
+    # rename "next_song.mp3" to "song.mp3" if next_song.mp3 existed -> song.mp3 exist
+    if os.path.isfile(next_song_mp3_path):
+        os.rename(next_song_mp3_path, current_song_mp3_path)
+    # download songs
     songs_list = get_songs_list()
     if len(songs_list) > 0:
-
-        
-        # if len(songs_list) > 1 and os.path.isfile(song_mp3_path):
-        #     print('~~~~~~~~~ Downloading 2 songs ~~~~~~~~~ ')
-        #     download_song(get_current_song(), song_mp3_path)
-
-        #     download_song(get_next_song(), song2_mp3_path)
-
-        # else:
-        #     download_song(get_current_song())
-        # play ffmpeg
-        voice = ctx.voice_client
-        voice.play(discord.FFmpegPCMAudio(song_mp3_path),
-                   after=lambda e: play_next(ctx))
-        voice.is_playing()
+        # check if next_song.mp3 existed - play song.mp3
+        if len(songs_list) > 1:
+            if os.path.isfile(song_mp3_path):
+                play_song(ctx, song_mp3_path)
+                print('~~~ Downloading next song into song2.mp3 ~~~')
+                download_song(get_next_song(), song2_mp3_path)
+            else:
+                print('~~~ Downloading current song into song.mp3 ~~~')
+                download_song(get_current_song(), song_mp3_path)
+                play_song(ctx, song_mp3_path)
+                print('~~~ Downloading next song into song2.mp3 ~~~')
+                download_song(get_next_song(), song2_mp3_path)
+        if len(songs_list) == 1:
+            print('~~~ Downloading current song into song.mp3 ~~~')
+            download_song(get_current_song(), song_mp3_path)
+            play_song(ctx, song_mp3_path)
     else:
+        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
+        voice = ctx.voice_client
         voice.disconnect()
         reset_songs_list()
-        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
 
 
 # play next song
 def play_next(ctx):
     print("~~~~~~~~~ Inside play_next ~~~~~~~~~")
     delete_first_song()
-    play_songs(ctx)
+    play_music(ctx)
