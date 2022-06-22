@@ -135,12 +135,16 @@ dmypy.json
 .nohup.out
 .activity.log
 
-# specific files
 /old
+# image files
+/resource_files/image_files/riot_images/spectator/runes.png
+/resource_files/image_files/riot_images/spectator/thumbnail.png
+# json files
 /resource_files/json_files/events.json
 /resource_files/json_files/beebot_profiles.json
 /resource_files/json_files/urls.json
-
-/resource_files/music_files/yt_links.json
+# music files
 /resource_files/music_files/songs_list.json
-/resource_files/music_files/current_song.json
+*.mp3
+*.webm.part
+*.webm

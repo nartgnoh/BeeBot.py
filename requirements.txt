@@ -4,6 +4,7 @@ riotwatcher
 discord-pretty-help
 python-dateutil
 pytz
+Pillow
 ffmpeg-python
 youtube_dl
 youtube-search

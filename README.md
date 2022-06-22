@@ -14,20 +14,25 @@ Code-base for a bee-themed Discord.py bot who responds with cute and helpful rea
 
 ### Dependencies
 
-* Runs on Python3 and ffmpeg
+* Runs on Python3
 ```
 $ sudo apt-get install software-properties-common
 $ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt-get update
 $ sudo apt-get install python3.8
-$ sudo apt-get install ffmpeg
 ```
 
 * Install requirements
 ```
 $ pip install -r requirements.txt
 ```
-  
+
+* Other requirements
+```
+$ sudo apt-get install ffmpeg
+$ youtube-dl --rm-cache-dir
+```
+
 ### Installing
 
 Run in Terminal:
@@ -36,6 +41,8 @@ $ git clone git@github.com:nartgnoh/Discord_Beebot.git
 ```
 
 ### Setup
+
+* Setup a discord bot application with the [Discord Developer Portal](https://discord.com/developers/applications)
 
 * Create a .env file and add the specified tokens
 ```
@@ -53,6 +60,7 @@ Click [here](https://developer.riotgames.com/) to find steps for a Riot API key,
 ## Executing program
 
 You can either run BeeBot.py locally or on a Google Cloud VM
+
 ### Running Locally
 
 * Go through the "Getting Started" section above
@@ -87,9 +95,11 @@ $ ps -ef | grep python3
 <!-- First lookup bee_bot.py process -->
 $ ps -ef | grep python3
 <!-- Looks like this: user+    1224     936 14 04:54 pts/0    00:00:00 python3 -u bee_bot.py -->
-<!-- Using the number of the process, kill the process -->
-$ kill 1224
+<!-- Using the number of the process (the pid), kill the process (in this example, the pid=1224) -->
+$ kill -9 1224
 ```
+* Once the bot is up and running, go through the admin commands and reset each one in discord
+  
 * ## Authors
 
 * Hong Tran [@nartgnoh](https://github.com/nartgnoh)

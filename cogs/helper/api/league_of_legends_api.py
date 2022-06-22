@@ -22,6 +22,8 @@ def get_version(region=default_region):
 def get_champion_list(champions_version=get_version(default_region)):
     return lol_watcher.data_dragon.champions(champions_version)
 
+# def get_summoner_match_history_20(summoner_id):
+
 
 def champion_string_formatting(champion):
     return champion.replace("'", '').lower().title().replace(' ', '').strip('"')

@@ -15,11 +15,15 @@ from youtube_search import YoutubeSearch
 current_directory = os.path.dirname(os.path.realpath(__file__))
 songs_list_json = "/".join(list(current_directory.split('/')
                                 [0:-3])) + '/resource_files/music_files/songs_list.json'
+music_files_directory = "/".join(list(current_directory.split('/')
+                                      [0:-3])) + '/resource_files/music_files/'
+current_song_mp3_path = music_files_directory + 'song.mp3'
+next_song_mp3_path = music_files_directory + 'next_song.mp3'
 
-song_mp3_path = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/music_files/song.mp3'
 
-
+# *********************************************************************************************************************
+# helper functions
+# *********************************************************************************************************************
 # get songs_list_json entire list
 def get_songs_list():
     with open(songs_list_json) as f:
@@ -29,6 +33,11 @@ def get_songs_list():
 # get songs_list_json first element
 def get_current_song():
     return get_songs_list()[0]
+
+
+# get songs_list_json second element
+def get_next_song():
+    return get_songs_list()[1]
 
 
 # reset songs list
@@ -45,124 +54,110 @@ def delete_first_song():
         json.dump(data[1:], outfile)
 
 
+# check song duration under 15 mins
+def check_song_duration(song_json):
+    song_duration = song_json['duration'].split(':')
+    # get song duration in seconds (mins*60 + secs)
+    total_seconds = int(song_duration[-2]) * 60 + int(song_duration[-1])
+    if total_seconds > 900:
+        return False
+    else:
+        return True
+
+
 # if "url" is not a real url link, then "YoutubeSearch" and create new a YouTube url link
 def add_url(yt_search_or_link):
     yt_search = YoutubeSearch(yt_search_or_link, max_results=1).to_json()
     new_yt_json = json.loads(yt_search)["videos"][0]
-    yt_links_json = get_songs_list()
-    data = yt_links_json + [new_yt_json]
-    with open(songs_list_json, 'w') as outfile:
-        json.dump(data, outfile)
+    if check_song_duration(new_yt_json):
+        yt_links_json = get_songs_list()
+        data = yt_links_json + [new_yt_json]
+        with open(songs_list_json, 'w') as outfile:
+            json.dump(data, outfile)
+        return new_yt_json
+    else:
+        return False
 
 
-# # get youtube_dl info
-# def get_yt_dl_info():
-#     current_song = get_current_song()
-#     youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-#     ydl_opts = {
-#         'format': 'bestaudio/best',
-#         'postprocessors': [{
-#             'key': 'FFmpegExtractAudio',
-#             'preferredcodec': 'mp3',
-#             'preferredquality': '192',
-#         }]
-#     }
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         info = ydl.extract_info(youtube_url, download=False)['formats'][0]['url']
-#         return info
-
-# # go next
-# def go_next():
-#     delete_first_song()
-#     return get_yt_dl_info()
-
-# play songs
-def play_songs(ctx):
-    check = True
-    # create song file
-    song_there = os.path.isfile(song_mp3_path)
-    try:
-        # remove "song.mp3" file
-        if song_there:
-            os.remove(song_mp3_path)
-    except PermissionError:
-        print('~~~~~~~~~ Error in play_songs() around "song_there" ~~~~~~~~~ ')
-    try:
-        current_song = get_current_song()
-    except:
-        check = False
-        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
-    if check:
-        print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
-        youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-        ydl_opts = {'format': 'bestaudio/best',
-                    'postprocessors': [{
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'mp3',
-                        'preferredquality': '192',
-                    }]
-                    }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([youtube_url])
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, song_mp3_path)
-        voice = ctx.voice_client
-
-        voice.play(discord.FFmpegPCMAudio(song_mp3_path),
-                    after=lambda e: play_next(ctx))
-        voice.is_playing()
+# *********************************************************************************************************************
+# play music helper functions
+# *********************************************************************************************************************
+# download song using youtube_dl
+def download_song(song, path):
+    print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
+    youtube_url = "https://www.youtube.com/" + song["url_suffix"]
+    ydl_opts = {'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }]
+                }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([youtube_url])
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, path)
 
 
-def play_next(ctx):
-    print("~~~~~~~~~ Inside play_next ~~~~~~~~~")
-    try:
-        delete_first_song()
-    except:
-        print("~~~~~~~~~ Nothing left in songs_list.json ~~~~~~~~~")
-    play_songs(ctx)
-
-# # # play songs
-# async def play_songs(ctx, bot):
-#     current_song = get_current_song()
-#     youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-#     ydl_opts = {'format': 'bestaudio/best',
-#                 'postprocessors': [{
-#                     'key': 'FFmpegExtractAudio',
-#                     'preferredcodec': 'mp3',
-#                     'preferredquality': '192',
-#                 }]
-#                 }
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         info = ydl.extract_info(youtube_url, download=False)[
-#             'formats'][0]['url']
-#         voice = ctx.voice_client
-#         FFMPEG_OPTIONS = {
-#             'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-#         voice.is_playing()
-#         voice.play(await discord.FFmpegOpusAudio.from_probe(info, **FFMPEG_OPTIONS))
-
-    # await discord.FFmpegOpusAudio.from_probe(song, **FFMPEG_OPTIONS)
-    # # calling this "download_song" function again to play next song
-    # voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
-    # song = info['formats'][0]['url']
-    # FFMPEG_OPTIONS = {
-    #     'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    # voice.play(await discord.FFmpegOpusAudio.from_probe(song, **FFMPEG_OPTIONS),
-    #            after=lambda e: download_song(ctx, bot))
-    # voice.is_playing()
+# play songs with ffmpeg
+def play_song(self, ctx, path):
+    voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+    voice.is_playing()
+    voice.play(discord.FFmpegPCMAudio(path),
+               after=lambda e: play_next(self, ctx))
+    voice.is_playing()
 
 
-# # check if songs_list_json is empty without the first element (current)
-# def check_rest_songs_list():
-#     with open(songs_list_json) as f:
-#         if json.load(f)[1:]:
-#             return True
-#         else:
-#             return False
+# *********************************************************************************************************************
+# main functions
+# *********************************************************************************************************************
+# # main play music with 2 downloads
+# def play_music(ctx):
+#     # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
+#     if os.path.isfile(current_song_mp3_path):
+#         os.remove(current_song_mp3_path)
+#     # rename "next_song.mp3" to "song.mp3" if next_song.mp3 existed -> song.mp3 exist
+#     if os.path.isfile(next_song_mp3_path):
+#         os.rename(next_song_mp3_path, current_song_mp3_path)
+#     # download songs
+#     songs_list = get_songs_list()
+#     if len(songs_list) > 0:
+#         # check if next_song.mp3 existed - play song.mp3
+#         if len(songs_list) > 1:
+#             if os.path.isfile(current_song_mp3_path):
+#                 play_song(ctx, current_song_mp3_path)
+#                 download_song(get_next_song(), next_song_mp3_path)
+#             else:
+#                 download_song(get_current_song(), current_song_mp3_path)
+#                 play_song(ctx, current_song_mp3_path)
+#                 download_song(get_next_song(), next_song_mp3_path)
+#         if len(songs_list) == 1:
+#             download_song(get_current_song(), current_song_mp3_path)
+#             play_song(ctx, current_song_mp3_path)
+#     else:
+#         print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
+#         reset_songs_list()
 
 
-# # check duration of song is under 15mins
-# def check_duration(yt_json):
-#     duration = datetime.strptime(yt_json['duration'], '%M:%S')
-#     # if yt_json[]
+# main play music with 1 download
+def play_music(self, ctx):
+    # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
+    if os.path.isfile(current_song_mp3_path):
+        os.remove(current_song_mp3_path)
+    # download songs
+    songs_list = get_songs_list()
+    if len(songs_list) > 0:
+        # check if next_song.mp3 existed - play song.mp3
+        download_song(get_current_song(), current_song_mp3_path)
+        play_song(self, ctx, current_song_mp3_path)
+    else:
+        print("---------- No more audio in queue ----------")
+        reset_songs_list()
+
+
+# play next song
+def play_next(self, ctx):
+    print("---------- Inside play_next ----------")
+    delete_first_song()
+    play_music(self, ctx)
