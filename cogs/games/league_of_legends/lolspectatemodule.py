@@ -134,7 +134,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                     # | embed |
                     # *********
                     embed = Embed(title=f"{summoner['name']}'s Live Game Info",
-                                  description=f"Game Mode: {spectator['gameMode']}\n(⭐ High mastery champions >200k)",
+                                  description=f"Game Mode: {spectator['gameMode']}\n(⭐ Enemies with high mastery on their champion >200k)",
                                   colour=ctx.author.colour)
                     # embed thumbnail
                     thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
