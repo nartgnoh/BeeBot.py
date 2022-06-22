@@ -39,8 +39,7 @@ class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
             # *********
             # | embed |
             # *********
-            embed = Embed(title="🎵 Current Song 🎵",
-                          description=f"***{current_song['title']}***",
+            embed = Embed(title=f"🎵 Current song is ~ {current_song['title']} 🎵",
                           colour=ctx.author.colour)
             # embed thumbnail
             thumb_url = current_song['thumbnails'][0]
@@ -60,8 +59,7 @@ class viewmusicmodule(commands.Cog, name="ViewMusicModule", description=""):
             # *********
             # | embed |
             # *********
-            embed = Embed(title="🎼 Next Song 🎼",
-                          description=f"***{next_song['title']}***",
+            embed = Embed(title=f"🎼 Next song is ~ {next_song['title']} 🎼",
                           colour=ctx.author.colour)
             # embed thumbnail
             thumb_url = next_song['thumbnails'][0]

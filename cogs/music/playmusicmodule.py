@@ -29,7 +29,7 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
     # bot command to play Youtube Audio
     # *********************************************************************************************************************
     @commands.command(name='play', aliases=['playaudio', 'playsong', '▶️'],
-                      help='▶️ Plays YouTube audio! Provide YouTube search or link! [Max length: 10mins, Role specific]')
+                      help='▶️ Plays YouTube audio! Provide YouTube search or link! [Max length: 15mins, Role specific]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def play(self, ctx, *, yt_search_or_link: Optional[str]):
@@ -39,30 +39,32 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
             if ctx.author.voice is None:
                 await ctx.send('Please join a discord channel! :slight_smile:')
             else:
-                music_helper.add_url(yt_search_or_link)
-                channel = ctx.message.author.voice.channel
-                voice = ctx.voice_client
-                if voice is None:
-                    await channel.connect(timeout=300)
+                check = music_helper.add_url(yt_search_or_link)
+                if not check:
+                    await ctx.send('Sorry! The song you were trying to play is too long! :cry: [Max length: 15mins]')
                 else:
-                    await voice.move_to(channel)
-                voice = ctx.voice_client
-                if voice.is_playing():
-                    await ctx.send(':notes: Your audio has been added to the queue! :notes:')
-                else:
-                    current_song = music_helper.get_current_song()
-                    music_helper.play_music(ctx)
-                    # *********
-                    # | embed |
-                    # *********
-                    embed = Embed(title="🎵 BeeBot will now bee playing 🎵",
-                                description=f"***{current_song['title']}***",
-                                colour=ctx.author.colour)
-                    # embed thumbnail
-                    thumb_url = current_song['thumbnails'][0]
-                    embed.set_thumbnail(url=thumb_url)
-                    await ctx.send(embed=embed)
-                    # await ctx.send(f':musical_note: BeeBot will now bee playing ***{current_song["title"]}!*** :musical_note:')
+                    channel = ctx.message.author.voice.channel
+                    voice = ctx.voice_client
+                    if voice is None:
+                        await channel.connect(timeout=300)
+                    else:
+                        await voice.move_to(channel)
+                    voice = ctx.voice_client
+                    if voice.is_playing():
+                        await ctx.send(':musical_score: Your audio has been added to the queue! :musical_score:')
+                    else:
+                        current_song = music_helper.get_current_song()
+                        music_helper.play_music(ctx)
+                        # *********
+                        # | embed |
+                        # *********
+                        embed = Embed(title=f"🎵 Now Playing 🎵\n{current_song['title']}",
+                                    description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
+                                    colour=ctx.author.colour)
+                        # embed thumbnail
+                        thumb_url = current_song['thumbnails'][0]
+                        embed.set_thumbnail(url=thumb_url)
+                        await ctx.send(embed=embed)
 
     # # bot command to go to next audio in queue by reaction vote
     # @bot.command(name='next', aliases=['skip'], help='⏭️ Play the next audio! (Role specific) ♫')

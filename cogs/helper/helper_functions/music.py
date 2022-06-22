@@ -54,16 +54,6 @@ def delete_first_song():
         json.dump(data[1:], outfile)
 
 
-# if "url" is not a real url link, then "YoutubeSearch" and create new a YouTube url link
-def add_url(yt_search_or_link):
-    yt_search = YoutubeSearch(yt_search_or_link, max_results=1).to_json()
-    new_yt_json = json.loads(yt_search)["videos"][0]
-    yt_links_json = get_songs_list()
-    data = yt_links_json + [new_yt_json]
-    with open(songs_list_json, 'w') as outfile:
-        json.dump(data, outfile)
-
-
 # check song duration under 15 mins
 def check_song_duration(song_json):
     song_duration = song_json['duration'].split(':')
@@ -73,6 +63,20 @@ def check_song_duration(song_json):
         return False
     else:
         return True
+
+
+# if "url" is not a real url link, then "YoutubeSearch" and create new a YouTube url link
+def add_url(yt_search_or_link):
+    yt_search = YoutubeSearch(yt_search_or_link, max_results=1).to_json()
+    new_yt_json = json.loads(yt_search)["videos"][0]
+    if check_song_duration(new_yt_json):
+        yt_links_json = get_songs_list()
+        data = yt_links_json + [new_yt_json]
+        with open(songs_list_json, 'w') as outfile:
+            json.dump(data, outfile)
+        return new_yt_json
+    else:
+        return False
 
 
 # *********************************************************************************************************************
