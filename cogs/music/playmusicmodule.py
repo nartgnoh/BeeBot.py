@@ -43,12 +43,12 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                 channel = ctx.message.author.voice.channel
                 voice = ctx.voice_client
                 if voice is None:
-                    await channel.connect()
+                    await channel.connect(timeout=300)
                 else:
                     await voice.move_to(channel)
                 voice = ctx.voice_client
                 if voice.is_playing():
-                    await ctx.send(':musical_note: Your audio has been added to the queue! :smile:')
+                    await ctx.send(':notes: Your audio has been added to the queue! :notes:')
                 else:
                     current_song = music_helper.get_current_song()
                     music_helper.play_music(ctx)
