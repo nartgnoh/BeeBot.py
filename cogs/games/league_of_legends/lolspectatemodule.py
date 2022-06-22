@@ -117,15 +117,24 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                         new_participants_list.append(participant)
                     if spectator['gameMode'] == 'CLASSIC':
                         spectator['gameMode'] = 'Summoner\'s Rift'
-                    # API full rune info
-                    response = requests.get(
-                        f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/runesReforged.json')
-                    rune_info = response.json()
+                    else:
+                        spectator['gameMode'] = spectator['gameMode'].replace(
+                            '_', ' ').title()
+                    # find your teamid
+                    summoner_team_id = 0
+                    for participant in new_participants_list:
+                        if participant['summonerId'] == summoner['id']:
+                            summoner_team_id = participant['teamId']
+                            break
+                    # # API full rune info
+                    # response = requests.get(
+                    #     f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/runesReforged.json')
+                    # rune_info = response.json()
                     # *********
                     # | embed |
                     # *********
                     embed = Embed(title=f"{summoner['name']}'s Live Game Info",
-                                  description=f"Game Mode: {spectator['gameMode'].replace('_', ' ').title()}",
+                                  description=f"Game Mode: {spectator['gameMode']}\n(⭐ High mastery champions >200k)",
                                   colour=ctx.author.colour)
                     # embed thumbnail
                     thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
@@ -162,14 +171,19 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                         #     images.merge_images_width_wise(
                         #         rune_style_image, rune_substyle_image, summoner_runes_image_path)
                         # summoner's team
-                        if participant['teamId'] == 100:
+                        if participant['teamId'] == summoner_team_id:
                             # Your Team section
                             summoner_team = summoner_team + \
                                 [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                             if 'rank' in participant:
                                 participant_rank = participant['rank']
-                                rank_string = f"Rank: **{participant_rank['tier'].title()} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%**"
-                                " ({participant_rank['wins']}W:{participant_rank['losses']}L)"
+                                if participant_rank['tier'] == "PLATINUM":
+                                    participant_rank['tier'] = "PLAT"
+                                elif participant_rank['tier'] == "DIAMOND":
+                                    participant_rank['tier'] = "DIA"
+                                elif participant_rank['tier'] == "GRANDMASTER":
+                                    participant_rank['tier'] = "G M"
+                                rank_string = f"Rank: **{participant_rank['tier'].title()} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%** ({participant_rank['wins']}W:{participant_rank['losses']}L)"
                             else:
                                 rank_string = "Rank: Unranked"
                             summoner_team_rank_wr = summoner_team_rank_wr + \
@@ -177,38 +191,37 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                         # enemy team
                         else:
                             # Enemy Team section
-                            enemy_team = enemy_team + \
-                                [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                             if 'rank' in participant:
                                 participant_rank = participant['rank']
-                                rank_string = f"Rank: **{participant_rank['tier'].title()} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%**"
-                                " ({participant_rank['wins']}W:{participant_rank['losses']}L)"
+                                if participant_rank['tier'] == "PLATINUM":
+                                    participant_rank['tier'] = "PLAT"
+                                elif participant_rank['tier'] == "DIAMOND":
+                                    participant_rank['tier'] = "DIA"
+                                elif participant_rank['tier'] == "GRANDMASTER":
+                                    participant_rank['tier'] = "G M"
+                                rank_string = f"Rank: **{participant_rank['tier'].title().replace(' ', '')} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%** ({participant_rank['wins']}W:{participant_rank['losses']}L)"
                             else:
                                 rank_string = "Rank: Unranked"
                             enemy_team_rank_wr = enemy_team_rank_wr + \
                                 [rank_string]
                             # Enemy Team High Mastery section
-                            high_mastery = ''
+                            high_mastery = False
                             for mastery in participant['masteries']:
                                 if participant['championId'] == mastery['championId']:
                                     if mastery['championPoints'] > 200000:
-                                        high_mastery = f"**{participant['summonerName']} ({participant['currentChampion']['name']})**"
+                                        high_mastery = True
+                                        enemy_team = enemy_team + \
+                                        [f"⭐ **{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                                     break
-                            enemy_team_high_mastery = enemy_team_high_mastery + \
-                                [high_mastery]
+                            if not high_mastery:
+                                enemy_team = enemy_team + \
+                                    [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                     enemy_team_high_mastery = [
                         i for i in enemy_team_high_mastery if i]
-                    embed.add_field(name="Enemy Team:",
-                                    value='\n'.join(enemy_team), inline=True)
+                    embed.add_field(name='Enemy Team:',
+                                    value='\n'.join(enemy_team)+'\n\n**Your Team:**\n'+'\n'.join(summoner_team), inline=True)
                     embed.add_field(name='\u200b',
-                                    value='\n'.join(enemy_team_rank_wr), inline=True)
-                    embed.add_field(name='\u200b', value='\u200b', inline=True)
-                    embed.add_field(name="Your Team:",
-                                    value='\n'.join(summoner_team), inline=True)
-                    embed.add_field(name='\u200b',
-                                    value='\n'.join(summoner_team_rank_wr), inline=True)
-                    embed.add_field(name="Enemy players to watch for (Mastery >200k):",
-                                    value=f"\u200b{', '.join(enemy_team_high_mastery)}", inline=False)
+                                    value='\n'.join(enemy_team_rank_wr)+'\n\n\u200b\n'+'\n'.join(summoner_team_rank_wr), inline=True)
                     # embed.add_field(name="Your Runes:",
                     #                 value='\u200b', inline=False)
                     # # embed image
