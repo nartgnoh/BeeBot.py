@@ -136,14 +136,15 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
     async def leave(self, ctx):
         try:
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+            if voice.is_connected():
+                voice.stop()
+                music_helper.reset_songs_list()
+                server = ctx.message.guild.voice_client
+                await server.disconnect()
+                await ctx.send("Ok I'll leave. :cry:")
         except:
             await ctx.send("BeeBot is not connected to a voice channel. :thinking:")
-        if voice.is_connected():
-            voice.stop()
-            music_helper.reset_songs_list()
-            server = ctx.message.guild.voice_client
-            await server.disconnect()
-            await ctx.send("Ok I'll leave. :cry:")
+
 
 
 def setup(bot):
