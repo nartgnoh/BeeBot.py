@@ -52,26 +52,7 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                 else:
                     current_song = music_helper.get_current_song()
                     music_helper.play_songs(ctx)
-
-                    # FFMPEG_OPTIONS = {
-                    #     'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-                    # voice.is_playing()
-                    # voice.play(await discord.FFmpegOpusAudio.from_probe(music_helper.get_yt_dl_info(), **FFMPEG_OPTIONS),
-                    #            after=await discord.FFmpegOpusAudio.from_probe(music_helper.get_yt_dl_info(), **FFMPEG_OPTIONS))
                     await ctx.send(f':musical_note: BeeBot will now bee playing ***{current_song["title"]}!*** :musical_note:')
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # # bot command to go to next audio in queue by reaction vote
     # @bot.command(name='next', aliases=['skip'], help='⏭️ Play the next audio! (Role specific) ♫')
@@ -144,7 +125,6 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description=""):
                 await ctx.send("Ok I'll leave. :cry:")
         except:
             await ctx.send("BeeBot is not connected to a voice channel. :thinking:")
-
 
 
 def setup(bot):

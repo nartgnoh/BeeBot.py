@@ -15,9 +15,13 @@ from youtube_search import YoutubeSearch
 current_directory = os.path.dirname(os.path.realpath(__file__))
 songs_list_json = "/".join(list(current_directory.split('/')
                                 [0:-3])) + '/resource_files/music_files/songs_list.json'
+music_files_directory = "/".join(list(current_directory.split('/')
+                                      [0:-3])) + '/resource_files/music_files/'
 
-song_mp3_path = "/".join(list(current_directory.split('/')
-                              [0:-3])) + '/resource_files/music_files/song.mp3'
+# song_mp3_path = "/".join(list(current_directory.split('/')
+#                               [0:-3])) + '/resource_files/music_files/song.mp3'
+# song2_mp3_path = "/".join(list(current_directory.split('/')
+#                                [0:-3])) + '/resource_files/music_files/song2.mp3'
 
 
 # get songs_list_json entire list
@@ -29,6 +33,11 @@ def get_songs_list():
 # get songs_list_json first element
 def get_current_song():
     return get_songs_list()[0]
+
+
+# get songs_list_json second element
+def get_next_song():
+    return get_songs_list()[1]
 
 
 # reset songs list
@@ -55,114 +64,67 @@ def add_url(yt_search_or_link):
         json.dump(data, outfile)
 
 
-# # get youtube_dl info
-# def get_yt_dl_info():
-#     current_song = get_current_song()
-#     youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-#     ydl_opts = {
-#         'format': 'bestaudio/best',
-#         'postprocessors': [{
-#             'key': 'FFmpegExtractAudio',
-#             'preferredcodec': 'mp3',
-#             'preferredquality': '192',
-#         }]
-#     }
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         info = ydl.extract_info(youtube_url, download=False)['formats'][0]['url']
-#         return info
+# download song using youtube_dl
+def download_song(song, path):
+    print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
+    youtube_url = "https://www.youtube.com/" + song["url_suffix"]
+    ydl_opts = {'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }]
+                }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([youtube_url])
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, path)
 
-# # go next
-# def go_next():
-#     delete_first_song()
-#     return get_yt_dl_info()
 
 # play songs
 def play_songs(ctx):
-    check = True
-    # create song file
-    song_there = os.path.isfile(song_mp3_path)
+    song_mp3_path = music_files_directory + 'song.mp3'
+    song2_mp3_path = music_files_directory + 'song2.mp3'
+    # remove "song.mp3" file
     try:
-        # remove "song.mp3" file
-        if song_there:
-            os.remove(song_mp3_path)
+        if os.path.isfile(song_mp3_path):
+            os.remove(music_files_directory + 'song.mp3')
     except PermissionError:
-        print('~~~~~~~~~ Error in play_songs() around "song_there" ~~~~~~~~~ ')
+        print('~~~~~~~~~ Error in play_songs() at FIRST try/except ~~~~~~~~~ ')
     try:
-        current_song = get_current_song()
-    except:
-        check = False
-        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
-    if check:
-        print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
-        youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-        ydl_opts = {'format': 'bestaudio/best',
-                    'postprocessors': [{
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'mp3',
-                        'preferredquality': '192',
-                    }]
-                    }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([youtube_url])
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, song_mp3_path)
+        # rename "song2.mp3" to "song.mp3" if song2.mp3 exists
+        if os.path.isfile(song2_mp3_path):
+            os.rename(song2_mp3_path, song_mp3_path)
+    except PermissionError:
+        print('~~~~~~~~~ Error in play_songs() at SECOND try/except ~~~~~~~~~ ')
+
+    # playing songs
+    songs_list = get_songs_list()
+    if len(songs_list) > 0:
+
+        
+        # if len(songs_list) > 1 and os.path.isfile(song_mp3_path):
+        #     print('~~~~~~~~~ Downloading 2 songs ~~~~~~~~~ ')
+        #     download_song(get_current_song(), song_mp3_path)
+
+        #     download_song(get_next_song(), song2_mp3_path)
+
+        # else:
+        #     download_song(get_current_song())
+        # play ffmpeg
         voice = ctx.voice_client
-
         voice.play(discord.FFmpegPCMAudio(song_mp3_path),
-                    after=lambda e: play_next(ctx))
+                   after=lambda e: play_next(ctx))
         voice.is_playing()
+    else:
+        voice.disconnect()
+        reset_songs_list()
+        print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
 
 
+# play next song
 def play_next(ctx):
     print("~~~~~~~~~ Inside play_next ~~~~~~~~~")
-    try:
-        delete_first_song()
-    except:
-        print("~~~~~~~~~ Nothing left in songs_list.json ~~~~~~~~~")
+    delete_first_song()
     play_songs(ctx)
-
-# # # play songs
-# async def play_songs(ctx, bot):
-#     current_song = get_current_song()
-#     youtube_url = "https://www.youtube.com/" + current_song["url_suffix"]
-#     ydl_opts = {'format': 'bestaudio/best',
-#                 'postprocessors': [{
-#                     'key': 'FFmpegExtractAudio',
-#                     'preferredcodec': 'mp3',
-#                     'preferredquality': '192',
-#                 }]
-#                 }
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         info = ydl.extract_info(youtube_url, download=False)[
-#             'formats'][0]['url']
-#         voice = ctx.voice_client
-#         FFMPEG_OPTIONS = {
-#             'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-#         voice.is_playing()
-#         voice.play(await discord.FFmpegOpusAudio.from_probe(info, **FFMPEG_OPTIONS))
-
-    # await discord.FFmpegOpusAudio.from_probe(song, **FFMPEG_OPTIONS)
-    # # calling this "download_song" function again to play next song
-    # voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
-    # song = info['formats'][0]['url']
-    # FFMPEG_OPTIONS = {
-    #     'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    # voice.play(await discord.FFmpegOpusAudio.from_probe(song, **FFMPEG_OPTIONS),
-    #            after=lambda e: download_song(ctx, bot))
-    # voice.is_playing()
-
-
-# # check if songs_list_json is empty without the first element (current)
-# def check_rest_songs_list():
-#     with open(songs_list_json) as f:
-#         if json.load(f)[1:]:
-#             return True
-#         else:
-#             return False
-
-
-# # check duration of song is under 15mins
-# def check_duration(yt_json):
-#     duration = datetime.strptime(yt_json['duration'], '%M:%S')
-#     # if yt_json[]
