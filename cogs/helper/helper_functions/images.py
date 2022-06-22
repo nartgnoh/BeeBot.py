@@ -42,6 +42,10 @@ def merge_images_width_wise(image1, image2, save_path, offset=0):
     new_image.save(save_path, "PNG")
 
 
+def resize_image(image, width, height):
+    return image.resize((width, height))
+
+
 def delete_image(path):
     if os.path.isfile(path):
         os.remove(path)

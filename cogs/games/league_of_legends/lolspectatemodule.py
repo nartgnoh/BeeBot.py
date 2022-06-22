@@ -82,7 +82,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                     try:
                         # get spectator info
                         spectator = lol_watcher.spectator.by_summoner(
-                            region, f"{''.join(summoner_name)}")
+                            region, summoner['id'])
                     except:
                         spectator_check = False
                         await ctx.send("Sorry! The summoner name you inputed isn't currently in a game! :cry:\n"
@@ -93,67 +93,139 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                         'n']['champion']
                     champ_list = lol_api.get_champion_list(
                         champions_version)['data']
-                    
-
-                    
-                    # image
-                    image_path = images.get_image_path('')
-
-                    
-
-                    # # get summoner ranks
-                    # ranks = lol_watcher.league.by_summoner(
-                    #     region, summoner['id'])
-                    # # get total mastery
-                    # total_mastery = lol_watcher.champion_mastery.scores_by_summoner(
-                    #     region, summoner['id'])
-                    # # get top mastery
-                    # top_mastery = lol_watcher.champion_mastery.by_summoner(region, summoner['id'])[
-                    #     0]
-                    # # get top mastery champ
-                    # champ_list = lol_api.get_champion_list(
-                    #     champions_version)['data']
-                    # top_master_champ_info = ''
-                    # for champion in champ_list:
-                    #     if top_mastery['championId'] == int(champ_list[champion]['key']):
-                    #         top_master_champ_info = champion
-                    #         break
-                    # top_master_champ_info = champ_list[top_master_champ_info]
+                    new_participants_list = []
+                    for participant in spectator['participants']:
+                        participant_summoner_id = participant['summonerId']
+                        # get ranks
+                        ranks = lol_watcher.league.by_summoner(
+                            region, participant_summoner_id)
+                        for rank in ranks:
+                            if 'RANKED_SOLO_5x5' in rank.values():
+                                participant['rank'] = rank
+                                break
+                        # get masteries
+                        masteries = lol_watcher.champion_mastery.by_summoner(
+                            region, participant_summoner_id)
+                        participant['masteries'] = masteries
+                        # get current champion
+                        for champion in champ_list:
+                            if participant['championId'] == int(champ_list[champion]['key']):
+                                participant['currentChampion'] = champ_list[champion]
+                            if 'top_mastery' in participant and 'currentChampion' in participant:
+                                break
+                        # add to new_participants_list
+                        new_participants_list.append(participant)
+                    if spectator['gameMode'] == 'CLASSIC':
+                        spectator['gameMode'] = 'Summoner\'s Rift'
+                    # API full rune info
+                    response = requests.get(
+                        f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/data/en_US/runesReforged.json')
+                    rune_info = response.json()
                     # *********
                     # | embed |
                     # *********
-                    # embed = Embed(title=f"{summoner['name']}'s LOL Profile",
-                    #               description=f"Summoner Level: {summoner['summonerLevel']}",
-                    #               colour=ctx.author.colour)
-                    # # embed thumbnail
-                    # thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
-                    # embed.set_thumbnail(url=thumb_url)
-                    # # embed fields
-                    # if ranks:
-                    #     for rank in ranks:
-                    #         embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
-                    #                         value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
-                    #                         f"Wins: {rank['wins']} Losses: {rank['losses']}", inline=False)
-                    #     embed.add_field(
-                    #         name='\u200b', value='\u200b', inline=False)
-                    # fields = [("Total Champion Mastery Score:", f"*{total_mastery}*", False),
-                    #           ("Highest Mastery Champion:",
-                    #            f"*{top_master_champ_info['name']}*", False),
-                    #           ("Mastery Level:",
-                    #            f"*{top_mastery['championLevel']}*", True),
-                    #           ("Mastery Points:", f"*{top_mastery['championPoints']}*", True)]
-                    # for name, value, inline in fields:
-                    #     embed.add_field(name=name, value=value, inline=inline)
-                    # await ctx.send(embed=embed)
+                    embed = Embed(title=f"{summoner['name']}'s Live Game Info",
+                                  description=f"Game Mode: {spectator['gameMode'].replace('_', ' ').title()}",
+                                  colour=ctx.author.colour)
+                    # embed thumbnail
+                    thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
+                    thumb_image = images.get_image_by_url(thumb_url)
+                    thumb_image = images.resize_image(thumb_image, 50, 50)
+                    images.save_image(thumb_image, images.get_image_path(
+                        'riot_images/spectator/thumbnail.png'))
+                    file = discord.File(
+                        f"resource_files/image_files/riot_images/spectator/thumbnail.png", filename="image.png")
+                    embed.set_thumbnail(url='attachment://image.png')
+                    # embed fields
+                    enemy_team = []
+                    enemy_team_rank_wr = []
+                    summoner_team = []
+                    summoner_team_rank_wr = []
+                    enemy_team_high_mastery = []
+                    # summoner_runes_image_path = images.get_image_path(
+                    #     'riot_images/spectator/runes.png')
+                    for participant in new_participants_list:
+                        # # summoner runes
+                        # if participant['summonerId'] == summoner['id']:
+                        #     ddragon_images_url = 'https://ddragon.canisback.com/img/'
+                        #     rune_style_id = participant['perks']['perkStyle']
+                        #     rune_substyle_id = participant['perks']['perkSubStyle']
+                        #     for rune in rune_info:
+                        #         if rune['id'] == rune_style_id:
+                        #             rune_style_image_url = rune['icon']
+                        #         if rune['id'] == rune_substyle_id:
+                        #             rune_substyle_image_url = rune['icon']
+                        #     rune_style_image = images.get_image_by_url(
+                        #         ddragon_images_url + rune_style_image_url)
+                        #     rune_substyle_image = images.get_image_by_url(
+                        #         ddragon_images_url + rune_substyle_image_url)
+                        #     images.merge_images_width_wise(
+                        #         rune_style_image, rune_substyle_image, summoner_runes_image_path)
+                        # summoner's team
+                        if participant['teamId'] == 100:
+                            # Your Team section
+                            summoner_team = summoner_team + \
+                                [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
+                            if 'rank' in participant:
+                                participant_rank = participant['rank']
+                                rank_string = f"Rank: **{participant_rank['tier'].title()} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%**"
+                                " ({participant_rank['wins']}W:{participant_rank['losses']}L)"
+                            else:
+                                rank_string = "Rank: Unranked"
+                            summoner_team_rank_wr = summoner_team_rank_wr + \
+                                [rank_string]
+                        # enemy team
+                        else:
+                            # Enemy Team section
+                            enemy_team = enemy_team + \
+                                [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
+                            if 'rank' in participant:
+                                participant_rank = participant['rank']
+                                rank_string = f"Rank: **{participant_rank['tier'].title()} {participant_rank['rank']}** - WR: **{round(participant_rank['wins']/(participant_rank['wins']+participant_rank['losses'])*100, 2)}%**"
+                                " ({participant_rank['wins']}W:{participant_rank['losses']}L)"
+                            else:
+                                rank_string = "Rank: Unranked"
+                            enemy_team_rank_wr = enemy_team_rank_wr + \
+                                [rank_string]
+                            # Enemy Team High Mastery section
+                            high_mastery = ''
+                            for mastery in participant['masteries']:
+                                if participant['championId'] == mastery['championId']:
+                                    if mastery['championPoints'] > 200000:
+                                        high_mastery = f"**{participant['summonerName']} ({participant['currentChampion']['name']})**"
+                                    break
+                            enemy_team_high_mastery = enemy_team_high_mastery + \
+                                [high_mastery]
+                    enemy_team_high_mastery = [
+                        i for i in enemy_team_high_mastery if i]
+                    embed.add_field(name="Enemy Team:",
+                                    value='\n'.join(enemy_team), inline=True)
+                    embed.add_field(name='\u200b',
+                                    value='\n'.join(enemy_team_rank_wr), inline=True)
+                    embed.add_field(name='\u200b', value='\u200b', inline=True)
+                    embed.add_field(name="Your Team:",
+                                    value='\n'.join(summoner_team), inline=True)
+                    embed.add_field(name='\u200b',
+                                    value='\n'.join(summoner_team_rank_wr), inline=True)
+                    embed.add_field(name="Enemy players to watch for (Mastery >200k):",
+                                    value=f"\u200b{', '.join(enemy_team_high_mastery)}", inline=False)
+                    # embed.add_field(name="Your Runes:",
+                    #                 value='\u200b', inline=False)
+                    # # embed image
+                    # file = discord.File(
+                    #     f'resource_files/image_files/riot_images/spectator/runes.png', filename="image.png")
+                    # embed.set_image(url='attachment://image.png')
+                    await ctx.send(file=file, embed=embed)
+                    images.delete_image(images.get_image_path(
+                        'riot_images/spectator/thumbnail.png'))
 
-
-    
     # *********************************************************************************************************************
     # bot command test
     # *********************************************************************************************************************
+
     @commands.command(name='imagetest')
     # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
+    @commands.has_role(admin_specific_command_name)
     async def champ_lookup(self, ctx, champ1, champ2):
         # get current lol version for region
         champions_version = lol_api.get_version()['n']['champion']
@@ -167,15 +239,18 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
 
         image1 = images.get_image_by_url(image1_url)
         image2 = images.get_image_by_url(image2_url)
-        
-        images.merge_images_width_wise(image1, image2, images.get_image_path('riot_images/spectator/new_image.png'))
+
+        images.merge_images_width_wise(image1, image2, images.get_image_path(
+            'riot_images/spectator/new_image.png'))
 
         image1 = images.new_blank_image()
         image2 = images.get_image_by_url(image2_url)
-        
-        images.merge_images_width_wise(image1, image2, images.get_image_path('riot_images/spectator/new_image2.png'))
-        
+
+        images.merge_images_width_wise(image1, image2, images.get_image_path(
+            'riot_images/spectator/new_image2.png'))
+
         await ctx.send("images")
+
 
 def setup(bot):
     bot.add_cog(lolspectatemodule(bot))

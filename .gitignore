@@ -136,7 +136,10 @@ dmypy.json
 .activity.log
 
 /old
-# specific files
+# image files
+/resource_files/image_files/riot_images/spectator/runes.png
+/resource_files/image_files/riot_images/spectator/thumbnail.png
+# json files
 /resource_files/json_files/events.json
 /resource_files/json_files/beebot_profiles.json
 /resource_files/json_files/urls.json
