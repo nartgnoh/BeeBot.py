@@ -109,20 +109,20 @@ def play_music(ctx):
     if len(songs_list) > 0:
         # check if next_song.mp3 existed - play song.mp3
         if len(songs_list) > 1:
-            if os.path.isfile(song_mp3_path):
-                play_song(ctx, song_mp3_path)
-                print('~~~ Downloading next song into song2.mp3 ~~~')
-                download_song(get_next_song(), song2_mp3_path)
+            if os.path.isfile(current_song_mp3_path):
+                play_song(ctx, current_song_mp3_path)
+                print('~~~ Downloading next song ~~~')
+                download_song(get_next_song(), next_song_mp3_path)
             else:
-                print('~~~ Downloading current song into song.mp3 ~~~')
-                download_song(get_current_song(), song_mp3_path)
-                play_song(ctx, song_mp3_path)
+                print('~~~ Downloading current song ~~~')
+                download_song(get_current_song(), current_song_mp3_path)
+                play_song(ctx, current_song_mp3_path)
                 print('~~~ Downloading next song into song2.mp3 ~~~')
-                download_song(get_next_song(), song2_mp3_path)
+                download_song(get_next_song(), next_song_mp3_path)
         if len(songs_list) == 1:
             print('~~~ Downloading current song into song.mp3 ~~~')
-            download_song(get_current_song(), song_mp3_path)
-            play_song(ctx, song_mp3_path)
+            download_song(get_current_song(), current_song_mp3_path)
+            play_song(ctx, current_song_mp3_path)
     else:
         print("~~~~~~~~~ No more audio in queue ~~~~~~~~~")
         voice = ctx.voice_client
