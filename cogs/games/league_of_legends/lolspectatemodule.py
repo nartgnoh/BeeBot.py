@@ -211,7 +211,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                                     if mastery['championPoints'] > 200000:
                                         high_mastery = True
                                         enemy_team = enemy_team + \
-                                        [f"⭐ **{participant['summonerName']} - {participant['currentChampion']['name']}**"]
+                                            [f"⭐ **{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                                     break
                             if not high_mastery:
                                 enemy_team = enemy_team + \
