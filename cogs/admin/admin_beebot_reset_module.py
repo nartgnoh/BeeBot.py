@@ -60,16 +60,6 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
         urls.set_urls_json({})
         await ctx.send('Reset BeeBot urls file.')
 
-    # *********************************************************************************************************************
-    # bot command admin beebot reset music
-    # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_music', help='🛡️ Reset BeeBot music file. [Admin Specific]')
-    # only specific roles can use this command
-    @commands.has_role(admin_specific_command_name)
-    async def admin_beebot_reset_music(self, ctx):
-        music_helper.reset_songs_list()
-        await ctx.send('Reset BeeBot music file.')
-
     # # *********************************************************************************************************************
     # # bot command admin beebot reset ALL BEEBOT FILES
     # # *********************************************************************************************************************
