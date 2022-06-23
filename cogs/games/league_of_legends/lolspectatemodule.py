@@ -83,8 +83,8 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                             region, summoner['id'])
                     except:
                         spectator_check = False
-                        await ctx.send("Sorry! The summoner name you inputed isn't currently in a game! :cry:\n"
-                                       "Please try again with a current game! :slight_smile:")
+                        await ctx.send("Sorry! The summoner name you inputed isn't currently in a League of Legends game! :cry:\n"
+                                       "Please try again with a current LoL game! :slight_smile:")
                 if summoner_check and spectator_check:
                     # get current lol version for region
                     champions_version = lol_api.get_version(region)[
