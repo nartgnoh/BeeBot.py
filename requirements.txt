@@ -5,6 +5,7 @@ discord-pretty-help
 python-dateutil
 pytz
 Pillow
+PyNaCl
 ffmpeg-python
 youtube_dl
 youtube-search

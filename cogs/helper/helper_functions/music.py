@@ -84,13 +84,13 @@ def add_url(yt_search_or_link):
 # *********************************************************************************************************************
 # download song using youtube_dl
 def download_song(song, path):
-    print("~~~~~~~~~ Downloading Music ~~~~~~~~~")
+    print("---------- Downloading Music ----------")
     youtube_url = "https://www.youtube.com/" + song["url_suffix"]
     ydl_opts = {'format': 'bestaudio/best',
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'mp3',
-                    'preferredquality': '192',
+                    'preferredquality': '192'
                 }]
                 }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -101,12 +101,15 @@ def download_song(song, path):
 
 
 # play songs with ffmpeg
-def play_song(self, ctx, path):
-    voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-    voice.is_playing()
+async def play_song(ctx, path):
+    print("---------- Playing song ----------")
+    channel = ctx.message.author.voice.channel
+    voice = ctx.voice_client
+    if voice is None:
+        await channel.connect()
+    voice = ctx.voice_client
     voice.play(discord.FFmpegPCMAudio(path),
-               after=lambda e: play_next(self, ctx))
-    voice.is_playing()
+               after=lambda e: play_next(ctx))
 
 
 # *********************************************************************************************************************
@@ -141,23 +144,22 @@ def play_song(self, ctx, path):
 
 
 # main play music with 1 download
-def play_music(self, ctx):
+async def play_music(ctx):
     # remove "song.mp3" file if song.mp3 exists -> song.mp3 not exist
     if os.path.isfile(current_song_mp3_path):
         os.remove(current_song_mp3_path)
     # download songs
     songs_list = get_songs_list()
     if len(songs_list) > 0:
-        # check if next_song.mp3 existed - play song.mp3
         download_song(get_current_song(), current_song_mp3_path)
-        play_song(self, ctx, current_song_mp3_path)
+        await play_song(ctx, current_song_mp3_path)
     else:
         print("---------- No more audio in queue ----------")
         reset_songs_list()
 
 
 # play next song
-def play_next(self, ctx):
+def play_next(ctx):
     print("---------- Inside play_next ----------")
     delete_first_song()
-    play_music(self, ctx)
+    play_music(ctx)

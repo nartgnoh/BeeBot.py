@@ -100,7 +100,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Profile",
+                    embed = Embed(title=f"{summoner['name']}'s LoL Profile",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
                     # embed thumbnail
@@ -111,7 +111,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                         for rank in ranks:
                             embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
                                             value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
-                                            f"Wins: {rank['wins']} Losses: {rank['losses']}", inline=False)
+                                            f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
                         embed.add_field(
                             name='\u200b', value='\u200b', inline=False)
                     fields = [("Total Champion Mastery Score:", f"*{total_mastery}*", False),
@@ -176,20 +176,16 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Rank",
+                    embed = Embed(title=f"{summoner['name']}'s LoL Rank",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
-                    # embed thumbnails
-                    thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
-                    embed.set_thumbnail(url=thumb_url)
-                    # embed fields
                     if ranks:
                         riot_ranks = lol_constants.riot_ranks()
                         total_rank = 0
                         for rank in ranks:
                             embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
                                             value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
-                                            f"Wins: {rank['wins']} Losses: {rank['losses']}", inline=False)
+                                            f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
                             # get average_rank
                             rank_key = [k for k, v in riot_ranks.items(
                             ) if v == {'tier': rank['tier'], 'rank': rank['rank']}]
@@ -199,17 +195,17 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
 
                         embed.add_field(
                             name=f"Average Rank:", value=f"{final_rank['tier'].title()} {final_rank['rank']}", inline=False)
-                        # embed image
+                        # embed thumbnail
                         file = discord.File(
                             f"resource_files/image_files/riot_images/ranked_emblems/Emblem_{final_rank['tier'].title()}.png", filename="image.png")
-                        embed.set_image(url='attachment://image.png')
+                        embed.set_thumbnail(url='attachment://image.png')
                         await ctx.send(file=file, embed=embed)
                     else:
                         embed.add_field(name="This summoner has nothing for ranked this season.",
                                         value="Maybe it's time?... 👀", inline=False)
-                        # embed image
-                        img_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/map/map11.png"
-                        embed.set_image(url=img_url)
+                        # embed thumbnail
+                        thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/map/map11.png"
+                        embed.set_thumbnail(url=thumb_url)
                         await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
@@ -275,14 +271,11 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # *********
                     # | embed |
                     # *********
-                    embed = Embed(title=f"{summoner['name']}'s LOL Mastery",
+                    embed = Embed(title=f"{summoner['name']}'s LoL Mastery",
                                   description=f"Summoner Level: {summoner['summonerLevel']}",
                                   colour=ctx.author.colour)
-                    # embed image
-                    img_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{top_master_champ_info['id']}.png"
-                    embed.set_image(url=img_url)
                     # embed thumbnail
-                    thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
+                    thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{top_master_champ_info['id']}.png"
                     embed.set_thumbnail(url=thumb_url)
                     # embed fields
                     fields = [("Total Champion Mastery Score:", f"*{total_mastery}*", False),

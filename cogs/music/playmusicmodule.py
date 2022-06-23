@@ -43,31 +43,27 @@ class playmusicmodule(commands.Cog, name="PlayMusicModule", description="BeeBot'
                 if not check:
                     await ctx.send('Sorry! The song you were trying to play is too long! :cry: [Max length: 15mins]')
                 else:
-                    channel = ctx.message.author.voice.channel
-                    voice = ctx.voice_client
-                    if voice is None:
-                        await channel.connect()
-                    else:
-                        await voice.move_to(channel)
-                    voice = ctx.voice_client
-                    print("---------------- PLAY ----------------")
-                    print(voice)
-                    if voice.is_playing():
+                    try:
+                        voice = ctx.voice_client
+                        voice_check = voice.is_playing()
+                    except:
+                        voice_check = False
+                    if voice_check:
                         # *********
                         # | embed |
                         # *********
                         embed = Embed(title=f"{check['title']}\n🎶 Added to Queue! 🎶",
-                                      colour=ctx.author.colour)
+                                    colour=ctx.author.colour)
                         await ctx.send(embed=embed)
                     else:
                         current_song = music_helper.get_current_song()
-                        music_helper.play_music(self, ctx)
+                        await music_helper.play_music(self, ctx)
                         # *********
                         # | embed |
                         # *********
                         embed = Embed(title=f"🎵 Now Playing 🎵\n{current_song['title']}",
-                                      description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
-                                      colour=ctx.author.colour)
+                                        description=f"By: {current_song['channel']}\nDuration: {current_song['duration']}",
+                                        colour=ctx.author.colour)
                         # embed thumbnail
                         thumb_url = current_song['thumbnails'][0]
                         embed.set_thumbnail(url=thumb_url)

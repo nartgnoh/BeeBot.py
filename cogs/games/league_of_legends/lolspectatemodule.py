@@ -1,6 +1,7 @@
 # *********************************************************************************************************************
 # lolspectatemodule.py
-# - lol_spectate command
+# - lol_live_game command
+# - lol_live_game_matches command (wip)
 # *********************************************************************************************************************
 
 import os
@@ -29,20 +30,21 @@ admin_specific_command_name = 'Bot Admin'
 # lolspectatemodule class
 
 
-class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lolspectate"):
+class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lollivegame"):
     def __init__(self, bot):
         self.bot = bot
 
     # *********************************************************************************************************************
-    # bot command pick a random skin for champion
+    # bot command look up stats for a live League of Legends game
     # *********************************************************************************************************************
-    @commands.command(name='lolspectate', aliases=['spectatelol', 'lolcurrent', 'currentlol', 'lolspec', 'speclol', '🕵️'],
-                      help="🕵️ Lookup a current game!\n\n"
+    @commands.command(name='lollivegame', aliases=['livegamelol', 
+                                                   'lolspectate', 'spectatelol', 'lolcurrent', 'currentlol', 'lolspec', 'speclol', '🕵️'],
+                      help="🕵️ Lookup stats for a live LoL game!\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def lol_profile(self, ctx, region: Optional[str], *summoner_name):
+    async def lol_live_game(self, ctx, region: Optional[str], *summoner_name):
         summoner_name = list(summoner_name)
         # check region
         region_check = True
