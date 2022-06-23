@@ -17,18 +17,15 @@ songs_list_json = "/".join(list(current_directory.split('/')
 # *********************************************************************************************************************
 # helper functions
 # *********************************************************************************************************************
+# get songs_list_json first element
+def get_current_song():
+    return get_songs_list()[0]
+
+
 # get songs_list_json entire list
 def get_songs_list():
     with open(songs_list_json) as f:
         return json.load(f)
-
-
-# delete first url from ytlinks_txt
-def delete_first_song():
-    with open(songs_list_json, 'r') as f:
-        data = json.load(f)
-    with open(songs_list_json, 'w') as outfile:
-        json.dump(data[1:], outfile)
 
 
 # if "url" is not a real url link, then "YoutubeSearch" and create new a YouTube url link
@@ -39,3 +36,17 @@ def add_url(yt_search_or_link):
     data = yt_links_json + [new_yt_json]
     with open(songs_list_json, 'w') as outfile:
         json.dump(data, outfile)
+
+
+# delete first url from ytlinks_txt
+def delete_first_song():
+    with open(songs_list_json, 'r') as f:
+        data = json.load(f)
+    with open(songs_list_json, 'w') as outfile:
+        json.dump(data[1:], outfile)
+
+
+# reset songs list
+def reset_songs_list():
+    with open(songs_list_json, 'w') as outfile:
+        json.dump([{}], outfile)

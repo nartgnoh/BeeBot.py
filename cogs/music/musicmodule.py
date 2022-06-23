@@ -8,6 +8,7 @@ import asyncio
 import itertools
 import sys
 import traceback
+import cogs.helper.helper_functions.music as music_helper
 
 from discord.ext import commands
 from discord import Embed
@@ -61,6 +62,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         self.title = data.get('title')
         self.web_url = data.get('webpage_url')
+        self.thumbnail = data.get('thumbnail')
 
         # YTDL info dicts (data) have other useful information you might want
         # https://github.com/rg3/youtube-dl/blob/master/README.md
@@ -82,12 +84,17 @@ class YTDLSource(discord.PCMVolumeTransformer):
             # take first item from a playlist
             data = data['entries'][0]
 
-        await ctx.send(f'```ini\n[Added {data["title"]} to the Queue.]\n```')
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title=f"{data['title']}\n🎶 Added to Queue! 🎶",
+                      colour=ctx.author.colour)
+        await ctx.send(embed=embed, delete_after=15)
 
         if download:
             source = ytdl.prepare_filename(data)
         else:
-            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title']}
+            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title'], 'thumbnail': data['thumbnail']}
 
         return cls(discord.FFmpegPCMAudio(source), data=data, requester=ctx.author)
 
@@ -162,8 +169,17 @@ class MusicPlayer:
 
             self._guild.voice_client.play(
                 source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send(f'**Now Playing:** `{source.title}` requested by '
-                                               f'`{source.requester}`')
+
+            # *********
+            # | embed |
+            # *********
+            embed = Embed(title=f"🎵 Now Playing 🎵\n{source.title}",
+                          description=f"Requested by: {source.requester}",
+                          colour=discord.Colour.random())
+            # embed thumbnail
+            thumb_url = source.thumbnail
+            embed.set_thumbnail(url=thumb_url)
+            self.np = await self._channel.send(embed=embed)
             await self.next.wait()
 
             # Make sure the FFmpeg process is cleaned up.
@@ -244,23 +260,20 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='join', aliases=['connect', '🔉'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
-        """Connect to voice.
-        Parameters
-        ------------
-        channel: discord.VoiceChannel [Optional]
-            The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
-            will be made.
-        This command also handles moving the bot to different channels.
-        """
+        # Connect to voice.
+        # Parameters
+        # ------------
+        # channel: discord.VoiceChannel [Optional]
+        #     The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
+        #     will be made.
+        # This command also handles moving the bot to different channels.
         if not channel:
             try:
                 channel = ctx.author.voice.channel
             except AttributeError:
                 raise InvalidVoiceChannel(
-                    'No channel to join. Please either specify a valid channel or join one.')
-
+                    'Sorry! There\'s no channel to join. :flushed: Please either specify a valid channel or join one! :smile:')
         vc = ctx.voice_client
-
         if vc:
             if vc.channel.id == channel.id:
                 return
@@ -275,8 +288,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
             except asyncio.TimeoutError:
                 raise VoiceConnectionError(
                     f'Connecting to channel: <{channel}> timed out.')
-
-        await ctx.send(f'Connected to: **{channel}**')
+        await ctx.send(f'Connected to: **{channel}**', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to play music
@@ -285,29 +297,29 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
                       help='▶️ Plays YouTube audio! [Provide YouTube search or link, Role specific]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def play_(self, ctx, *, search: str):
-        """Request a song and add it to the queue.
-        This command attempts to join a valid voice channel if the bot is not already in one.
-        Uses YTDL to automatically search and retrieve a song.
-        Parameters
-        ------------
-        search: str [Required]
-            The song to search and retrieve using YTDL. This could be a simple search, an ID or URL.
-        """
-        await ctx.trigger_typing()
-
-        vc = ctx.voice_client
-
-        if not vc:
-            await ctx.invoke(self.connect_)
-
-        player = self.get_player(ctx)
-
-        # If download is False, source will be a dict which will be used later to regather the stream.
-        # If download is True, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
-        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
-
-        await player.queue.put(source)
+    async def play_(self, ctx, *, search: Optional[str]):
+        # Request a song and add it to the queue.
+        # This command attempts to join a valid voice channel if the bot is not already in one.
+        # Uses YTDL to automatically search and retrieve a song.
+        # Parameters
+        # ------------
+        # search: str [Required]
+        #     The song to search and retrieve using YTDL. This could be a simple search, an ID or URL.
+        if search == None:
+            await ctx.send('Please provide a YouTube link or YouTube search info! :pleading_face:')
+        else:
+            if ctx.author.voice is None:
+                await ctx.send('Please join a discord channel to use this command! :slight_smile:')
+            else:
+                await ctx.trigger_typing()
+                vc = ctx.voice_client
+                if not vc:
+                    await ctx.invoke(self.connect_)
+                player = self.get_player(ctx)
+                # If download is False, source will be a dict which will be used later to regather the stream.
+                # If download is True, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
+                source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+                await player.queue.put(source)
 
     # *********************************************************************************************************************
     # bot command to pause music
@@ -316,16 +328,14 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def pause_(self, ctx):
-        """Pause the currently playing song."""
+        # Pause the currently playing song.
         vc = ctx.voice_client
-
         if not vc or not vc.is_playing():
-            return await ctx.send('I am not currently playing anything!')
+            return await ctx.send('Sorry! I\'m not currently playing anything! :flushed:')
         elif vc.is_paused():
             return
-
         vc.pause()
-        await ctx.send(f'**`{ctx.author}`**: Paused the song!')
+        await ctx.send(f'{ctx.author}: Paused the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to resume audio
@@ -334,16 +344,14 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def resume_(self, ctx):
-        """Resume the currently paused song."""
+        # Resume the currently paused song.
         vc = ctx.voice_client
-
         if not vc or not vc.is_connected():
-            return await ctx.send('I am not currently playing anything!')
+            return await ctx.send('Sorry! I\'m not currently playing anything! :flushed:')
         elif not vc.is_paused():
             return
-
         vc.resume()
-        await ctx.send(f'**`{ctx.author}`**: Resumed the song!')
+        await ctx.send(f'{ctx.author}: Resumed the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to go to next audio in queue by reaction vote
@@ -352,105 +360,92 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def skip_(self, ctx):
-        """Skip the song."""
+        # Skip the song.
         vc = ctx.voice_client
-
         if not vc or not vc.is_connected():
-            return await ctx.send('I am not currently playing anything!')
-
+            return await ctx.send('Sorry! I\'m not currently playing anything! :flushed:')
         if vc.is_paused():
             pass
         elif not vc.is_playing():
             return
-
         vc.stop()
-        await ctx.send(f'**`{ctx.author}`**: Skipped the song!')
+        await ctx.send(f'{ctx.author}: Skipped the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to view current queue
     # *********************************************************************************************************************
     @commands.command(name='queue', aliases=['q', 'playlist', '🎶'], help='🎶 View the current queue!')
     async def queue_info(self, ctx):
-        """Retrieve a basic queue of upcoming songs."""
+        # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
-
         if not vc or not vc.is_connected():
-            return await ctx.send('I am not currently connected to voice!')
-
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
         player = self.get_player(ctx)
         if player.queue.empty():
-            return await ctx.send('There are currently no more queued songs.')
-
+            return await ctx.send('There is no audio in the queue! :flushed: Try the "play" command to add a song! :smile:')
         # Grab up to 5 entries from the queue...
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-
-        fmt = '\n'.join(f'**`{_["title"]}`**' for _ in upcoming)
-        embed = discord.Embed(
-            title=f'Upcoming - Next {len(upcoming)}', description=fmt)
-
+        print(upcoming)
+        fmt = '\n'.join(f'**`{song["title"]}`**' for song in upcoming)
+        # *********
+        # | embed |
+        # *********
+        embed = discord.Embed(title=f'🎶 Current {len(upcoming)} Songs in Queue 🎶',
+                              description=fmt,
+                              colour=ctx.author.colour)
         await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to view current audio
     # *********************************************************************************************************************
-    @commands.command(name='now_playing', aliases=['np', 'current', 'currentsong', 'playing', '🎵'],
-                      help='🎵 View the current audio!')
+
+    @commands.command(name='now_playing', aliases=['np', 'current', 'playing', '🎵'],
+                      help='🎵 View what\'s playing now!')
     async def now_playing_(self, ctx):
-        """Display information about the currently playing song."""
+        # Display information about the currently playing song.
         vc = ctx.voice_client
-
         if not vc or not vc.is_connected():
-            return await ctx.send('I am not currently connected to voice!')
-
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
         player = self.get_player(ctx)
         if not player.current:
-            return await ctx.send('I am not currently playing anything!')
-
+            return await ctx.send('Sorry! I\'m not currently playing anything! :flushed:')
         try:
             # Remove our previous now_playing message.
             await player.np.delete()
         except discord.HTTPException:
             pass
-
-        # player.np = await ctx.send(f'**Now Playing:** `{vc.source.title}` '
-        #                            f'requested by `{vc.source.requester}`')
-
-        print(vc.source)
         # *********
         # | embed |
         # *********
         embed = Embed(title=f"🎵 Current song 🎵\n{vc.source.title}",
-                        colour=ctx.author.colour)
-        # # embed thumbnail
-        # thumb_url = current_song['thumbnails'][0]
-        # embed.set_thumbnail(url=thumb_url)
+                      description=f"Requested by: {vc.source.requester}",
+                      colour=ctx.author.colour)
+        # embed thumbnail
+        thumb_url = vc.source.thumbnail
+        embed.set_thumbnail(url=thumb_url)
         player.np = await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to set default volume
     # *********************************************************************************************************************
     @commands.command(name='volume', aliases=['vol', '🔊'],
-                      help='🔊 Change the player volume!')
-    async def change_volume(self, ctx, *, vol: float):
-        """Change the player volume.
-        Parameters
-        ------------
-        volume: float or int [Required]
-            The volume to set the player to in percentage. This must be between 1 and 100.
-        """
+                      help='🔊 Change the player volume! [Range: 1 to 100]')
+    async def change_volume(self, ctx, *, vol: Optional[float]):
+        # Change the player volume.
+        # Parameters
+        # ------------
+        # volume: float or int [Required]
+        #     The volume to set the player to in percentage. This must be between 1 and 100.
+        if vol == None:
+            return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
         vc = ctx.voice_client
-
         if not vc or not vc.is_connected():
-            return await ctx.send('I am not currently connected to voice!')
-
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
         if not 0 < vol < 101:
-            return await ctx.send('Please enter a value between 1 and 100.')
-
+            return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
         player = self.get_player(ctx)
-
         if vc.source:
             vc.source.volume = vol / 100
-
         player.volume = vol / 100
         await ctx.send(f'**{ctx.author}** set the volume to **{vol}%**')
 
@@ -462,14 +457,12 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def stop_(self, ctx):
-        """Stop the currently playing song and destroy the player.
-        !Warning!
-            This will destroy the player assigned to your guild, also deleting any queued songs and settings.
-        """
+        # Stop the currently playing song and destroy the player.
+        # !Warning!
+        #     This will destroy the player assigned to your guild, also deleting any queued songs and settings.
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             return await ctx.send('Sorry! I\'m not currently playing anything! :thinking:')
-
         await self.cleanup(ctx.guild)
         vc.disconnect()
         await ctx.send("Okay, I'll leave. :cry:")
