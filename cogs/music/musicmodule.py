@@ -258,7 +258,10 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     # bot command to join voice channel
     # *********************************************************************************************************************
-    @commands.command(name='join', aliases=['connect', '🔉'])
+    @commands.command(name='join', aliases=['connect', '🔉'],
+                      help='🔉 BeeBot joins voice channel!')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
         # Connect to voice.
         # Parameters
@@ -374,7 +377,8 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     # bot command to view current queue
     # *********************************************************************************************************************
-    @commands.command(name='queue', aliases=['q', 'playlist', '🎶'], help='🎶 View the current queue! [Current and Upcoming 5 songs')
+    @commands.command(name='queue', aliases=['q', 'playlist', '🎶'],
+                      help='🎶 View the current queue! [Current and Upcoming 5 songs]')
     async def queue_info(self, ctx):
         # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
@@ -397,9 +401,11 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         embed = discord.Embed(title=f'🎶 Current Queue 🎶',
                               colour=ctx.author.colour)
         # embed fields
-        embed.add_field(name=f"🎵 Current Song 🎵:", value=vc.source.title, inline=False)
+        embed.add_field(name=f"🎵 Current Song 🎵:",
+                        value=vc.source.title, inline=False)
         if fmt:
-            embed.add_field(name=f"🎶 Upcoming {len(upcoming)} Songs 🎶:", value='\n'.join(fmt), inline=False)
+            embed.add_field(
+                name=f"🎶 Upcoming {len(upcoming)} Songs 🎶:", value='\n'.join(fmt), inline=False)
         await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
@@ -460,7 +466,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # bot command to leave voice channel and deletes queue
     # *********************************************************************************************************************
     @commands.command(name='leave', aliases=['stop', 'deletequeue', 'disconnect', '🔈'],
-                      help='🔈 Beebot leaves voice channel and deletes current queue. [Role specific]')
+                      help='🔈 BeeBot leaves voice channel and deletes current queue. [Role specific]')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def stop_(self, ctx):
