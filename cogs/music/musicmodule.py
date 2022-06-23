@@ -385,7 +385,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
             return await ctx.send('There is no audio in the queue! :flushed: Try the "play" command to add a song! :smile:')
         # Grab up to 5 entries from the queue...
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-        print(upcoming)
         fmt = '\n'.join(f'**`{song["title"]}`**' for song in upcoming)
         # *********
         # | embed |
