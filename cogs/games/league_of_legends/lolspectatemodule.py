@@ -134,7 +134,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                     # | embed |
                     # *********
                     embed = Embed(title=f"{summoner['name']}'s Live Game Info",
-                                  description=f"Game Mode: {spectator['gameMode']}\n(⭐ Enemies with high mastery on their champion >200k)",
+                                  description=f"Game Mode: {spectator['gameMode']}",
                                   colour=ctx.author.colour)
                     # embed thumbnail
                     thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/profileicon/{summoner['profileIconId']}.png"
@@ -190,6 +190,8 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                                 [rank_string]
                         # enemy team
                         else:
+                            enemy_team = enemy_team + \
+                                    [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                             # Enemy Team section
                             if 'rank' in participant:
                                 participant_rank = participant['rank']
@@ -205,23 +207,23 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                             enemy_team_rank_wr = enemy_team_rank_wr + \
                                 [rank_string]
                             # Enemy Team High Mastery section
-                            high_mastery = False
                             for mastery in participant['masteries']:
                                 if participant['championId'] == mastery['championId']:
                                     if mastery['championPoints'] > 200000:
-                                        high_mastery = True
-                                        enemy_team = enemy_team + \
-                                            [f"⭐ **{participant['summonerName']} - {participant['currentChampion']['name']}**"]
+                                        enemy_team_high_mastery = enemy_team_high_mastery + [f"{participant['summonerName']} ({participant['currentChampion']['name']})"]
                                     break
-                            if not high_mastery:
-                                enemy_team = enemy_team + \
-                                    [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
-                    enemy_team_high_mastery = [
-                        i for i in enemy_team_high_mastery if i]
+                    if not enemy_team_high_mastery:
+                        enemy_team_high_mastery = ['None']
                     embed.add_field(name='Enemy Team:',
-                                    value='\n'.join(enemy_team)+'\n\n**Your Team:**\n'+'\n'.join(summoner_team), inline=True)
+                                    value='\n'.join(enemy_team), inline=True)
                     embed.add_field(name='\u200b',
-                                    value='\n'.join(enemy_team_rank_wr)+'\n\n\u200b\n'+'\n'.join(summoner_team_rank_wr), inline=True)
+                                    value='\n'.join(enemy_team_rank_wr), inline=True)
+                    embed.add_field(name='Enemies with high mastery on their champion:', 
+                                    value=', '.join(enemy_team_high_mastery), inline=False)
+                    embed.add_field(name='Your Team',
+                                    value='\n'.join(summoner_team), inline=True)
+                    embed.add_field(name='\u200b',
+                                    value='\n'.join(summoner_team_rank_wr), inline=True)
                     # embed.add_field(name="Your Runes:",
                     #                 value='\u200b', inline=False)
                     # # embed image
