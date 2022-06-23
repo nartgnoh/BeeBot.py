@@ -1,12 +1,10 @@
 # *********************************************************************************************************************
 # lolspectatemodule.py
-# - pick_skin command
+# - lol_spectate command
 # *********************************************************************************************************************
 
 import os
 import discord
-import random
-import requests
 import cogs.helper.constants.lol_constants as lol_constants
 import cogs.helper.api.league_of_legends_api as lol_api
 import cogs.helper.helper_functions.images as images
@@ -85,8 +83,8 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                             region, summoner['id'])
                     except:
                         spectator_check = False
-                        await ctx.send("Sorry! The summoner name you inputed isn't currently in a game! :cry:\n"
-                                       "Please try again with a current game! :slight_smile:")
+                        await ctx.send("Sorry! The summoner name you inputed isn't currently in a League of Legends game! :cry:\n"
+                                       "Please try again with a current LoL game! :slight_smile:")
                 if summoner_check and spectator_check:
                     # get current lol version for region
                     champions_version = lol_api.get_version(region)[
@@ -191,7 +189,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                         # enemy team
                         else:
                             enemy_team = enemy_team + \
-                                    [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
+                                [f"**{participant['summonerName']} - {participant['currentChampion']['name']}**"]
                             # Enemy Team section
                             if 'rank' in participant:
                                 participant_rank = participant['rank']
@@ -210,7 +208,8 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                             for mastery in participant['masteries']:
                                 if participant['championId'] == mastery['championId']:
                                     if mastery['championPoints'] > 200000:
-                                        enemy_team_high_mastery = enemy_team_high_mastery + [f"{participant['summonerName']} ({participant['currentChampion']['name']})"]
+                                        enemy_team_high_mastery = enemy_team_high_mastery + \
+                                            [f"{participant['summonerName']} ({participant['currentChampion']['name']})"]
                                     break
                     if not enemy_team_high_mastery:
                         enemy_team_high_mastery = ['None']
@@ -218,7 +217,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                                     value='\n'.join(enemy_team), inline=True)
                     embed.add_field(name='\u200b',
                                     value='\n'.join(enemy_team_rank_wr), inline=True)
-                    embed.add_field(name='Enemies with high mastery on their champion (>200k):', 
+                    embed.add_field(name='Enemies with high mastery on their champion (>200k):',
                                     value=', '.join(enemy_team_high_mastery), inline=False)
                     embed.add_field(name='Your Team',
                                     value='\n'.join(summoner_team), inline=True)
@@ -234,38 +233,6 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                     images.delete_image(images.get_image_path(
                         'riot_images/spectator/thumbnail.png'))
                     await msg.add_reaction("❌")
-
-    # *********************************************************************************************************************
-    # bot command test
-    # *********************************************************************************************************************
-
-    @commands.command(name='imagetest')
-    # only specific roles can use this command
-    @commands.has_role(admin_specific_command_name)
-    async def champ_lookup(self, ctx, champ1, champ2):
-        # get current lol version for region
-        champions_version = lol_api.get_version()['n']['champion']
-        champ_list = lol_api.get_champion_list(champions_version)['data']
-
-        lol_champion1 = lol_api.champion_string_formatting(champ1)
-        lol_champion2 = lol_api.champion_string_formatting(champ2)
-
-        image1_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{lol_champion1}.png'
-        image2_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{lol_champion2}.png'
-
-        image1 = images.get_image_by_url(image1_url)
-        image2 = images.get_image_by_url(image2_url)
-
-        images.merge_images_width_wise(image1, image2, images.get_image_path(
-            'riot_images/spectator/new_image.png'))
-
-        image1 = images.new_blank_image()
-        image2 = images.get_image_by_url(image2_url)
-
-        images.merge_images_width_wise(image1, image2, images.get_image_path(
-            'riot_images/spectator/new_image2.png'))
-
-        await ctx.send("images")
 
 
 def setup(bot):
