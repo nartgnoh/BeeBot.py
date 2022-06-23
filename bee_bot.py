@@ -13,6 +13,7 @@ from pretty_help import PrettyHelp
 
 # get all cog extensions
 all_extensions = ['cogs.admin.admin_beebot_reset_module',
+                  'cogs.admin.test_module',
                   'cogs.beebot_profile.beebotprofilemodule',
                   'cogs.beebot_profile.lolbeebotprofilemodule',
                   # 'cogs.events.eventsmodule',
@@ -25,7 +26,7 @@ all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   'cogs.games.gamesmodule',
                   # 'cogs.games.teamfight_tactics',
                   'cogs.helper.listeners.reactions_listener',
-                #   'cogs.helper.listeners.voice_states_listener',
+                  # 'cogs.helper.listeners.voice_states_listener',
                   'cogs.music.playmusicmodule',
                   'cogs.music.viewmusicmodule',
                   'cogs.responses.emotionsmodule',
