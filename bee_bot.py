@@ -37,7 +37,7 @@ all_extensions = ['cogs.admin.admin_beebot_reset_module',
 
 def get_prefix(bot, message):
     prefixes = ['BB ', 'bb ', 'Bb ', 'bB ']  # BeeBot exclusive
-    prefixes = ['B ', 'b ']  # BeeBot-Testing exclusive
+    # prefixes = ['B ', 'b ']  # BeeBot-Testing exclusive
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 
