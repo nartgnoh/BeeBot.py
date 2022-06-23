@@ -218,7 +218,7 @@ class lolspectatemodule(commands.Cog, name="LoLSpectateModule", description="lol
                                     value='\n'.join(enemy_team), inline=True)
                     embed.add_field(name='\u200b',
                                     value='\n'.join(enemy_team_rank_wr), inline=True)
-                    embed.add_field(name='Enemies with high mastery on their champion:', 
+                    embed.add_field(name='Enemies with high mastery on their champion (>200k):', 
                                     value=', '.join(enemy_team_high_mastery), inline=False)
                     embed.add_field(name='Your Team',
                                     value='\n'.join(summoner_team), inline=True)
