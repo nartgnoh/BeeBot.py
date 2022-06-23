@@ -374,24 +374,32 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     # bot command to view current queue
     # *********************************************************************************************************************
-    @commands.command(name='queue', aliases=['q', 'playlist', '🎶'], help='🎶 View the current queue!')
+    @commands.command(name='queue', aliases=['q', 'playlist', '🎶'], help='🎶 View the current queue! [Current and Upcoming 5 songs')
     async def queue_info(self, ctx):
         # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
         player = self.get_player(ctx)
-        if player.queue.empty():
+        if not player.current:
             return await ctx.send('There is no audio in the queue! :flushed: Try the "play" command to add a song! :smile:')
         # Grab up to 5 entries from the queue...
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
-        fmt = '\n'.join(f'**`{song["title"]}`**' for song in upcoming)
+        fmt = []
+        if upcoming:
+            count = 0
+            for song in upcoming:
+                count += 1
+                fmt = fmt + [f"{count}: {song['title']}"]
         # *********
         # | embed |
         # *********
-        embed = discord.Embed(title=f'🎶 Current {len(upcoming)} Songs in Queue 🎶',
-                              description=fmt,
+        embed = discord.Embed(title=f'🎶 Current Queue 🎶',
                               colour=ctx.author.colour)
+        # embed fields
+        embed.add_field(name=f"🎵 Current Song 🎵:", value=vc.source.title, inline=False)
+        if fmt:
+            embed.add_field(name=f"🎶 Upcoming {len(upcoming)} Songs 🎶:", value='\n'.join(fmt), inline=False)
         await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
