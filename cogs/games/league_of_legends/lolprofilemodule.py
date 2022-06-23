@@ -170,9 +170,6 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     # get current lol version for region
                     champions_version = lol_api.get_version(region)[
                         'n']['champion']
-                    # get summoner info
-                    summoner = lol_watcher.summoner.by_name(
-                        region, summoner_name)
                     # get summoner ranks
                     ranks = lol_watcher.league.by_summoner(
                         region, summoner['id'])
@@ -260,9 +257,6 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 if summoner_check:
                     # get current lol version for region
                     champions_version = lol_api.get_version()['n']['champion']
-                    # get summoner info
-                    summoner = lol_watcher.summoner.by_name(
-                        region, summoner_name)
                     # get total mastery
                     total_mastery = lol_watcher.champion_mastery.scores_by_summoner(
                         region, summoner['id'])
