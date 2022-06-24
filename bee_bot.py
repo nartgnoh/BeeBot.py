@@ -14,7 +14,7 @@ from pretty_help import PrettyHelp
 all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   'cogs.admin.test_module',
                   'cogs.beebot_profile.beebotprofilemodule',
-                  # 'cogs.events.eventsmodule',
+                  'cogs.events.eventsmodule',
                   # 'cogs.events.giveawaymodule',
                   'cogs.games.league_of_legends.lolclashmodule',
                   'cogs.games.league_of_legends.lolinfomodule',
@@ -23,8 +23,6 @@ all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   # 'cogs.games.teamfight_tactics',
                   'cogs.helper.listeners.reactions_listener',
                   'cogs.music.musicmodule',
-                  'cogs.responses.emotionsmodule',
-                  'cogs.responses.pollsmodule',
                   'cogs.responses.responsesmodule'
                   ]
 
