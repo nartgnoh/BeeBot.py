@@ -31,7 +31,7 @@ class test_module(commands.Cog, name="Test_Module",
     @commands.command(name='imagetest')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
-    async def champ_lookup(self, ctx, champ1, champ2):
+    async def image_test(self, ctx, champ1, champ2):
         # get current lol version for region
         champions_version = lol_api.get_version()['n']['champion']
         champ_list = lol_api.get_champion_list(champions_version)['data']
@@ -55,6 +55,16 @@ class test_module(commands.Cog, name="Test_Module",
             'riot_images/spectator/new_image2.png'))
 
         await ctx.send("images")
+
+    # *********************************************************************************************************************
+    # bot command test
+    # *********************************************************************************************************************
+    @commands.command(name='replytest')
+    # only specific roles can use this command
+    @commands.has_role(admin_specific_command_name)
+    async def reply_test(self, ctx, msg_id):
+        msg = await ctx.fetch_message(msg_id)
+        await msg.reply("hello")
 
 
 def setup(bot):

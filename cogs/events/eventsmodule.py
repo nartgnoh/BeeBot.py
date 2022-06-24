@@ -67,6 +67,23 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
             await msg.add_reaction(emoji)
 
     # *********************************************************************************************************************
+    # bot command list active giveaways
+    # *********************************************************************************************************************
+    @commands.command(name='activegiveaways', aliases=['getgiveaways', 'listgiveaways', '💝'],
+                      help='💝 Get a list of active giveaways!')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def active_giveaways(self, ctx):
+        events_data = events.get_events_json()
+        if not 'giveaways' in events_data:
+            return await ctx.send("Sorry! There are no active giveaways at the moment! :mouth_open:")
+        if not events_data['giveaways']:
+            return await ctx.send("Sorry! There are no active giveaways at the moment! :mouth_open:")
+        for giveaway in events_data['giveaways']:
+            message = await ctx.fetch_message(int(giveaway))
+            await message.reply(f"**{events_data['giveaways'][giveaway]['title']}** run by **{events_data['giveaways'][giveaway]['giveaway_author_display_name']}**")
+
+    # *********************************************************************************************************************
     # bot command to make a giveaway in chat
     # *********************************************************************************************************************
     @commands.command(name='giveaway', aliases=['creategiveaway', 'makegiveaway', '🎁'],
@@ -84,12 +101,12 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
             return await ctx.send("Sorry! You have an invalid emoji! :cry: Please try again! :smile:")
         if rewards == None:
             return await ctx.send("Sorry! You have invalid rewards! :cry: Please try again! :smile:")
-        giveaway_author = str(ctx.message.author)
         events_data = events.get_events_json()
         if not events.check_event(events_data, 'giveaways'):
             events_data['giveaways'] = {}
         rewards = rewards.strip("]['").split("', '")
-        giveaway_json = {'giveaway_author': giveaway_author,
+        giveaway_json = {'giveaway_author': str(ctx.message.author),
+                         'giveaway_author_display_name': str(ctx.message.author.display_name),
                          'title': title,
                          'reaction': reaction,
                          'start_time': datetime.timestamp(datetime.now()),
@@ -115,7 +132,7 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
                         value=description, inline=False)
         # embed footer
         embed.set_footer(
-            text=f"Giveaway By: {giveaway_author}\n{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
+            text=f"Giveaway By: {str(ctx.message.author.display_name)}\n{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
         msg = await ctx.send(embed=embed)
         await msg.add_reaction(reaction)
         giveaway_json['message_id'] = int(msg.id)
@@ -132,12 +149,11 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
     async def end_giveaway(self, ctx, *, title: Optional[str]):
         if title == None:
             return await ctx.send("Sorry! You forgot to add your title! :open_mouth: Please try again! :slight_smile:")
-        giveaway_author = str(ctx.message.author)
         events_data = events.get_events_json()
         giveaway_check = False
         for giveaway in events_data['giveaways']:
             giveaway = events_data['giveaways'][giveaway]
-            if giveaway['title'] == title and giveaway['giveaway_author'] == giveaway_author:
+            if giveaway['title'] == title and giveaway['giveaway_author'] == str(ctx.message.author):
                 giveaway_check = True
                 giveaway = giveaway
                 break
@@ -182,7 +198,7 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
                         value='\n'.join(rewards_list), inline=False)
         # embed footer
         embed.set_footer(
-            text=f"Giveaway By: {giveaway_author}\n{reaction} This giveaway lasted {days.days} day(s)!")
+            text=f"Giveaway By: {giveaway['giveaway_author_display_name']}\n{reaction} This giveaway lasted {days.days} day(s)!")
         await ctx.send(embed=embed)
         await ctx.send(final_message)
 
