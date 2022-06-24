@@ -1,7 +1,9 @@
 # *********************************************************************************************************************
 # eventsmodule.py
-# - giveaway command (wip)
 # - polls command
+# - active_giveaways command
+# - create_giveaway command
+# - end_giveaway command
 # *********************************************************************************************************************
 
 import os
@@ -25,7 +27,7 @@ giveaway_specific_command_name = 'Bot Giveaway Access'
 # eventsmodule class
 
 
-class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
+class eventsmodule(commands.Cog, name="EventsModule", description="activegiveaways, polls"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -70,7 +72,7 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
     # bot command list active giveaways
     # *********************************************************************************************************************
     @commands.command(name='activegiveaways', aliases=['getgiveaways', 'listgiveaways', '💝'],
-                      help='💝 Get a list of active giveaways!')
+                      help='💝 Get a list of active giveaways!\n\nRole specific to create a giveaway ~ ask Nart#6379 about setting one up!')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def active_giveaways(self, ctx):
