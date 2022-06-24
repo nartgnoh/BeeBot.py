@@ -142,7 +142,8 @@ class giveawaymodule(commands.Cog, name="GiveawayModule", description="giveaway"
         # embed footer
         embed.set_footer(
             text=f"Giveaway By: {giveaway_author}\n{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
-        await ctx.send(embed=embed)
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction(reaction)
 
 
 def setup(bot):
