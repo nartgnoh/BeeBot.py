@@ -235,31 +235,30 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
         if number_of_coins == None:
             number_of_coins = 1
         if number_of_coins > 100 or number_of_coins < 1:
-            await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max coins: 100]')
-        else:
-            coin_flip_ht = [
-                'Heads, ',
-                'Tails, '
-            ]
-            cf_quotes = [
-                'You coin flip(s) were:',
-                'Clink, spin, spin, clink:',
-                'Heads or Tails? :open_mouth:',
-                'I wish you good RNG :relieved:',
-                ':coin:'
-            ]
-            cf_message = random.choice(cf_quotes)
-            # add coin flips to string
-            for i in range(number_of_coins):
-                cf_results = cf_results + random.choice(coin_flip_ht)
-            # *********
-            # | embed |
-            # *********
-            embed = Embed(title=cf_message,
-                          colour=discord.Colour.gold(),
-                          description=cf_results[:-2])
+            return await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max coins: 100]')
+        coin_flip_ht = [
+            'Heads, ',
+            'Tails, '
+        ]
+        cf_quotes = [
+            'You coin flip(s) were:',
+            'Clink, spin, spin, clink:',
+            'Heads or Tails? :open_mouth:',
+            'I wish you good RNG :relieved:',
+            ':coin:'
+        ]
+        cf_message = random.choice(cf_quotes)
+        # add coin flips to string
+        for i in range(number_of_coins):
+            cf_results = cf_results + random.choice(coin_flip_ht)
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title=cf_message,
+                        colour=discord.Colour.gold(),
+                        description=cf_results[:-2])
 
-            await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to roll dice (no specification is an auto 1D6)
@@ -273,28 +272,27 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
         if number_of_sides == None:
             number_of_sides = 6
         if number_of_dice > 100 or number_of_dice < 1 or number_of_sides > 100 or number_of_sides < 1:
-            await ctx.send('Sorry! Your number(s) are out of bounds! :cry: Try again! [Max dice: 100D100]')
-        else:
-            dice = [
-                str(random.choice(range(1, number_of_sides + 1)))
-                for _ in range(number_of_dice)
-            ]
-            rd_quotes = [
-                'Your dice roll(s) were:',
-                'Clack, rattle, clatter:',
-                'Highroller?!? :open_mouth:',
-                'I wish you good RNG :relieved:',
-                ':game_die:',
-                ':skull: + :ice_cube:'
-            ]
-            rd_message = random.choice(rd_quotes)
-            # *********
-            # | embed |
-            # *********
-            embed = Embed(title=rd_message,
-                          colour=discord.Colour.random(),
-                          description=', '.join(dice))
-            await ctx.send(embed=embed)
+            return await ctx.send('Sorry! Your number(s) are out of bounds! :cry: Try again! [Max dice: 100D100]')
+        dice = [
+            str(random.choice(range(1, number_of_sides + 1)))
+            for _ in range(number_of_dice)
+        ]
+        rd_quotes = [
+            'Your dice roll(s) were:',
+            'Clack, rattle, clatter:',
+            'Highroller?!? :open_mouth:',
+            'I wish you good RNG :relieved:',
+            ':game_die:',
+            ':skull: + :ice_cube:'
+        ]
+        rd_message = random.choice(rd_quotes)
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title=rd_message,
+                        colour=discord.Colour.random(),
+                        description=', '.join(dice))
+        await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to send gif/tenor
@@ -323,24 +321,23 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
         get_url_info = requests.get(url)
         # 404 status_code means tenor is not working/down
         if get_url_info.status_code == 404:
-            await ctx.send("Sorry! Tenor is not working at the moment! :cry:")
+            return await ctx.send("Sorry! Tenor is not working at the moment! :cry:")
         # 200 status_code means tenor is working
         elif get_url_info.status_code == 200:
             # checking for results
             json_search = get_url_info.json()
             json_check = json_search['next']
             if json_check == "0":
-                await ctx.send(f"Sorry! Couldn't find any gifs for {search}! :cry:")
-            else:
-                # load json to get url data
-                data = json.loads(get_url_info.text)
-                # random choice between 0 and min of "9 or len(data['results'])"
-                gif_choice = random.randint(0, min(9, len(data['results'])))
-                # get gif result
-                result_gif = data['results'][gif_choice]['media'][0]['gif']['url']
-                # embed gif
-                embed.set_image(url=result_gif)
-                await ctx.send(embed=embed)
+                return await ctx.send(f"Sorry! Couldn't find any gifs for {search}! :cry:")
+            # load json to get url data
+            data = json.loads(get_url_info.text)
+            # random choice between 0 and min of "9 or len(data['results'])"
+            gif_choice = random.randint(0, min(9, len(data['results'])))
+            # get gif result
+            result_gif = data['results'][gif_choice]['media'][0]['gif']['url']
+            # embed gif
+            embed.set_image(url=result_gif)
+            await ctx.send(embed=embed)
 
 
 def setup(bot):

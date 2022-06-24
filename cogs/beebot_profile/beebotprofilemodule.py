@@ -37,23 +37,22 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
     async def lol_roles(self, ctx, *roles):
         roles = list(roles)
         if not roles:
-            await ctx.send("Sorry! You need to add role(s)! :open_mouth:")
-        else:
-            roles_list = []
-            for role in roles:
-                if role.title() in lol_constants.lol_roles():
-                    roles_list.append(role.lower())
-            roles_list = list(dict.fromkeys(roles_list))
-            profile = str(ctx.message.author)
-            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
-                beebot_profiles_data, profile)
-            beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
-                beebot_profiles_data, profile, "league_of_legends")
-            beebot_profiles_data[profile]["league_of_legends"][
-                'preferred_role(s)'] = roles_list
-            beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
-            await ctx.send("Your role(s) have been updated! :white_check_mark:")
+            return await ctx.send("Sorry! You need to add role(s)! :open_mouth:")
+        roles_list = []
+        for role in roles:
+            if role.title() in lol_constants.lol_roles():
+                roles_list.append(role.lower())
+        roles_list = list(dict.fromkeys(roles_list))
+        profile = str(ctx.message.author)
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        beebot_profiles_data = beebot_profiles.beebot_profile_exists(
+            beebot_profiles_data, profile)
+        beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
+            beebot_profiles_data, profile, "league_of_legends")
+        beebot_profiles_data[profile]["league_of_legends"][
+            'preferred_role(s)'] = roles_list
+        beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
+        await ctx.send("Your role(s) have been updated! :white_check_mark:")
 
     # *********************************************************************************************************************
     # bot command setup local timezone of user
@@ -65,17 +64,16 @@ class beebotprofilemodule(commands.Cog, name="BeeBotProfileModule", description=
     @commands.has_role(role_specific_command_name)
     async def timezone(self, ctx, timezone: Optional[str]):
         if timezone == None:
-            await ctx.send("Sorry! You need to add your timezone! :open_mouth:")
+            return await ctx.send("Sorry! You need to add your timezone! :open_mouth:")
         elif timezone not in timezones.list_all_timezones():
-            await ctx.send("Sorry! You need to add a valid timezone! :open_mouth:")
-        else:
-            profile = str(ctx.message.author)
-            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
-                beebot_profiles_data, profile)
-            beebot_profiles_data[profile]["timezone"] = timezone
-            beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
-            await ctx.send("Your timezone has been updated! :white_check_mark:")
+            return await ctx.send("Sorry! You need to add a valid timezone! :open_mouth:")
+        profile = str(ctx.message.author)
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        beebot_profiles_data = beebot_profiles.beebot_profile_exists(
+            beebot_profiles_data, profile)
+        beebot_profiles_data[profile]["timezone"] = timezone
+        beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
+        await ctx.send("Your timezone has been updated! :white_check_mark:")
 
 
 def setup(bot):

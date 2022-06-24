@@ -40,22 +40,21 @@ class giveawaymodule(commands.Cog, name="GiveawayModule", description="giveaway"
             return await ctx.send("Sorry! You forgot to add inputs! :open_mouth: Please provide some! :slight_smile:")
         if reaction == None or not emojis.check_emoji(reaction):
             return await ctx.send("Sorry! You have an invalid emoji! :cry: Please try again! :smile:")
-        
-        
+
         # *********
         # | embed |
         # *********
         embed = Embed(title=f"{ctx.author.display_name}'s __{title}__ Giveaway!",
-                description=f"React with {reaction} to join the giveaway!",
-                colour=ctx.author.colour)
+                      description=f"React with {reaction} to join the giveaway!",
+                      colour=ctx.author.colour)
         # embed fields
-        embed.add_field(name="Giveaway Description:", value=description, inline=False)
+        embed.add_field(name="Giveaway Description:",
+                        value=description, inline=False)
         # embed footer
-        embed.set_footer(text=f"{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
+        embed.set_footer(
+            text=f"{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
         await ctx.send(embed=embed)
 
-
-        
         # if question == None:
         # embed = Embed(title="Giveaway",
         # 			  description=description,
@@ -75,7 +74,6 @@ class giveawaymodule(commands.Cog, name="GiveawayModule", description="giveaway"
 
         # self.bot.scheduler.add_job(self.complete_giveaway, "date", run_date=datetime.now()+timedelta(seconds=mins),
         # 						   args=[message.channel.id, message.id])
-
 
     # async def complete_giveaway(self, channel_id, message_id):
     # 	message = await self.bot.get_channel(channel_id).fetch_message(message_id)

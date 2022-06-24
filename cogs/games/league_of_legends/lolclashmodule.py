@@ -48,71 +48,67 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     async def clash_add(self, ctx, availability: Optional[str], *roles):
         events_data = events.get_events_json()
         if not events.check_event(events_data, 'clash'):
-            await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+            return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        clash_event = events_data['clash']
+        clash_date = datetime.fromtimestamp(
+            clash_event['schedule'][0]['startTime'] / 1e3)
+        if clash_date < datetime.now():
+            return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        if availability == None:
+            return await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
+        availability = availability.lower().title()
+        if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lol_constants.lol_roles():
+            return await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\', \'Both\', or role(s) '
+                                  'after command! :smile:')
+        available_member = str(ctx.message.author)
+        participants = clash_event['participants']
+        roles = list(roles)
+        avail_dict = {}
+        if availability in lol_constants.lol_roles():
+            roles = [availability.lower()] + roles
+        elif availability == 'Both':
+            avail_dict = {'Sat': 1, 'Sun': 1}
         else:
-            clash_event = events_data['clash']
-            clash_date = datetime.fromtimestamp(
-                clash_event['schedule'][0]['startTime'] / 1e3)
-            if clash_date < datetime.now():
-                await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+            avail_dict = {availability: 1}
+        # add roles
+        roles_list = []
+        if roles:
+            for role in roles:
+                if role.title() in lol_constants.lol_roles():
+                    roles_list.append(role.lower())
+            roles_list = list(dict.fromkeys(roles_list))
+        role_msg = ''
+        if roles_list:
+            role_msg = 'and preferred role(s) '
+            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+            # add member's roles
+            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
+                available_member, beebot_profiles_data)
+            beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
+                beebot_profiles_data, available_member, "league_of_legends")
+            beebot_profiles_data[available_member]["league_of_legends"][
+                'preferred_role(s)'] = roles_list
+            beebot_profiles_data = beebot_profiles.set_beebot_profiles_json(
+                beebot_profiles_data)
+        # check if member already registered
+        if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
+            member = participants[available_member]
+            if member['Sat'] == 1 and member['Sun'] == 1 and not roles_list:
+                await ctx.send('Your name was already added to the list for both days! :open_mouth:')
+            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun') and not roles_list:
+                await ctx.send('Your name was already added to the list for this day! :open_mouth:')
             else:
-                if availability == None:
-                    await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
-                else:
-                    availability = availability.lower().title()
-                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lol_constants.lol_roles():
-                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\', \'Both\', or role(s) '
-                                       'after command! :smile:')
-                    else:
-                        available_member = str(ctx.message.author)
-                        participants = clash_event['participants']
-                        roles = list(roles)
-                        avail_dict = {}
-                        if availability in lol_constants.lol_roles():
-                            roles = [availability.lower()] + roles
-                        elif availability == 'Both':
-                            avail_dict = {'Sat': 1, 'Sun': 1}
-                        else:
-                            avail_dict = {availability: 1}
-                        # add roles
-                        roles_list = []
-                        if roles:
-                            for role in roles:
-                                if role.title() in lol_constants.lol_roles():
-                                    roles_list.append(role.lower())
-                            roles_list = list(dict.fromkeys(roles_list))
-                        role_msg = ''
-                        if roles_list:
-                            role_msg = 'and preferred role(s) '
-                            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-                            # add member's roles
-                            beebot_profiles_data = beebot_profiles.beebot_profile_exists(
-                                available_member, beebot_profiles_data)
-                            beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
-                                beebot_profiles_data, available_member, "league_of_legends")
-                            beebot_profiles_data[available_member]["league_of_legends"][
-                                'preferred_role(s)'] = roles_list
-                            beebot_profiles_data = beebot_profiles.set_beebot_profiles_json(
-                                beebot_profiles_data)
-                        # check if member already registered
-                        if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
-                            member = participants[available_member]
-                            if member['Sat'] == 1 and member['Sun'] == 1 and not roles_list:
-                                await ctx.send('Your name was already added to the list for both days! :open_mouth:')
-                            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun') and not roles_list:
-                                await ctx.send('Your name was already added to the list for this day! :open_mouth:')
-                            else:
-                                participants[available_member].update(
-                                    avail_dict)
-                                await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
-                        elif availability in lol_constants.lol_roles() and roles_list:
-                            await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
-                        else:
-                            participants[available_member] = {
-                                'Sat': 0, 'Sun': 0}
-                            participants[available_member].update(avail_dict)
-                            await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
-                        events.set_events_json(events_data)
+                participants[available_member].update(
+                    avail_dict)
+                await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
+        elif availability in lol_constants.lol_roles() and roles_list:
+            await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
+        else:
+            participants[available_member] = {
+                'Sat': 0, 'Sun': 0}
+            participants[available_member].update(avail_dict)
+            await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
+        events.set_events_json(events_data)
 
     # *********************************************************************************************************************
     # bot command to remove author from availability list
@@ -124,42 +120,37 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
     async def clash_remove(self, ctx, availability: Optional[str]):
         events_data = events.get_events_json()
         if not events.check_event(events_data, 'clash'):
-            await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+            return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        clash_event = events_data['clash']
+        clash_date = datetime.fromtimestamp(
+            clash_event['schedule'][0]['startTime'] / 1e3)
+        if clash_date < datetime.now():
+            return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        if availability == None:
+            return await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
+        availability = availability.lower().title()
+        if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
+            return await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
+                                  'after command! :smile:')
+        # check if member already registered
+        available_member = str(ctx.message.author)
+        participants = clash_event['participants']
+        if availability == 'Both':
+            avail_dict = {'Sat': 0, 'Sun': 0}
         else:
-            clash_event = events_data['clash']
-            clash_date = datetime.fromtimestamp(
-                clash_event['schedule'][0]['startTime'] / 1e3)
-            if clash_date < datetime.now():
-                await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
-            else:
-                if availability == None:
-                    await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
-                else:
-                    availability = availability.lower().title()
-                    if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
-                        await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
-                                       'after command! :smile:')
-                    else:
-                        # check if member already registered
-                        available_member = str(ctx.message.author)
-                        participants = clash_event['participants']
-                        if availability == 'Both':
-                            avail_dict = {'Sat': 0, 'Sun': 0}
-                        else:
-                            avail_dict = {availability: 0}
-                        if available_member not in participants:
-                            await ctx.send('Your name wasn\'t on the list. :thinking: Add it with the "addclash" command! :smile:')
-                        else:
-                            member = participants[available_member]
-                            if (member['Sat'] == 0 and availability == 'Sat') or (member['Sun'] == 0 and availability == 'Sun'):
-                                await ctx.send('You\'re already not signed up for this day! :open_mouth:')
-                            else:
-                                participants[available_member].update(
-                                    avail_dict)
-                                if participants[available_member] == {'Sat': 0, 'Sun': 0}:
-                                    participants.pop(available_member)
-                                events.set_events_json(events_data)
-                                await ctx.send('Your name was removed from the availability list for this day(s). :slight_smile:')
+            avail_dict = {availability: 0}
+        if available_member not in participants:
+            return await ctx.send('Your name wasn\'t on the list. :thinking: Add it with the "addclash" command! :smile:')
+        member = participants[available_member]
+        if (member['Sat'] == 0 and availability == 'Sat') or (member['Sun'] == 0 and availability == 'Sun'):
+            await ctx.send('You\'re already not signed up for this day! :open_mouth:')
+        else:
+            participants[available_member].update(
+                avail_dict)
+            if participants[available_member] == {'Sat': 0, 'Sun': 0}:
+                participants.pop(available_member)
+            events.set_events_json(events_data)
+            await ctx.send('Your name was removed from the availability list for this day(s). :slight_smile:')
 
     # *********************************************************************************************************************
     # bot command to view clash availability list
@@ -173,57 +164,56 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
         clash = events_data['clash']
         date = datetime.fromtimestamp(clash['schedule'][0]['startTime'] / 1e3)
         if not clash['participants']:
-            await ctx.send('No one has added their availability yet! :cry: Add yours with the \"addclash\" command! :smile:')
+            return await ctx.send('No one has added their availability yet! :cry: Add yours with the \"addclash\" command! :smile:')
         elif date < datetime.now():
-            await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
-        else:
-            available_days = {'Saturday': [], 'Sunday': []}
-            for member in clash['participants']:
-                beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-                fields = []
-                if beebot_profiles.check_beebot_profile(beebot_profiles_data, member):
-                    if beebot_profiles.check_beebot_profile(beebot_profiles_data[member], 'league_of_legends'):
-                        if beebot_profiles.check_beebot_profile(beebot_profiles_data[member]['league_of_legends'], 'preferred_role(s)'):
-                            if beebot_profiles_data[member]['league_of_legends']['preferred_role(s)']:
-                                # add roles
-                                fields.append(
-                                    f"preferred role(s): *{', '.join(beebot_profiles_data[member]['league_of_legends']['preferred_role(s)'])}*")
-                # set fields
-                if not fields:
-                    fields = ''
+            return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
+        available_days = {'Saturday': [], 'Sunday': []}
+        for member in clash['participants']:
+            beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+            fields = []
+            if beebot_profiles.check_beebot_profile(beebot_profiles_data, member):
+                if beebot_profiles.check_beebot_profile(beebot_profiles_data[member], 'league_of_legends'):
+                    if beebot_profiles.check_beebot_profile(beebot_profiles_data[member]['league_of_legends'], 'preferred_role(s)'):
+                        if beebot_profiles_data[member]['league_of_legends']['preferred_role(s)']:
+                            # add roles
+                            fields.append(
+                                f"preferred role(s): *{', '.join(beebot_profiles_data[member]['league_of_legends']['preferred_role(s)'])}*")
+            # set fields
+            if not fields:
+                fields = ''
+            else:
+                fields = f"[{' | '.join(fields)}]"
+            # format string
+            member_name = '#'.join(member.split("#")[:-1])
+            if clash['participants'][member]['Sat'] == 1:
+                available_days['Saturday'].append(
+                    f"- ***{member_name}*** {fields}")
+            if clash['participants'][member]['Sun'] == 1:
+                available_days['Sunday'].append(
+                    f"- ***{member_name}*** {fields}")
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title="Clash List",
+                      description=f"Here are the signups for the next Clash weekend!\n"
+                      f"Last day to signup is;\n"
+                      f"*{date.astimezone(timezones.get_pacific_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p (%Z)')}*\n"
+                      f"*{date.astimezone(timezones.get_eastern_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p (%Z)')}*",
+                      colour=ctx.author.colour)
+        # embed thumbnail
+        file = discord.File(
+            f"resource_files/image_files/thumbnails/lolclash_thumb.png", filename="image.png")
+        embed.set_thumbnail(url='attachment://image.png')
+        # embed fields
+        for day in available_days:
+            if available_days[day]:
+                if day == 'Saturday':
+                    clash_date = date - timedelta(days=1)
                 else:
-                    fields = f"[{' | '.join(fields)}]"
-                # format string
-                member_name = '#'.join(member.split("#")[:-1])
-                if clash['participants'][member]['Sat'] == 1:
-                    available_days['Saturday'].append(
-                        f"- ***{member_name}*** {fields}")
-                if clash['participants'][member]['Sun'] == 1:
-                    available_days['Sunday'].append(
-                        f"- ***{member_name}*** {fields}")
-            # *********
-            # | embed |
-            # *********
-            embed = Embed(title="Clash List",
-                          description=f"Here are the signups for the next Clash weekend!\n"
-                          f"Last day to signup is;\n"
-                          f"*{date.astimezone(timezones.get_pacific_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p (%Z)')}*\n"
-                          f"*{date.astimezone(timezones.get_eastern_timezone()).strftime('%A, %B %-d, %Y @ %-I:%M%p (%Z)')}*",
-                          colour=ctx.author.colour)
-            # embed thumbnail
-            file = discord.File(
-                f"resource_files/image_files/thumbnails/lolclash_thumb.png", filename="image.png")
-            embed.set_thumbnail(url='attachment://image.png')
-            # embed fields
-            for day in available_days:
-                if available_days[day]:
-                    if day == 'Saturday':
-                        clash_date = date - timedelta(days=1)
-                    else:
-                        clash_date = date
-                    embed.add_field(name=clash_date.astimezone(timezones.get_pacific_timezone()).strftime(
-                        '%A, %B %-d, %Y:'), value='\n'.join(available_days[day]), inline=False)
-            await ctx.send(file=file, embed=embed)
+                    clash_date = date
+                embed.add_field(name=clash_date.astimezone(timezones.get_pacific_timezone()).strftime(
+                    '%A, %B %-d, %Y:'), value='\n'.join(available_days[day]), inline=False)
+        await ctx.send(file=file, embed=embed)
 
     # *********************************************************************************************************************
     # bot command to set clash date
