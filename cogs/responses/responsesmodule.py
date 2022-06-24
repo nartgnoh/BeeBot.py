@@ -34,7 +34,7 @@ admin_specific_command_name = 'Bot Admin'
 
 
 class responsesmodule(commands.Cog, name="ResponsesModule",
-                      description="beefacts, colour, happybirthday, coinflip, diceroll, gif"):
+                      description="beefacts, colour, happybirthday, dadjoke, coinflip, diceroll, gif"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -113,7 +113,7 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
     # *********************************************************************************************************************
     # bot command tell a dad joke
     # *********************************************************************************************************************
-    @commands.command(name='dadjoke', aliases=['joke', '🃏'],
+    @commands.command(name='dadjoke', aliases=['joke', 'dadjokes', '🃏'],
                       help='🃏 Tell a dad joke!')
     async def dad_joke(self, ctx):
         await ctx.send(f"{Dadjoke().joke}  :rofl:")
