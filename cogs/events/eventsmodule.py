@@ -164,9 +164,9 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
             count += 1
             if count <= len(winners_list):
                 rewards_list = rewards_list + \
-                    [f"{string_formatter.make_ordinal(count)} Place: {winners_list[count-1]} ({reward})"]
+                    [f"{string_formatter.make_ordinal(count)} Place: **{participants[winners_list[count-1]]}** ({reward})"]
                 final_message = final_message + \
-                    f"{string_formatter.make_ordinal(count)} Place: <@{participants[winners_list[count-1]]}>\n"
+                    f"{string_formatter.make_ordinal(count)} Place: <@{winners_list[count-1]}>\n"
             else:
                 rewards_list = rewards_list + \
                     [f"{string_formatter.make_ordinal(count)} Place: N/A ({reward})"]

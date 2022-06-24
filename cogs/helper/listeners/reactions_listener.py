@@ -36,7 +36,7 @@ class Reactions(Cog):
                 if str(payload.message_id) in events_data['giveaways']:
                     giveaway = events_data['giveaways'][str(payload.message_id)]
                     if payload.emoji.name == giveaway['reaction']:
-                        giveaway['participants'][str(payload.member)] = int(payload.member.id)
+                        giveaway['participants'][int(payload.member.id)] = str(payload.member.display_name)
                         events.set_events_json(events_data)
 
 
