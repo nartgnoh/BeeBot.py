@@ -5,17 +5,17 @@
 
 import os
 import discord
-import warnings
+import random
 import cogs.helper.constants.emoji_constants as emoji_constants
 import cogs.helper.helper_functions.emojis as emojis
+import cogs.helper.helper_functions.events as events
+import cogs.helper.helper_functions.string_formatter as string_formatter
 
 from discord.ext import commands
 from discord.ext.commands import Cog
 from discord import Embed
 from typing import Optional
-from datetime import datetime, timedelta
-
-warnings.filterwarnings("error")
+from datetime import datetime
 
 # role specific names
 role_specific_command_name = 'Bot Commander'
@@ -29,18 +29,105 @@ class giveawaymodule(commands.Cog, name="GiveawayModule", description="giveaway"
         self.bot = bot
 
     # *********************************************************************************************************************
+    # bot command to end a giveaway in chat
+    # *********************************************************************************************************************
+    @commands.command(name='endgiveaway', aliases=['finishgiveaway', '🎉'],
+                      help='🎉 End a giveaway you made!')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def create_giveaway(self, ctx, *, title: Optional[str]):
+        if title == None:
+            return await ctx.send("Sorry! You forgot to add your title! :open_mouth: Please try again! :slight_smile:")
+        giveaway_author = str(ctx.message.author)
+        events_data = events.get_events_json()
+        if not events.check_event(events_data, 'giveaways') or not giveaway_author in events_data['giveaways']:
+            return await ctx.send("Sorry! You don't have a giveaway active! :cry:")
+        giveaway_check = False
+        for giveaway in events_data['giveaways'][giveaway_author]:
+            if giveaway['title'] == title:
+                giveaway_check = True
+                giveaway = giveaway
+                break
+        if not giveaway_check:
+            return await ctx.send("Sorry! You don't have a giveaway active! :cry:")
+        print(giveaway)
+        reaction = giveaway['reaction']
+        days = datetime.now() - giveaway['start_time']
+        participants = giveaway['participants']
+        rewards = giveaway['rewards']
+        events_data['giveaways'][giveaway_author].remove(giveaway)
+
+        # events.set_events_json(events_data)
+
+        # get winners
+        party_keys = participants.keys()
+        random.shuffle(party_keys)
+        winners_list = random.sample(party_keys, len(rewards))
+        rewards_list = []
+        count = 0
+        final_message = ''
+        for reward in rewards:
+            count += 1
+            rewards_list = rewards_list + \
+                [f"{string_formatter.make_ordinal(count)} Place: {winners_list(count-1)} ({reward})"]
+            final_message = final_message + \
+                f"{string_formatter.make_ordinal(count)} Place: <@{participants[winners_list(count-1)]}>"
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title=f"{ctx.author.display_name}'s __{title}__ Giveaway Winners!",
+                      colour=ctx.author.colour)
+        # embed fields
+        embed.add_field(name="Winners:",
+                        value='\n'.join(rewards_list), inline=False)
+        # embed footer
+        embed.set_footer(
+            text=f"Giveaway By: {giveaway_author}\n{reaction} This giveaway lasted {days} day(s)!")
+        await ctx.send(embed=embed)
+        await ctx.send()
+
+    # *********************************************************************************************************************
     # bot command to make a giveaway in chat
     # *********************************************************************************************************************
     @commands.command(name='giveaway', aliases=['creategiveaway', 'makegiveaway', '🎁'],
-                      help='🎁 Make a giveaway! [Titles with spaces need quotes ""]')
+                      help='🎁 Make a giveaway! [Type "BB help giveaway" for more info, Role specific]\n\n'
+                      'Titles with spaces need quotes "".\n'
+                      'Prizes must be in a list format in apostrophes \'\' in descending order inside quotes "".\n'
+                      'Example:\nBB giveaway "BB Bucks" 💵 "[\'500 BB Bucks\', \'200 BB Bucks\', \'100 BB Bucks\']"\nRules: Be good c:')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def create_giveaway(self, ctx, title: Optional[str], reaction: Optional[str], *, description: Optional[str]):
+    async def create_giveaway(self, ctx, title: Optional[str], reaction: Optional[str],
+                              rewards: Optional[str], *, description: Optional[str]):
         if title == None:
             return await ctx.send("Sorry! You forgot to add inputs! :open_mouth: Please provide some! :slight_smile:")
         if reaction == None or not emojis.check_emoji(reaction):
             return await ctx.send("Sorry! You have an invalid emoji! :cry: Please try again! :smile:")
+        if rewards == None:
+            return await ctx.send("Sorry! You have invalid rewards! :cry: Please try again! :smile:")
+        giveaway_author = str(ctx.message.author)
+        events_data = events.get_events_json()
+        if not events.check_event(events_data, 'giveaways'):
+            events_data['giveaways'] = {}
+        if not giveaway_author in events_data['giveaways']:
+            events_data['giveaways'][giveaway_author] = []
+        rewards = rewards.strip("]['").split("', '")
+        giveaway_json = {'title': title,
+                         'reaction': reaction,
+                         'start_time': datetime.now(),
+                         'participants': {},
+                         'rewards': rewards
+                         }
+        events_data['giveaways'][giveaway_author].append(giveaway_json)
+        print(giveaway_json)
 
+        # events.set_events_json(events_data)
+
+        rewards_list = []
+        count = 0
+        for reward in rewards:
+            count += 1
+            rewards_list = rewards_list + \
+                [f"{string_formatter.make_ordinal(count)} Place: **{reward}**"]
         # *********
         # | embed |
         # *********
@@ -48,95 +135,14 @@ class giveawaymodule(commands.Cog, name="GiveawayModule", description="giveaway"
                       description=f"React with {reaction} to join the giveaway!",
                       colour=ctx.author.colour)
         # embed fields
-        embed.add_field(name="Giveaway Description:",
+        embed.add_field(name="Prizes:",
+                        value='\n'.join(rewards_list), inline=False)
+        embed.add_field(name="Description:",
                         value=description, inline=False)
         # embed footer
         embed.set_footer(
-            text=f"{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
+            text=f"Giveaway By: {giveaway_author}\n{reaction} Type \"BB endgiveaway {title}\" to end the giveaway!")
         await ctx.send(embed=embed)
-
-        # if question == None:
-        # embed = Embed(title="Giveaway",
-        # 			  description=description,
-        # 			  colour=ctx.author.colour,
-        # 			  timestamp=datetime.utcnow())
-
-        # fields = [
-        #     ("End time", f"{datetime.utcnow()+timedelta(seconds=mins*60)} UTC", False)]
-
-        # for name, value, inline in fields:
-        # 	embed.add_field(name=name, value=value, inline=inline)
-
-        # message = await ctx.send(embed=embed)
-        # await message.add_reaction("✅")
-
-        # self.giveaways.append((message.channel.id, message.id))
-
-        # self.bot.scheduler.add_job(self.complete_giveaway, "date", run_date=datetime.now()+timedelta(seconds=mins),
-        # 						   args=[message.channel.id, message.id])
-
-    # async def complete_giveaway(self, channel_id, message_id):
-    # 	message = await self.bot.get_channel(channel_id).fetch_message(message_id)
-
-    # 	if len((entrants := [u for u in await message.reactions[0].users().flatten() if not u.bot])) > 0:
-    # 		winner = choice(entrants)
-    # 		await message.channel.send(f"Congratulations {winner.mention} - you won the giveaway!")
-    # 		self.giveaways.remove((message.channel.id, message.id))
-
-    # 	else:
-    # 		await message.channel.send("Giveaway ended - no one entered!")
-    # 		self.giveaways.remove((message.channel.id, message.id))
-
-    # @Cog.listener()
-    # async def on_raw_reaction_add(self, payload):
-        # if self.bot.ready and payload.message_id == self.reaction_message.id:
-        # 	current_colours = filter(lambda r: r in self.colours.values(), payload.member.roles)
-        # 	await payload.member.remove_roles(*current_colours, reason="Colour role reaction.")
-        # 	await payload.member.add_roles(self.colours[payload.emoji.name], reason="Colour role reaction.")
-        # 	await self.reaction_message.remove_reaction(payload.emoji, payload.member)
-
-        # elif payload.message_id in (poll[1] for poll in self.giveaway):
-        # 	message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-
-        # 	for reaction in message.reactions:
-        # 		if (not payload.member.bot
-        # 			and payload.member in await reaction.users().flatten()
-        # 			and reaction.emoji != payload.emoji.name):
-        # 			await message.remove_reaction(reaction.emoji, payload.member)
-
-        # elif payload.emoji.name == "⭐":
-        # 	message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-
-        # 	if not message.author.bot and payload.member.id != message.author.id:
-        # 		msg_id, stars = db.record("SELECT StarMessageID, Stars FROM starboard WHERE RootMessageID = ?",
-        # 								  message.id) or (None, 0)
-
-        # 		embed = Embed(title="Starred message",
-        # 					  colour=message.author.colour,
-        # 					  timestamp=datetime.utcnow())
-
-        # 		fields = [("Author", message.author.mention, False),
-        # 				  ("Content", message.content or "See attachment", False),
-        # 				  ("Stars", stars+1, False)]
-
-        # 		for name, value, inline in fields:
-        # 			embed.add_field(name=name, value=value, inline=inline)
-
-        # 		if len(message.attachments):
-        # 			embed.set_image(url=message.attachments[0].url)
-
-        # 		if not stars:
-        # 			star_message = await self.starboard_channel.send(embed=embed)
-        # 			db.execute("INSERT INTO starboard (RootMessageID, StarMessageID) VALUES (?, ?)",
-        # 					   message.id, star_message.id)
-
-        # 		else:
-        # 			star_message = await self.starboard_channel.fetch_message(msg_id)
-        # 			await star_message.edit(embed=embed)
-        # 			db.execute("UPDATE starboard SET Stars = Stars + 1 WHERE RootMessageID = ?", message.id)
-
-        # 	else:
-        # 		await message.remove_reaction(payload.emoji, payload.member)
 
 
 def setup(bot):
