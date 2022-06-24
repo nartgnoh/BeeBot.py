@@ -37,12 +37,11 @@ class gamesmodule(commands.Cog, name="GamesModule", description="pickgame, spilt
         if number_of_players == None:
             # else number_of_players was 0
             if ctx.message.author.voice is None:
-                await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
-                               'or joining a voice channel! :slight_smile:')
-            else:
-                # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
-                channel = ctx.message.author.voice.channel
-                number_of_players = len(channel.members)
+                return await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
+                                      'or joining a voice channel! :slight_smile:')
+            # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
+            channel = ctx.message.author.voice.channel
+            number_of_players = len(channel.members)
         # get games.json file
         games_json_path = "/".join(list(current_directory.split('/')
                                    [0:-2])) + '/resource_files/json_files/games.json'
@@ -86,50 +85,48 @@ class gamesmodule(commands.Cog, name="GamesModule", description="pickgame, spilt
     async def split_teams(self, ctx, number_of_teams: Optional[int]):
         # check for members in voice call
         if ctx.message.author.voice is None:
-            await ctx.send('An error has occurred! :confounded: Try joining a voice channel! :slight_smile:')
-        else:
-            # set "number_of_teams" to 2 if none
-            if number_of_teams == None:
-                number_of_teams = 2
-            # check if in bounds
-            if number_of_teams > 101 and number_of_teams < 0:
-                await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max teams: 101]')
+            return await ctx.send('An error has occurred! :confounded: Try joining a voice channel! :slight_smile:')
+        # set "number_of_teams" to 2 if none
+        if number_of_teams == None:
+            number_of_teams = 2
+        # check if in bounds
+        if number_of_teams > 101 and number_of_teams < 0:
+            return await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max teams: 101]')
+        # create a "players_list" for members in the voice channel
+        channel = ctx.message.author.voice.channel
+        players_list = []
+        for member in channel.members:
+            user = member.display_name
+            players_list.append(user)
+        # randomize the elements of the list 1 to "len(channel.members)" times
+        for i in range(random.randint(1, len(channel.members))):
+            random.shuffle(players_list)
+        # split the teams into the number of teams
+        team_split = np.array_split(players_list, number_of_teams)
+        teams_dict = {}
+        team_number = 0
+        players_num = len(players_list)
+        for team in team_split:
+            if players_num > 0:
+                team_number += 1
+                teams_dict[team_number] = list(team)
+                players_num -= 1
             else:
-                # create a "players_list" for members in the voice channel
-                channel = ctx.message.author.voice.channel
-                players_list = []
-                for member in channel.members:
-                    user = member.display_name
-                    players_list.append(user)
-                # randomize the elements of the list 1 to "len(channel.members)" times
-                for i in range(random.randint(1, len(channel.members))):
-                    random.shuffle(players_list)
-                # split the teams into the number of teams
-                team_split = np.array_split(players_list, number_of_teams)
-                teams_dict = {}
-                team_number = 0
-                players_num = len(players_list)
-                for team in team_split:
-                    if players_num > 0:
-                        team_number += 1
-                        teams_dict[team_number] = list(team)
-                        players_num -= 1
-                    else:
-                        break
-                # *********
-                # | embed |
-                # *********
-                embed = Embed(title="Teams",
-                              colour=discord.Colour.random())
-                emoji_list = random.sample(
-                    emoji_constants.cute_animals(), len(teams_dict))
-                random.shuffle(emoji_list)
-                for team in teams_dict:
-                    emoji, name = emoji_list[team-1].split()
-                    # embed fields
-                    embed.add_field(
-                        name=f"{emoji} Team {name}:", value=f"{', '.join(teams_dict[team])}", inline=False)
-                await ctx.send(embed=embed)
+                break
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title="Teams",
+                      colour=discord.Colour.random())
+        emoji_list = random.sample(
+            emoji_constants.cute_animals(), len(teams_dict))
+        random.shuffle(emoji_list)
+        for team in teams_dict:
+            emoji, name = emoji_list[team-1].split()
+            # embed fields
+            embed.add_field(
+                name=f"{emoji} Team {name}:", value=f"{', '.join(teams_dict[team])}", inline=False)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
