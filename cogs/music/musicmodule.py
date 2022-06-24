@@ -383,7 +383,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
-            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed:')
         player = self.get_player(ctx)
         if not player.current:
             return await ctx.send('There is no audio in the queue! :flushed: Try the "play" command to add a song! :smile:')
@@ -418,7 +418,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         # Display information about the currently playing song.
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
-            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed:')
         player = self.get_player(ctx)
         if not player.current:
             return await ctx.send('Sorry! I\'m not currently playing anything! :flushed:')
@@ -453,7 +453,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
             return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
-            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed')
+            return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed:')
         if not 0 < vol < 101:
             return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
         player = self.get_player(ctx)
