@@ -34,7 +34,7 @@ admin_specific_command_name = 'Bot Admin'
 
 
 class responsesmodule(commands.Cog, name="ResponsesModule",
-                      description="beefacts, colour, happybirthday, dadjoke, coinflip, diceroll, gif"):
+                      description="beefacts, coinflip, colour, dadjoke, diceroll, gif, happybirthday"):
     def __init__(self, bot):
         self.bot = bot
 

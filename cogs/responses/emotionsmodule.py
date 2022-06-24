@@ -22,7 +22,7 @@ admin_specific_command_name = 'Bot Admin'
 # emotionsmodule class
 
 
-class emotionsmodule(commands.Cog, name="EmotionsModule", description="happy, sad, angry"):
+class emotionsmodule(commands.Cog, name="EmotionsModule", description="angry, happy, sad"):
     def __init__(self, bot):
         self.bot = bot
 
