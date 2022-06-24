@@ -28,7 +28,7 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
     # *********************************************************************************************************************
     @commands.command(name='poll', aliases=['createpoll', 'makepoll', 'polls', '💈'],
                       help='💈 Make a poll! [Max options: 9, Questions and Options with spaces need quotes "", Role specific]\n\n'
-                      '(Example: <BB poll "Who\'s excited for BeeBot\'s return?" Yes "Of course" Yay>)')
+                      'Example:\nBB poll "Who\'s excited for BeeBot\'s return?" Yes "Of course" Yay')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def create_poll(self, ctx, question: Optional[str], *options):
