@@ -8,7 +8,6 @@ import asyncio
 import itertools
 import sys
 import traceback
-import cogs.helper.helper_functions.music as music_helper
 
 from discord.ext import commands
 from discord import Embed

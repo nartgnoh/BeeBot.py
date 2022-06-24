@@ -11,7 +11,6 @@ import discord
 import cogs.helper.helper_functions.events as events
 import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 import cogs.helper.helper_functions.urls as urls
-import cogs.helper.helper_functions.music as music_helper
 
 from discord.ext import commands
 from discord import Embed
