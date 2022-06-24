@@ -449,12 +449,12 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         # volume: float or int [Required]
         #     The volume to set the player to in percentage. This must be between 1 and 100.
         if vol == None:
-            return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
+            return await ctx.send('Sorry! Please enter a value between 1 and 100. :open_mouth:')
         vc = ctx.voice_client
         if not vc or not vc.is_connected():
             return await ctx.send('Sorry! I\'m not currently connected to voice! :flushed:')
         if not 0 < vol < 101:
-            return await ctx.send('Sorry! Please enter a value between 1 and 100. :mouth_open:')
+            return await ctx.send('Sorry! Please enter a value between 1 and 100. :open_mouth:')
         player = self.get_player(ctx)
         if vc.source:
             vc.source.volume = vol / 100
