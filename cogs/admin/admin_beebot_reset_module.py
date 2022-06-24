@@ -32,12 +32,22 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
     # *********************************************************************************************************************
     # bot command admin beebot reset events
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_events', help='🛡️ Reset BeeBot events file. [Admin Specific]')
+    @commands.command(name='admin_beebot_reset_all_events',
+                      help='🛡️ Reset BeeBot events file. [Admin Specific]\n\nOptions: "all", "clash", "giveaways"')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
-    async def admin_beebot_reset_all_events(self, ctx):
-        events.set_events_json({})
-        await ctx.send('Reset BeeBot events file.')
+    async def admin_beebot_reset_all_events(self, ctx, *, event: Optional[str]):
+        if event == None:
+            return await ctx.send('Please add an event to reset!')
+        if event.lower() == 'all':
+            events.set_events_json({})
+            return await ctx.send('Reset ALL BeeBot events file.')
+        events_json = events.get_events_json()
+        if not event.lower() in events_json:
+            return await ctx.send('Your event doesn\'t exist!')
+        events_json[event] = {}
+        events.set_events_json(events_json)
+        await ctx.send(f'Reset {event} BeeBot events file.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles
