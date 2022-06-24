@@ -76,9 +76,9 @@ class eventsmodule(commands.Cog, name="EventsModule", description="polls"):
     async def active_giveaways(self, ctx):
         events_data = events.get_events_json()
         if not 'giveaways' in events_data:
-            return await ctx.send("Sorry! There are no active giveaways at the moment! :mouth_open:")
+            return await ctx.send("Sorry! There are no active giveaways at the moment! :open_mouth:")
         if not events_data['giveaways']:
-            return await ctx.send("Sorry! There are no active giveaways at the moment! :mouth_open:")
+            return await ctx.send("Sorry! There are no active giveaways at the moment! :open_mouth:")
         for giveaway in events_data['giveaways']:
             message = await ctx.fetch_message(int(giveaway))
             await message.reply(f"**{events_data['giveaways'][giveaway]['title']}** run by **{events_data['giveaways'][giveaway]['giveaway_author_display_name']}**")
