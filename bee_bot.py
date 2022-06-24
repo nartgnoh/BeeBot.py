@@ -4,10 +4,9 @@
 
 import os
 import discord
-import sys
-import traceback
+import itertools
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from pretty_help import PrettyHelp
 
@@ -15,22 +14,15 @@ from pretty_help import PrettyHelp
 all_extensions = ['cogs.admin.admin_beebot_reset_module',
                   'cogs.admin.test_module',
                   'cogs.beebot_profile.beebotprofilemodule',
-                  'cogs.beebot_profile.lolbeebotprofilemodule',
-                  # 'cogs.events.eventsmodule',
+                  'cogs.events.eventsmodule',
+                  # 'cogs.events.giveawaymodule',
                   'cogs.games.league_of_legends.lolclashmodule',
                   'cogs.games.league_of_legends.lolinfomodule',
                   'cogs.games.league_of_legends.lolprofilemodule',
-                  'cogs.games.league_of_legends.lolskinsmodule',
-                  'cogs.games.league_of_legends.lolspectatemodule',
-                  'cogs.games.league_of_legends.lolteamsmodule',
                   'cogs.games.gamesmodule',
                   # 'cogs.games.teamfight_tactics',
                   'cogs.helper.listeners.reactions_listener',
-                  # 'cogs.helper.listeners.voice_states_listener',
                   'cogs.music.musicmodule',
-                  'cogs.responses.emotionsmodule',
-                  # 'cogs.responses.giveawaymodule',
-                  'cogs.responses.pollsmodule',
                   'cogs.responses.responsesmodule'
                   ]
 
@@ -63,10 +55,30 @@ if __name__ == '__main__':
 async def on_ready():
     print('----------------------------------------------\n'
           f'Logged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n\n')
-
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with BEES NUTS (type \"BB help\")"))
+    await bot.change_presence(status=discord.Status.online)
+    # starting task loops
+    change_activity.start()
     print(f'BeeBot successfully logged in and booted! :D'
           '\n----------------------------------------------')
+
+
+statuslist = itertools.cycle([
+    'League of Legends [type \"BB help\"]',
+    'with your Mom [type \"BB help\"]',
+    'with BEES NUTS [type \"BB help\"]',
+    'RealLife.exe [type \"BB help\"]',
+    'myself :c [type \"BB help\"]',
+    'with your Waifu [type \"BB help\"]',
+    'with my Queen Bee [type \"BB help\"]',
+    'literally nothing [type \"BB help\"]',
+    'a prank [type \"BB help\"]'
+])
+
+
+# change activity
+@tasks.loop(seconds=900)
+async def change_activity():
+    await bot.change_presence(activity=discord.Game(next(statuslist)))
 
 
 bot.run(DISCORD_TOKEN, bot=True, reconnect=True)

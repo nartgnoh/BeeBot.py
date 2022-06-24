@@ -1,7 +1,7 @@
 # *********************************************************************************************************************
 # gamesmodule.py
-# - split_teams command
 # - pick_game command
+# - split_teams command
 # *********************************************************************************************************************
 
 import os
@@ -24,9 +24,58 @@ admin_specific_command_name = 'Bot Admin'
 # gamesmodule class
 
 
-class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pickgame"):
+class gamesmodule(commands.Cog, name="GamesModule", description="pickgame, spiltteams"):
     def __init__(self, bot):
         self.bot = bot
+
+    # *********************************************************************************************************************
+    # bot command to pick a game from an excel sheet of games with number of player specification
+    # *********************************************************************************************************************
+    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'],
+                      help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
+    async def pick_game(self, ctx, number_of_players: Optional[int]):
+        if number_of_players == None:
+            # else number_of_players was 0
+            if ctx.message.author.voice is None:
+                await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
+                               'or joining a voice channel! :slight_smile:')
+            else:
+                # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
+                channel = ctx.message.author.voice.channel
+                number_of_players = len(channel.members)
+        # get games.json file
+        games_json_path = "/".join(list(current_directory.split('/')
+                                   [0:-2])) + '/resource_files/json_files/games.json'
+        with open(games_json_path) as games_json:
+            games = json.load(games_json)
+            final_games_list = []
+            # iterate through games dictionary
+            for key in games:
+                if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
+                    final_games_list.append(key)
+            # picking a random game from the final_games_list
+            random_game = random.choice(final_games_list)
+            url = games[random_game]['url']
+        pg_quotes = [f'Have you tried *{random_game}*? :smile:',
+                     f'Why not try *{random_game}*? :open_mouth:',
+                     f'I recommend *{random_game}*! :liar:',
+                     f'I might not have friends, but your friends can play *{random_game}*! :smiling_face_with_tear:']
+        pg_message = random.choice(pg_quotes)
+        # *********
+        # | embed |
+        # *********
+        # create an embed with game url
+        if url is not None:
+            embed = Embed(title=random_game,
+                          url=url,
+                          description=pg_message,
+                          colour=discord.Colour.random())
+        # embed without url
+        else:
+            embed = Embed(title=random_game,
+                          description=pg_message,
+                          colour=discord.Colour.random())
+        await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to split teams
@@ -81,55 +130,6 @@ class gamesmodule(commands.Cog, name="GamesModule", description="spiltteams, pic
                     embed.add_field(
                         name=f"{emoji} Team {name}:", value=f"{', '.join(teams_dict[team])}", inline=False)
                 await ctx.send(embed=embed)
-
-    # *********************************************************************************************************************
-    # bot command to pick a game from an excel sheet of games with number of player specification
-    # *********************************************************************************************************************
-    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'],
-                      help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
-    async def pick_game(self, ctx, number_of_players: Optional[int]):
-        if number_of_players == None:
-            # else number_of_players was 0
-            if ctx.message.author.voice is None:
-                await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
-                               'or joining a voice channel! :slight_smile:')
-            else:
-                # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
-                channel = ctx.message.author.voice.channel
-                number_of_players = len(channel.members)
-        # get games.json file
-        games_json_path = "/".join(list(current_directory.split('/')
-                                   [0:-2])) + '/resource_files/json_files/games.json'
-        with open(games_json_path) as games_json:
-            games = json.load(games_json)
-            final_games_list = []
-            # iterate through games dictionary
-            for key in games:
-                if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
-                    final_games_list.append(key)
-            # picking a random game from the final_games_list
-            random_game = random.choice(final_games_list)
-            url = games[random_game]['url']
-        pg_quotes = [f'Have you tried *{random_game}*? :smile:',
-                     f'Why not try *{random_game}*? :open_mouth:',
-                     f'I recommend *{random_game}*! :liar:',
-                     f'I might not have friends, but your friends can play *{random_game}*! :smiling_face_with_tear:']
-        pg_message = random.choice(pg_quotes)
-        # *********
-        # | embed |
-        # *********
-        # create an embed with game url
-        if url is not None:
-            embed = Embed(title=random_game,
-                          url=url,
-                          description=pg_message,
-                          colour=discord.Colour.random())
-        # embed without url
-        else:
-            embed = Embed(title=random_game,
-                          description=pg_message,
-                          colour=discord.Colour.random())
-        await ctx.send(embed=embed)
 
 
 def setup(bot):
