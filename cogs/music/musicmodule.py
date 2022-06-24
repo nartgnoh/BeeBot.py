@@ -338,7 +338,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         elif vc.is_paused():
             return
         vc.pause()
-        await ctx.send(f'{ctx.author}: Paused the song!', delete_after=15)
+        await ctx.send(f'**{ctx.author.display_name}** paused the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to resume audio
@@ -354,7 +354,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         elif not vc.is_paused():
             return
         vc.resume()
-        await ctx.send(f'{ctx.author}: Resumed the song!', delete_after=15)
+        await ctx.send(f'**{ctx.author.display_name}** resumed the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to go to next audio in queue by reaction vote
@@ -372,7 +372,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         elif not vc.is_playing():
             return
         vc.stop()
-        await ctx.send(f'{ctx.author}: Skipped the song!', delete_after=15)
+        await ctx.send(f'**{ctx.author.display_name}** skipped the song!', delete_after=15)
 
     # *********************************************************************************************************************
     # bot command to view current queue
@@ -460,7 +460,7 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
         if vc.source:
             vc.source.volume = vol / 100
         player.volume = vol / 100
-        await ctx.send(f'**{ctx.author}** set the volume to **{vol}%**')
+        await ctx.send(f'**{ctx.author.display_name}** set the volume to **{vol}%**')
 
     # *********************************************************************************************************************
     # bot command to leave voice channel and deletes queue
