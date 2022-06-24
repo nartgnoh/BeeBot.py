@@ -17,6 +17,7 @@ import json
 from discord.ext import commands
 from discord import Embed
 from typing import Optional
+from dadjokes import Dadjoke
 from dotenv import load_dotenv
 
 # get tenor_key from .env file
@@ -108,6 +109,14 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
         random.shuffle(hbd_emojis)
         for emoji in hbd_emojis:
             await msg.add_reaction(emoji)
+
+    # *********************************************************************************************************************
+    # bot command tell a dad joke
+    # *********************************************************************************************************************
+    @commands.command(name='dadjoke', aliases=['joke', '🃏'],
+                      help='🃏 Tell a dad joke!')
+    async def dad_joke(self, ctx):
+        await ctx.send(f"{Dadjoke().joke}  :rofl:")
 
     # *********************************************************************************************************************
     # bot command to flip coin

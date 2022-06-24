@@ -1,5 +1,4 @@
 discord.py
-"discord.py[voice]"
 python-dotenv
 riotwatcher
 discord-pretty-help
@@ -10,3 +9,4 @@ PyNaCl
 ffmpeg-python
 youtube_dl
 youtube-search
+dadjokes
