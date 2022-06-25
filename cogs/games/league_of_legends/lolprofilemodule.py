@@ -3,12 +3,18 @@
 # - lol_profile command
 # - lol_mastery command
 # - lol_rank command
+# - lol_champpool command
+# - lol_champpooladd command
+# - lol_champpoolremove command
+# - lol_randomchamp command
 # *********************************************************************************************************************
 
 import os
 import discord
-import cogs.helper.constants.lol_constants as lol_constants
+import random
 import cogs.helper.api.league_of_legends_api as lol_api
+import cogs.helper.constants.lol_constants as lol_constants
+import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 
 from discord.ext import commands
 from discord import Embed
@@ -25,6 +31,9 @@ default_region = 'na1'
 # role specific names
 role_specific_command_name = 'Bot Commander'
 admin_specific_command_name = 'Bot Admin'
+
+# Module constants
+CHAMP_POOL_KEY = 'champ_pool'
 
 # lolprofilemodule class
 
@@ -281,6 +290,176 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 thumb_url = f"http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/map/map11.png"
                 embed.set_thumbnail(url=thumb_url)
                 await ctx.send(embed=embed)
+
+    # *********************************************************************************************************************
+    # bot command to view the calling user's champion pool
+    # *********************************************************************************************************************
+    @commands.command(name='lolchamppool', aliases=['lolcp', 'cplol', 'pool', 'champpool', '📝'],
+                      help=f"📝 Show the list of champions in your champion pool for each role.\n\n"
+                           f"[Input Role: type \"<role>\" (ex: mid)]\n"
+                           f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]")
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def lol_champpool(self, ctx, role: Optional[str]):
+        # Validate provided input, if any
+        valid_roles = lol_constants.lol_roles(include_fill=False)
+        if role is not None and role not in valid_roles:
+            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+
+        # Retrieve persisted champ pools from beebot profiles. Changes don't matter because they're never saved.
+        user = str(ctx.message.author)
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        user_profile = beebot_profiles_data.get(user, {})
+        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
+
+        if role is not None:
+            user_champ_pool = {role: user_champ_pool.get(role, [])}
+
+        # *********
+        # | embed |
+        # *********
+        embed = Embed(title=user, colour=ctx.author.colour)
+        for role, champions in user_champ_pool.items():
+            embed.add_field(name=f'{role.title()}:', value=', '.join(champions), inline=False)
+        await ctx.send(embed=embed)
+
+    # *********************************************************************************************************************
+    # bot command to add champions to the calling user's champion pool for a given role
+    # *********************************************************************************************************************
+    @commands.command(name='lolchamppooladd', aliases=['lolcpadd', 'cpaddlol', 'pooladd', 'champpooladd', '✏'],
+                      help=f"✏ Add champions to your champion pool for a given role.\n\n"
+                           f"[Input Role: type \"<role>\" (ex: mid)]\n"
+                           f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]\n"
+                           f"[Input Champions: type names of champions to add, separated by a space, using quotes if "
+                           f"the champ name is more than one word (ex: \"miss fortune\" cassiopeia).")
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def lol_champpooladd(self, ctx, role: str, *champions):
+        # Validate inputs
+        valid_roles = lol_constants.lol_roles(include_fill=False)
+        if role is not None and role not in valid_roles:
+            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+        if not champions:
+            await ctx.send("You must provide a list of champions to add to your pool")
+
+        # Retrieve persisted champ pools from beebot profiles.
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
+        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
+        role_champ_pool = user_champ_pool.get(role, [])
+
+        # Validate specified champions and deduplicate entries
+        champ_add_success = False
+        champ_add_failed_list = []
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
+        for champion_name in champions:
+            formatted_champ_name = lol_api.champion_string_formatting(champion_name)
+            if formatted_champ_name not in champ_list:
+                champ_add_failed_list.append(champion_name)
+            else:
+                role_champ_pool.append(champ_list[formatted_champ_name]['name'])
+                champ_add_success = True
+
+        role_champ_pool = sorted(set(role_champ_pool))
+
+        # Persist the updated profile data
+        beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
+
+        if champ_add_failed_list and champ_add_success:
+            invalid_champs = ', '.join(champ_add_failed_list)
+            await ctx.send(f"Your {role} champion pool has been updated, but {invalid_champs} could not be added.")
+        elif champ_add_failed_list and not champ_add_success:
+            invalid_champs = ', '.join(champ_add_failed_list)
+            await ctx.send(f"Could not update you {role} champion pool - {invalid_champs} could not be added.")
+        else:
+            await ctx.send(f"Your {role} champion pool has been updated!")
+
+    # *********************************************************************************************************************
+    # bot command to remove a champion from the calling user's champion pool for a given role
+    # *********************************************************************************************************************
+    @commands.command(name='lolchamppoolremove',
+                      aliases=['lolcpremove', 'cpremovelol', 'poolremove', 'champpoolremove', '📃'],
+                      help=f"📃 Remove champions from your champion pool for a given role.\n\n"
+                           f"[Input Role: type \"<role>\" (ex: mid)]\n"
+                           f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]\n"
+                           f"[Input Champions: type names of champions to add separated by a space, using quotes if "
+                           f"the champ name is more than one word (ex: \"miss fortune\" cassiopeia).")
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def lol_champpoolremove(self, ctx, role: str, *champions):
+        # Validate inputs
+        valid_roles = lol_constants.lol_roles(include_fill=False)
+        if role is not None and role not in valid_roles:
+            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+        if not champions:
+            await ctx.send("You must provide a list of champions to add to your pool")
+
+        # Retrieve persisted champ pools from beebot profiles.
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
+        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
+        role_champ_pool = user_champ_pool.get(role, [])
+
+        # Remove champions from the specified role's champ pool if they exist
+        champ_remove_success = False
+        champ_remove_failed_list = []
+        for champion_name in champions:
+            try:
+                role_champ_pool.remove(champion_name)
+                champ_remove_success = True
+            except ValueError:
+                champ_remove_failed_list.append(champion_name)
+        role_champ_pool = sorted(role_champ_pool)
+
+        # Persist the updated profile data
+        beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
+
+        if champ_remove_failed_list and champ_remove_success:
+            invalid_champs = ', '.join(champ_remove_failed_list)
+            await ctx.send(f"Your {role} champion pool has been updated, but {invalid_champs} could not be removed.")
+        elif champ_remove_failed_list and not champ_remove_success:
+            invalid_champs = ', '.join(champ_remove_failed_list)
+            await ctx.send(f"Could not update you {role} champion pool - {invalid_champs} could not be removed.")
+        else:
+            await ctx.send(f"Your {role} champion pool has been updated!")
+
+    # *********************************************************************************************************************
+    # bot command to choose a random champion from the calling user's champion pool for the given role
+    # *********************************************************************************************************************
+    @commands.command(name='lolrandomchamp', aliases=['pickchamp', 'randchamp', '🎰'],
+                      help=f"🎰 Pick a random champion from your champion pool of the specified role.\n\n"
+                           f"[Input Role: type \"<role>\" (ex: mid)]\n"
+                           f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]")
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
+    async def lol_randomchamp(self, ctx, role: str):
+        # Validate role
+        valid_roles = lol_constants.lol_roles(include_fill=False)
+        if role not in valid_roles:
+            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+
+        # Retrieve persisted champ pools from beebot profiles.
+        beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
+        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
+        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
+        user_role_pool = user_champ_pool.get(role, [])
+
+        # If the user has champions in their pool for that role, pick a random one. Champ names should already be
+        # validated when it was inserted.
+        if not user_role_pool:
+            await ctx.send(f"Your {role} pool is empty! Use \"bb lolchamppooladd\" to add to it.")
+        chosen_champ = random.choice(user_role_pool)
+
+        # *********
+        # | embed |
+        # *********
+        formatted_champ_name = lol_api.champion_string_formatting(chosen_champ)
+        embed = Embed(title=chosen_champ, colour=discord.Colour.random())
+        champions_version = lol_api.get_version()['n']['champion']
+        thumb_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{formatted_champ_name}.png'
+        embed.set_thumbnail(url=thumb_url)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

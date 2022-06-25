@@ -83,7 +83,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
             # add member's roles
             beebot_profiles_data = beebot_profiles.beebot_profile_exists(
-                available_member, beebot_profiles_data)
+                beebot_profiles_data, available_member)
             beebot_profiles_data = beebot_profiles.beebot_profile_key_exists(
                 beebot_profiles_data, available_member, "league_of_legends")
             beebot_profiles_data[available_member]["league_of_legends"][
