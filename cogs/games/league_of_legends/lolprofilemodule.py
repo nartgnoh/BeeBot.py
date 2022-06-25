@@ -38,7 +38,7 @@ CHAMP_POOL_KEY = 'champ_pool'
 # lolprofilemodule class
 
 
-class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolprofile, lolmastery, lolrank"):
+class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolprofile, lolmastery, lolrank, lolchamppool options"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -304,7 +304,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # Validate provided input, if any
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role is not None and role not in valid_roles:
-            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+            return await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
 
         # Retrieve persisted champ pools from beebot profiles. Changes don't matter because they're never saved.
         user = str(ctx.message.author)
@@ -338,9 +338,9 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # Validate inputs
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role is not None and role not in valid_roles:
-            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+            return await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
         if not champions:
-            await ctx.send("You must provide a list of champions to add to your pool")
+            return await ctx.send("You must provide a list of champions to add to your pool")
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
@@ -391,9 +391,9 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # Validate inputs
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role is not None and role not in valid_roles:
-            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+            return await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
         if not champions:
-            await ctx.send("You must provide a list of champions to add to your pool")
+            return await ctx.send("You must provide a list of champions to add to your pool")
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
@@ -437,7 +437,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # Validate role
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role not in valid_roles:
-            await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
+            return await ctx.send(f"Specified role '{role}' not in list of valid roles ({', '.join(valid_roles)})!")
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
