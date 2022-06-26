@@ -67,11 +67,12 @@ statuslist = itertools.cycle([
     'with your Mom [type \"BB help\"]',
     'with BEES NUTS [type \"BB help\"]',
     'RealLife.exe [type \"BB help\"]',
-    'myself :c [type \"BB help\"]',
+    'myself. [type \"BB help\"]',
     'with your Waifu [type \"BB help\"]',
     'with my Queen Bee [type \"BB help\"]',
     'literally nothing [type \"BB help\"]',
-    'a prank [type \"BB help\"]'
+    'a prank [type \"BB help\"]',
+    'with grass. [type \"BB help\"]'
 ])
 
 
