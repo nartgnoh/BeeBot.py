@@ -315,6 +315,9 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         if role is not None:
             user_champ_pool = {
                 role.title(): user_champ_pool.get(role.title(), [])}
+        available_roles = [
+            e for e in valid_roles if e in user_champ_pool.keys()]
+        user_champ_pool = {k: user_champ_pool[k] for k in available_roles}
 
         # *********
         # | embed |
