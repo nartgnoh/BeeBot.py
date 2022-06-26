@@ -24,7 +24,7 @@ def get_champion_list(champions_version=get_version(default_region)):
 
 # def get_summoner_match_history_20(summoner_id):
 
-
+# http://ddragon.leagueoflegends.com/cdn/12.11.1/data/en_US/champion.json
 def champion_string_formatting(champion):
     check = champion.replace("'", '').lower().title().replace(' ', '').strip('"')
     if check == 'Kogmaw' or check == 'Reksai':
