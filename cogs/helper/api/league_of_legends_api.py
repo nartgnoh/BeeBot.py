@@ -26,9 +26,9 @@ def get_champion_list(champions_version=get_version(default_region)):
 
 
 def champion_string_formatting(champion):
-    return champion.replace("'", '').lower().title().replace(' ', '').strip('"')
+    return champion.replace('.', ' ').replace("'", '').lower().title().replace(' ', '').strip('"')
 
 
 def champion_url_by_name(champ_name):
-    formatting = champ_name.replace("'", '-').replace(" ", '-').lower()
+    formatting = champ_name.replace("'", '-').replace(" ", '-').replace('.', '').lower()
     return f"https://www.leagueoflegends.com/en-us/champions/{formatting}/"
