@@ -301,29 +301,33 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_champpool(self, ctx, role: Optional[str]):
-        role = role.title()
         # Validate provided input, if any
         valid_roles = lol_constants.lol_roles(include_fill=False)
-        if role == None:
-            return await ctx.send(f"Sorry! You forgot to specify a role! :cry: Please add a valid role ({', '.join(valid_roles)})! :smile:")
-        if role is not None and role not in valid_roles:
+        if role is not None and role.title() not in valid_roles:
             return await ctx.send(f"Your specified role '{role}' is not a valid role ({', '.join(valid_roles)})! :cry:")
 
         # Retrieve persisted champ pools from beebot profiles. Changes don't matter because they're never saved.
-        user = str(ctx.message.author)
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-        user_profile = beebot_profiles_data.get(user, {})
-        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
+        user_profile = beebot_profiles_data.setdefault(
+            str(ctx.message.author), {})
+        user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
 
         if role is not None:
-            user_champ_pool = {role: user_champ_pool.get(role, [])}
+            user_champ_pool = {
+                role.title(): user_champ_pool.get(role.title(), [])}
 
         # *********
         # | embed |
         # *********
-        embed = Embed(title=user, colour=ctx.author.colour)
+        embed = Embed(
+            title=f"{str(ctx.message.author.display_name)}'s Champion Pool", colour=ctx.author.colour)
+        # embed thumbnail
+        thumb_url = ctx.message.author.avatar_url
+        embed.set_thumbnail(url=thumb_url)
+        # embed field
         for role, champions in user_champ_pool.items():
-            embed.add_field(name=f'{role.title()}:', value=', '.join(champions), inline=False)
+            embed.add_field(name=f'{role.title()}:',
+                            value=', '.join(champions), inline=False)
         await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
@@ -338,11 +342,11 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_champpooladd(self, ctx, role: Optional[str], *champions):
-        role = role.title()
         # Validate inputs
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role == None:
             return await ctx.send(f"Sorry! You forgot to specify a role! :cry: Please add a valid role ({', '.join(valid_roles)})! :smile:")
+        role = role.title()
         if role is not None and role not in valid_roles:
             return await ctx.send(f"Your specified role '{role}' is not a valid role ({', '.join(valid_roles)})! :cry:")
         if not champions:
@@ -350,9 +354,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
-        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
-        role_champ_pool = user_champ_pool.get(role, [])
+        user_profile = beebot_profiles_data.setdefault(
+            str(ctx.message.author), {})
+        user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
+        role_champ_pool = user_champ_pool.setdefault(role, [])
 
         # Validate specified champions and deduplicate entries
         champ_add_success = False
@@ -360,11 +365,13 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         champions_version = lol_api.get_version()['n']['champion']
         champ_list = lol_api.get_champion_list(champions_version)['data']
         for champion_name in champions:
-            formatted_champ_name = lol_api.champion_string_formatting(champion_name)
+            formatted_champ_name = lol_api.champion_string_formatting(
+                champion_name)
             if formatted_champ_name not in champ_list:
                 champ_add_failed_list.append(champion_name)
             else:
-                role_champ_pool.append(champ_list[formatted_champ_name]['name'])
+                role_champ_pool.append(
+                    champ_list[formatted_champ_name]['name'])
                 champ_add_success = True
 
         role_champ_pool = sorted(set(role_champ_pool))
@@ -386,7 +393,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # bot command to remove a champion from the calling user's champion pool for a given role
     # *********************************************************************************************************************
     @commands.command(name='lolchamppoolremove',
-                      aliases=['lolcpremove', 'cpremovelol', 'poolremove', 'champpoolremove', '📃'],
+                      aliases=['lolcpremove', 'cpremovelol',
+                               'poolremove', 'champpoolremove', '📃'],
                       help=f"📃 Remove champions from your champion pool for a given role.\n\n"
                            f"[Input Role: type \"<role>\" (ex: mid)]\n"
                            f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]\n"
@@ -395,11 +403,11 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_champpoolremove(self, ctx, role: Optional[str], *champions):
-        role = role.title()
         # Validate inputs
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role == None:
             return await ctx.send(f"Sorry! You forgot to specify a role! :cry: Please add a valid role ({', '.join(valid_roles)})! :smile:")
+        role = role.title()
         if role is not None and role not in valid_roles:
             return await ctx.send(f"Your specified role '{role}' is not a valid role ({', '.join(valid_roles)})! :cry:")
         if not champions:
@@ -407,9 +415,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
-        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
-        role_champ_pool = user_champ_pool.get(role, [])
+        user_profile = beebot_profiles_data.setdefault(
+            str(ctx.message.author), {})
+        user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
+        role_champ_pool = user_champ_pool.setdefault(role, [])
 
         # Remove champions from the specified role's champ pool if they exist
         champ_remove_success = False
@@ -444,19 +453,20 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
     async def lol_randomchamp(self, ctx, role: Optional[str]):
-        role = role.title()
         # Validate role
         valid_roles = lol_constants.lol_roles(include_fill=False)
         if role == None:
             return await ctx.send(f"Sorry! You forgot to specify a role! :cry: Please add a valid role ({', '.join(valid_roles)})! :smile:")
+        role = role.title()
         if role not in valid_roles:
             return await ctx.send(f"Your specified role '{role}' is not a valid role ({', '.join(valid_roles)})! :cry:")
 
         # Retrieve persisted champ pools from beebot profiles.
         beebot_profiles_data = beebot_profiles.get_beebot_profiles_json()
-        user_profile = beebot_profiles_data.get(str(ctx.message.author), {})
-        user_champ_pool = user_profile.get(CHAMP_POOL_KEY, {})
-        user_role_pool = user_champ_pool.get(role, [])
+        user_profile = beebot_profiles_data.setdefault(
+            str(ctx.message.author), {})
+        user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
+        user_role_pool = user_champ_pool.setdefault(role, [])
 
         # If the user has champions in their pool for that role, pick a random one. Champ names should already be
         # validated when it was inserted.
@@ -467,10 +477,11 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # *********
         # | embed |
         # *********
-        embed = Embed(title=chosen_champ, colour=discord.Colour.random())
-        # embed thumbnail
         formatted_champ_name = lol_api.champion_string_formatting(chosen_champ)
         champions_version = lol_api.get_version()['n']['champion']
+        embed = Embed(title=chosen_champ, colour=discord.Colour.random(),
+                      url=lol_api.champion_url_by_name(chosen_champ))
+        # embed thumbnail
         thumb_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{formatted_champ_name}.png'
         embed.set_thumbnail(url=thumb_url)
         await ctx.send(embed=embed)
