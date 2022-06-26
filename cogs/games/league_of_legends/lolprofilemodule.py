@@ -422,12 +422,17 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
         # Remove champions from the specified role's champ pool if they exist
         champ_remove_success = False
         champ_remove_failed_list = []
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
         for champion_name in champions:
+            formatted_champ_name = lol_api.champion_string_formatting(
+                champion_name)
+            champ_name = champ_list[formatted_champ_name]['name']
             try:
-                role_champ_pool.remove(champion_name)
+                role_champ_pool.remove(champ_name)
                 champ_remove_success = True
             except ValueError:
-                champ_remove_failed_list.append(champion_name)
+                champ_remove_failed_list.append(champ_name)
 
         # Persist the updated profile data
         beebot_profiles_data[str(ctx.message.author)][CHAMP_POOL_KEY][role] = sorted(
