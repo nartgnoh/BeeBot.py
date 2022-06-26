@@ -26,6 +26,9 @@ def get_champion_list(champions_version=get_version(default_region)):
 
 
 def champion_string_formatting(champion):
+    check = champion.replace("'", '').lower().title().replace(' ', '').strip('"')
+    if check == 'Kogmaw' or check == 'Reksai':
+        return champion.lower().title().replace(' ', '').replace("'", '').strip('"')
     return champion.replace('.', ' ').replace("'", '').lower().title().replace(' ', '').strip('"')
 
 

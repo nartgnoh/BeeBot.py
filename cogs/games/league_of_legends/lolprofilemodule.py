@@ -382,10 +382,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
 
         if champ_add_failed_list and champ_add_success:
             invalid_champs = ', '.join(champ_add_failed_list)
-            await ctx.send(f"Your {role} champion pool has been updated :smile:, but {invalid_champs} could not be removed.")
+            await ctx.send(f"Your {role} champion pool has been updated :smile:, but {invalid_champs} could not be added.")
         elif champ_add_failed_list and not champ_add_success:
             invalid_champs = ', '.join(champ_add_failed_list)
-            await ctx.send(f"Could not update your {role} champion pool :cry: - {invalid_champs} could not be removed.")
+            await ctx.send(f"Could not update your {role} champion pool :cry: - {invalid_champs} could not be added.")
         else:
             await ctx.send(f"Your {role} champion pool has been updated! :smile:")
 
