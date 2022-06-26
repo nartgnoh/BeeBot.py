@@ -294,7 +294,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # *********************************************************************************************************************
     # bot command to view the calling user's champion pool
     # *********************************************************************************************************************
-    @commands.command(name='lolchamppool', aliases=['lolcp', 'cplol', 'pool', 'champpool', '📝'],
+    @commands.command(name='lolchamppool', aliases=['lolcp', 'cplol', 'champpool', '📝'],
                       help=f"📝 Show the list of champions in your champion pool for each role.\n\n"
                            f"[Input Role: type \"<role>\" (ex: mid)]\n"
                            f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]")
@@ -374,10 +374,9 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                     champ_list[formatted_champ_name]['name'])
                 champ_add_success = True
 
-        role_champ_pool = sorted(set(role_champ_pool))
-
-        print(beebot_profiles_data)
         # Persist the updated profile data
+        beebot_profiles_data[str(ctx.message.author)][CHAMP_POOL_KEY][role] = sorted(
+            set(role_champ_pool))
         beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
 
         if champ_add_failed_list and champ_add_success:
@@ -429,9 +428,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 champ_remove_success = True
             except ValueError:
                 champ_remove_failed_list.append(champion_name)
-        role_champ_pool = sorted(role_champ_pool)
 
         # Persist the updated profile data
+        beebot_profiles_data[str(ctx.message.author)][CHAMP_POOL_KEY][role] = sorted(
+            set(role_champ_pool))
         beebot_profiles.set_beebot_profiles_json(beebot_profiles_data)
 
         if champ_remove_failed_list and champ_remove_success:
@@ -446,7 +446,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # *********************************************************************************************************************
     # bot command to choose a random champion from the calling user's champion pool for the given role
     # *********************************************************************************************************************
-    @commands.command(name='lolrandomchamp', aliases=['pickchamp', 'randchamp', '🎰'],
+    @commands.command(name='lolrandomchamp', aliases=['pickchamp', 'lolrandchamp', 'randchamp', 'lolpc', 'lolrc', '🎰'],
                       help=f"🎰 Pick a random champion from your champion pool of the specified role.\n\n"
                            f"[Input Role: type \"<role>\" (ex: mid)]\n"
                            f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]")
@@ -474,12 +474,18 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
             await ctx.send(f"Your {role} pool is empty! :cry: Use \"bb lolchamppooladd\" to add to it!")
         chosen_champ = random.choice(user_role_pool)
 
+        # API champion info
+        formatted_champ_name = lol_api.champion_string_formatting(chosen_champ)
+        champions_version = lol_api.get_version()['n']['champion']
+        champ_list = lol_api.get_champion_list(champions_version)['data']
+        champion_info = champ_list[formatted_champ_name]
+
         # *********
         # | embed |
         # *********
-        formatted_champ_name = lol_api.champion_string_formatting(chosen_champ)
-        champions_version = lol_api.get_version()['n']['champion']
-        embed = Embed(title=chosen_champ, colour=discord.Colour.random(),
+        embed = Embed(title=chosen_champ,
+                      colour=discord.Colour.random(),
+                      description=champion_info['title'],
                       url=lol_api.champion_url_by_name(chosen_champ))
         # embed thumbnail
         thumb_url = f'http://ddragon.leagueoflegends.com/cdn/{champions_version}/img/champion/{formatted_champ_name}.png'
