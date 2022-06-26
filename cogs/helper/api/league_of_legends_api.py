@@ -29,6 +29,8 @@ def champion_string_formatting(champion):
     check = champion.replace("'", '').lower().title().replace(' ', '').strip('"')
     if check == 'Kogmaw' or check == 'Reksai':
         return champion.lower().title().replace(' ', '').replace("'", '').strip('"')
+    elif check == 'Wukong':
+        return 'MonkeyKing'
     return champion.replace('.', ' ').replace("'", '').lower().title().replace(' ', '').strip('"')
 
 
