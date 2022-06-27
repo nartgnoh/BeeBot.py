@@ -9,6 +9,7 @@
 import os
 import discord
 import cogs.helper.helper_functions.events as events
+import cogs.helper.helper_functions.games as games
 import cogs.helper.helper_functions.beebot_profiles as beebot_profiles
 import cogs.helper.helper_functions.urls as urls
 
@@ -45,9 +46,29 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
         events_json = events.get_events_json()
         if not event.lower() in events_json:
             return await ctx.send('Your event doesn\'t exist!')
-        events_json[event] = {}
+        events_json[event.lower()] = {}
         events.set_events_json(events_json)
         await ctx.send(f'Reset {event} BeeBot events file.')
+
+    # *********************************************************************************************************************
+    # bot command admin beebot reset games
+    # *********************************************************************************************************************
+    @commands.command(name='admin_beebot_reset_all_games',
+                      help='🛡️ Reset BeeBot games file. [Admin Specific]\n\nOptions: "all", "blackjack"')
+    # only specific roles can use this command
+    @commands.has_role(admin_specific_command_name)
+    async def admin_beebot_reset_all_games(self, ctx, *, game: Optional[str]):
+        if game == None:
+            return await ctx.send('Please add a game to reset!')
+        if game.lower() == 'all':
+            games.set_games_json({})
+            return await ctx.send('Reset ALL BeeBot games file.')
+        games_json = games.get_games_json()
+        if not game.lower() in games_json:
+            return await ctx.send('Your game doesn\'t exist!')
+        games_json[game.lower()] = {}
+        games.set_games_json(games_json)
+        await ctx.send(f'Reset {game} BeeBot games file.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles

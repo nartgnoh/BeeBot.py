@@ -8,9 +8,11 @@ import discord
 import random
 import numpy as np
 import json
-import cogs.helper.constants.emoji_constants as emoji_constants
+import cogs.helper.helper_functions.games as games
 
 from discord.ext import commands
+from discord.ext.commands import Cog
+from discord.utils import get
 from discord import Embed
 from typing import Optional
 
@@ -30,50 +32,43 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='playblackjack', aliases=['blackjack', '♠️'],
-                      help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
-    async def blackjack(self, ctx, number_of_players: Optional[int]):
-        if number_of_players == None:
-            # else number_of_players was 0
-            if ctx.message.author.voice is None:
-                return await ctx.send('An error occurred! :thinking:\nTry adding a number after "pickgame" '
-                                      'or joining a voice channel! :slight_smile:')
-            # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
-            channel = ctx.message.author.voice.channel
-            number_of_players = len(channel.members)
-        # get games.json file
-        games_json_path = "/".join(list(current_directory.split('/')
-                                   [0:-2])) + '/resource_files/json_files/games.json'
-        with open(games_json_path) as games_json:
-            games = json.load(games_json)
-            final_games_list = []
-            # iterate through games dictionary
-            for key in games:
-                if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
-                    final_games_list.append(key)
-            # picking a random game from the final_games_list
-            random_game = random.choice(final_games_list)
-            url = games[random_game]['url']
-        pg_quotes = [f'Have you tried *{random_game}*? :smile:',
-                     f'Why not try *{random_game}*? :open_mouth:',
-                     f'I recommend *{random_game}*! :liar:',
-                     f'I might not have friends, but your friends can play *{random_game}*! :smiling_face_with_tear:']
-        pg_message = random.choice(pg_quotes)
+    @commands.command(name='blackjack', aliases=['playblackjack', '♠️'],
+                      help='♠️ Play a game of blackjack with BeeBot!'
+                      '[React 🇭 to Hit or 🇸 to Stand]')
+    async def blackjack(self, ctx):
+        games_data = games.get_games_json()
+        beebot_profiles_data.setdefault('games', [])
+        # user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
+        # role_champ_pool = user_champ_pool.setdefault(role, [])
+
         # *********
         # | embed |
         # *********
-        # create an embed with game url
-        if url is not None:
-            embed = Embed(title=random_game,
-                          url=url,
-                          description=pg_message,
-                          colour=discord.Colour.random())
-        # embed without url
-        else:
-            embed = Embed(title=random_game,
-                          description=pg_message,
-                          colour=discord.Colour.random())
-        await ctx.send(embed=embed)
+        embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
+                      description="React 🇭 to Hit or 🇸 to Stand",
+                      colour=ctx.author.colour)
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction('🇭')
+        await msg.add_reaction('🇸')
+
+    # **********************************************
+    # | listener on_raw_reaction_add for Blackjack |
+    # **********************************************
+    @Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+        reaction = get(message.reactions, emoji=payload.emoji.name)
+
+        if payload.emoji.name == '🇭' and payload.member != self.bot.user:
+            embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
+                          description="React 🇭 to Hit or 🇸 to Stand",
+                          colour=payload.member.colour)
+            embed.add_field(name="THIS IS AN EDIT", value='hello')
+            await reaction.remove(payload.member)
+            await message.edit(embed=embed)
+
+        # if payload.emoji.name == '🇸' and payload.member != self.bot.user:
+        #     if 
 
     # *********************************************************************************************************************
     # bot command to flip coin

@@ -10,6 +10,7 @@ import random
 import numpy as np
 import json
 import cogs.helper.constants.emoji_constants as emoji_constants
+import cogs.helper.helper_functions.games as games
 
 from discord.ext import commands
 from discord import Embed
@@ -42,19 +43,15 @@ class gamesetupmodule(commands.Cog, name="GameSetupModule", description="pickgam
             # if "number_of_players" is none, then get the "number_of_players" in the voice channel of the author
             channel = ctx.message.author.voice.channel
             number_of_players = len(channel.members)
-        # get games.json file
-        games_json_path = "/".join(list(current_directory.split('/')
-                                   [0:-2])) + '/resource_files/json_files/games.json'
-        with open(games_json_path) as games_json:
-            games = json.load(games_json)
-            final_games_list = []
-            # iterate through games dictionary
-            for key in games:
-                if games[key]['min'] <= number_of_players and games[key]['max'] >= number_of_players:
-                    final_games_list.append(key)
-            # picking a random game from the final_games_list
-            random_game = random.choice(final_games_list)
-            url = games[random_game]['url']
+        games_data = games.get_game_ideas_json()
+        final_games_list = []
+        # iterate through games dictionary
+        for key in games_data:
+            if games_data[key]['min'] <= number_of_players and games_data[key]['max'] >= number_of_players:
+                final_games_list.append(key)
+        # picking a random game from the final_games_list
+        random_game = random.choice(final_games_list)
+        url = games_data[random_game]['url']
         pg_quotes = [f'Have you tried *{random_game}*? :smile:',
                      f'Why not try *{random_game}*? :open_mouth:',
                      f'I recommend *{random_game}*! :liar:',
