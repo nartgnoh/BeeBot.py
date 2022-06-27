@@ -3,8 +3,6 @@
 # - bee_facts command
 # - colour command
 # - happy_birthday command
-# - coin_flip command
-# - dice_roll command
 # - gif command
 # *********************************************************************************************************************
 
@@ -34,7 +32,7 @@ admin_specific_command_name = 'Bot Admin'
 
 
 class responsesmodule(commands.Cog, name="ResponsesModule",
-                      description="angry, beefacts, coinflip, dadjoke, diceroll, gif, happy, happybirthday, pickcolour, sad"):
+                      description="angry, beefacts, dadjoke, gif, happy, happybirthday, pickcolour, sad"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -223,76 +221,6 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
                       help='🃏 Tells a dad joke!')
     async def dad_joke(self, ctx):
         await ctx.send(f"{Dadjoke().joke}  :rofl:")
-
-    # *********************************************************************************************************************
-    # bot command to flip coin
-    # *********************************************************************************************************************
-    @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'],
-                      help='🟡 Simulates coin flip. [Max coins: 100]')
-    async def coin_flip(self, ctx, number_of_coins: Optional[int]):
-        cf_results = ''
-        # default 1 coin
-        if number_of_coins == None:
-            number_of_coins = 1
-        if number_of_coins > 100 or number_of_coins < 1:
-            return await ctx.send('Sorry! Your number is out of bounds! :cry: Try again! [Max coins: 100]')
-        coin_flip_ht = [
-            'Heads, ',
-            'Tails, '
-        ]
-        cf_quotes = [
-            'You coin flip(s) were:',
-            'Clink, spin, spin, clink:',
-            'Heads or Tails? :open_mouth:',
-            'I wish you good RNG :relieved:',
-            ':coin:'
-        ]
-        cf_message = random.choice(cf_quotes)
-        # add coin flips to string
-        for i in range(number_of_coins):
-            cf_results = cf_results + random.choice(coin_flip_ht)
-        # *********
-        # | embed |
-        # *********
-        embed = Embed(title=cf_message,
-                        colour=discord.Colour.gold(),
-                        description=cf_results[:-2])
-
-        await ctx.send(embed=embed)
-
-    # *********************************************************************************************************************
-    # bot command to roll dice (no specification is an auto 1D6)
-    # *********************************************************************************************************************
-    @commands.command(name='diceroll', aliases=['rolldice', 'roll', 'dice', '🎲'],
-                      help='🎲 Simulates rolling dice. [Auto: 1D6, Max dice: 100D100]')
-    async def dice_roll(self, ctx, number_of_dice: Optional[int], number_of_sides: Optional[int]):
-        # default 1D6 dice
-        if number_of_dice == None:
-            number_of_dice = 1
-        if number_of_sides == None:
-            number_of_sides = 6
-        if number_of_dice > 100 or number_of_dice < 1 or number_of_sides > 100 or number_of_sides < 1:
-            return await ctx.send('Sorry! Your number(s) are out of bounds! :cry: Try again! [Max dice: 100D100]')
-        dice = [
-            str(random.choice(range(1, number_of_sides + 1)))
-            for _ in range(number_of_dice)
-        ]
-        rd_quotes = [
-            'Your dice roll(s) were:',
-            'Clack, rattle, clatter:',
-            'Highroller?!? :open_mouth:',
-            'I wish you good RNG :relieved:',
-            ':game_die:',
-            ':skull: + :ice_cube:'
-        ]
-        rd_message = random.choice(rd_quotes)
-        # *********
-        # | embed |
-        # *********
-        embed = Embed(title=rd_message,
-                        colour=discord.Colour.random(),
-                        description=', '.join(dice))
-        await ctx.send(embed=embed)
 
     # *********************************************************************************************************************
     # bot command to send gif/tenor

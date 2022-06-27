@@ -31,7 +31,7 @@ class gamesetupmodule(commands.Cog, name="GameSetupModule", description="pickgam
     # *********************************************************************************************************************
     # bot command to pick a game from an excel sheet of games with number of player specification
     # *********************************************************************************************************************
-    @commands.command(name='pickgame', aliases=['🎮', 'pickgames'],
+    @commands.command(name='pickgame', aliases=['pickgames', '🎮'],
                       help='🎮 Picks a game to play. [Auto: Number of people in voice channel]')
     async def pick_game(self, ctx, number_of_players: Optional[int]):
         if number_of_players == None:
