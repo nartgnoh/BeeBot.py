@@ -20,6 +20,7 @@ all_extensions = [
     'cogs.games.league_of_legends.lolinfomodule',
     'cogs.games.league_of_legends.lolprofilemodule',
     'cogs.games.gamesmodule',
+    'cogs.games.gamesetupmodule',
     # 'cogs.games.teamfight_tactics',
     'cogs.helper.listeners.reactions_listener',
     'cogs.music.musicmodule',
