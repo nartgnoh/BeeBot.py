@@ -1,9 +1,7 @@
 # *********************************************************************************************************************
-# emojiconstants.py
+# emoji_constants.py
 # import cogs.helper.constants.emoji_constants as emoji_constants
 # *********************************************************************************************************************
-
-import os
 
 
 def cute_animals(): return ['🦍 Gorilla', '🦧 Orangutan', '🐶 Dog', '🐺 Wolf', '🦊 Fox', '🦝 Raccoon', '🐱 Cat', '🦁 Lion', '🐯 Tiger', '🐴 Horse',
