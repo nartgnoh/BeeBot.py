@@ -6,9 +6,8 @@
 import os
 import discord
 import random
-import numpy as np
-import json
 import cogs.helper.helper_functions.games as games
+import cogs.helper.constants.games_constants as games_constants
 
 from discord.ext import commands
 from discord.ext.commands import Cog
@@ -36,6 +35,9 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                       help='♠️ Play a game of blackjack with BeeBot!'
                       '[React 🇭 to Hit or 🇸 to Stand]')
     async def blackjack(self, ctx):
+        black_jack_deck = games_constants.blackjack_cards()
+        active_cards = random.sample(list(black_jack_deck), 4)
+
         games_data = games.get_games_json()
         games_data.setdefault('blackjack', {})
 
@@ -46,16 +48,20 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                       description="React 🇭 to Hit or 🇸 to Stand",
                       colour=ctx.author.colour)
         embed.add_field(name="Dealer's Cards:",
-                        value=f"|A ♠️| |? 🃏|", inline=False)
+                        value=f"Card 1: **{active_cards[0]}**\n"
+                        f"Card 2: **???**", inline=False)
         embed.add_field(name="Player's Cards:",
-                        value=f"|A ♠️| |7 ♥️|\n"
-                        f"Player's Total: **18**", inline=False)
+                        value=f"Card 1: **{active_cards[1]}**\n"
+                        f"Card 2: **{active_cards[3]}**\n"
+                        f"Player's Total: {black_jack_deck[active_cards[1]] + black_jack_deck[active_cards[3]]}", 
+                        inline=False)
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('🇭')
         await msg.add_reaction('🇸')
 
-        games_data['blackjack'][int(msg.id)] = {'dealer_cards': [],
-                                                'player_cards': []}
+        games_data['blackjack'][int(msg.id)] = {'dealer_cards': {'card_1': active_cards[0], 'card_2': active_cards[2]},
+                                                'player_cards': {'card_1': active_cards[1], 'card_2': active_cards[3]},
+                                                'all_active_cards_list': active_cards}
         print(games_data)
         # games.set_games_json(games_data)
 
@@ -72,6 +78,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
             games_data = games.get_games_json()
             games_data.setdefault('blackjack', {})
             if payload.message_id in games_data:
+                black_jack_deck = games_constants.blackjack_cards()
                 if payload.emoji.name == '🇭':
                     # *********
                     # | embed |

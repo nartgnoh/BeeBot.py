@@ -8,7 +8,6 @@ import os
 import discord
 import random
 import numpy as np
-import json
 import cogs.helper.constants.emoji_constants as emoji_constants
 import cogs.helper.helper_functions.games as games
 
