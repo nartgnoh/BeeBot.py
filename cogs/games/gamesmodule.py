@@ -37,9 +37,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                       '[React 🇭 to Hit or 🇸 to Stand]')
     async def blackjack(self, ctx):
         games_data = games.get_games_json()
-        beebot_profiles_data.setdefault('games', [])
-        # user_champ_pool = user_profile.setdefault(CHAMP_POOL_KEY, {})
-        # role_champ_pool = user_champ_pool.setdefault(role, [])
+        games_data.setdefault('blackjack', {})
 
         # *********
         # | embed |
@@ -47,9 +45,19 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
         embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
                       description="React 🇭 to Hit or 🇸 to Stand",
                       colour=ctx.author.colour)
+        embed.add_field(name="Dealer's Cards:",
+                        value=f"|A ♠️| |? 🃏|", inline=False)
+        embed.add_field(name="Player's Cards:",
+                        value=f"|A ♠️| |7 ♥️|\n"
+                        f"Player's Total: **18**", inline=False)
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('🇭')
         await msg.add_reaction('🇸')
+
+        games_data['blackjack'][int(msg.id)] = {'dealer_cards': [],
+                                                'player_cards': []}
+        print(games_data)
+        # games.set_games_json(games_data)
 
     # **********************************************
     # | listener on_raw_reaction_add for Blackjack |
@@ -58,21 +66,28 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
     async def on_raw_reaction_add(self, payload):
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         reaction = get(message.reactions, emoji=payload.emoji.name)
+        if (payload.emoji.name == '🇭' or payload.emoji.name == '🇸') and payload.member != self.bot.user:
+            print('hello')
 
-        if payload.emoji.name == '🇭' and payload.member != self.bot.user:
-            embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
-                          description="React 🇭 to Hit or 🇸 to Stand",
-                          colour=payload.member.colour)
-            embed.add_field(name="THIS IS AN EDIT", value='hello')
-            await reaction.remove(payload.member)
-            await message.edit(embed=embed)
-
-        # if payload.emoji.name == '🇸' and payload.member != self.bot.user:
-        #     if 
+            games_data = games.get_games_json()
+            games_data.setdefault('blackjack', {})
+            if payload.message_id in games_data:
+                if payload.emoji.name == '🇭':
+                    # *********
+                    # | embed |
+                    # *********
+                    embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
+                                  description="React 🇭 to Hit or 🇸 to Stand",
+                                  colour=payload.member.colour)
+                    embed.add_field(name="THIS IS AN EDIT", value='hello')
+                    await reaction.remove(payload.member)
+                    await message.edit(embed=embed)
+                # elif payload.emoji.name == '🇸':
 
     # *********************************************************************************************************************
     # bot command to flip coin
     # *********************************************************************************************************************
+
     @commands.command(name='coinflip', aliases=['coin', 'coins', 'flip', 'flips', '🟡'],
                       help='🟡 Simulates coin flip. [Max coins: 100]')
     async def coin_flip(self, ctx, number_of_coins: Optional[int]):
