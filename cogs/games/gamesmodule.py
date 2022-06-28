@@ -82,10 +82,10 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                             f"Player's Total: **{player_total}**", inline=False)
             if sum(dealer_cards.values()) == 21:
                 embed.add_field(name="Winners:",
-                                value=f"**Draw!**", inline=False)
+                                value=f"**Draw!** 😇", inline=False)
             else:
                 embed.add_field(name="Winner:",
-                                value=f"**{ctx.message.author.display_name} Wins!!**", inline=False)
+                                value=f"**{ctx.message.author.display_name} Wins!!** 🥳", inline=False)
             await ctx.send(embed=embed)
         else:
             if player_total == 22:
@@ -215,16 +215,16 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                         player_total = sum(blackjack_game['player_cards'].values())
                         if dealer_total > 21 and player_total > 21:
                             embed.add_field(name="Winner:",
-                                            value=f"**Everyone Loses.**", inline=False)
+                                            value=f"**Everyone Loses. ☹️**", inline=False)
                         elif dealer_total == player_total:
                             embed.add_field(name="Winner:",
-                                            value=f"**Draw!**", inline=False)
+                                            value=f"**Draw!** 😇", inline=False)
                         elif (dealer_total > player_total or bust_check) and dealer_total <= 21:
                             embed.add_field(name="Winner:",
-                                            value=f"**BeeBot Wins!!**", inline=False)
+                                            value=f"**BeeBot Wins!! 😄**", inline=False)
                         elif dealer_total < player_total or dealer_total > 21:
                             embed.add_field(name="Winner:",
-                                            value=f"**{payload.member.display_name} Wins!!**", inline=False)
+                                            value=f"**{payload.member.display_name} Wins!! 🥳**", inline=False)
                         await message.edit(embed=embed)
                         # remove blackjack game
                         games_data['blackjack'].pop(str(payload.message_id))
