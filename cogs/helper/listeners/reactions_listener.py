@@ -17,7 +17,10 @@ class Reactions(Cog):
     @Cog.listener()
     async def on_raw_reaction_add(self, payload):
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-        first_reaction_users = await message.reactions[0].users().flatten()
+        try:
+            first_reaction_users = await message.reactions[0].users().flatten()
+        except:
+            first_reaction_users = []
 
         # ***********************************
         # | delete message on '❌' reaction |
