@@ -73,7 +73,10 @@ statuslist = itertools.cycle([
     'with my Queen Bee [type \"BB help\"]',
     'literally nothing [type \"BB help\"]',
     'a prank [type \"BB help\"]',
-    'with grass. [type \"BB help\"]'
+    'with grass. [type \"BB help\"]',
+    'Fortnite [type \"BB help\"]',
+    'Card Games [type \"BB help\"]',
+    'Minecraft [type \"BB help\"]'
 ])
 
 
