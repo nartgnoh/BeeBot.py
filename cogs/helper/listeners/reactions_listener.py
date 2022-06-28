@@ -16,24 +16,22 @@ class Reactions(Cog):
     # *********************************************************************************************************************
     @Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-        try:
+        if payload.emoji.name == '❌':
+            message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
             first_reaction_users = await message.reactions[0].users().flatten()
-        except:
-            first_reaction_users = []
 
-        # ***********************************
-        # | delete message on '❌' reaction |
-        # ***********************************
-        for u in first_reaction_users:
-            if u.bot and len(first_reaction_users) > 1 and payload.emoji.name == '❌':
-                await message.delete()
-                break
+            # ***********************************
+            # | delete message on '❌' reaction |
+            # ***********************************
+            for u in first_reaction_users:
+                if u.bot and len(first_reaction_users) > 1 and message.reactions[0] == '❌':
+                    await message.delete()
+                    break
 
         # *********************************
         # | add participants to giveaways |
         # *********************************
-        if len(first_reaction_users) > 1:
+        if payload.member != self.bot.user:
             events_data = events.get_events_json()
             if 'giveaways' in events_data:
                 if str(payload.message_id) in events_data['giveaways']:
@@ -49,7 +47,6 @@ class Reactions(Cog):
     # *********************************************************************************************************************
     @Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
         # ************************************
         # | remove participants to giveaways |
         # ************************************
