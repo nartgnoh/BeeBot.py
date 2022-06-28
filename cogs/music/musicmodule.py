@@ -378,6 +378,8 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='queue', aliases=['q', 'playlist', '🎶'],
                       help='🎶 View the current queue! [Current and Upcoming 5 songs]')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
     async def queue_info(self, ctx):
         # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
@@ -413,6 +415,8 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
 
     @commands.command(name='now_playing', aliases=['np', 'current', 'playing', '🎵'],
                       help='🎵 View what\'s playing now!')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
     async def now_playing_(self, ctx):
         # Display information about the currently playing song.
         vc = ctx.voice_client
@@ -442,6 +446,8 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='volume', aliases=['vol', '🔊'],
                       help='🔊 Change the player volume! [Range: 1 to 100]')
+    # only specific roles can use this command
+    @commands.has_role(role_specific_command_name)
     async def change_volume(self, ctx, *, vol: Optional[float]):
         # Change the player volume.
         # Parameters
