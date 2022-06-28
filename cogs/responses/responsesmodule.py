@@ -225,7 +225,7 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
     # *********************************************************************************************************************
     # bot command to send gif/tenor
     # *********************************************************************************************************************
-    @commands.command(name='gif', aliases=['giphy', 'tenor', '😂'], help='😂 Random gif from Tenor. [Auto: bees, Role Specific]')
+    @commands.command(name='gif', aliases=['giphy', 'tenor', '😂'], help='😂 Random gif from Tenor. [Auto: bees]')
     async def gif(self, ctx, *, search: Optional[str]):
         # search 'bees' if no given search
         if search == None:
