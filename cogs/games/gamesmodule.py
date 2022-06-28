@@ -54,7 +54,7 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
                       colour=ctx.author.colour)
         # embed fields
         if player_total == 21:
-            while sum(dealer_cards) < 17:
+            while sum(dealer_cards.values()) < 17:
                 inactive_cards = [e for e in list(
                     blackjack_deck) if e not in active_cards]
                 new_card = random.choice(inactive_cards)
@@ -102,7 +102,8 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
             # save blackjack game in games.json
             games_data = games.get_games_json()
             games_data.setdefault('blackjack', {})
-            games_data['blackjack'][int(msg.id)] = {'dealer_cards': dealer_cards,
+            games_data['blackjack'][int(msg.id)] = {'author_name': str(ctx.message.author),
+                                                    'dealer_cards': dealer_cards,
                                                     'dealer_message': dealer_message,
                                                     'player_cards': player_cards,
                                                     'player_message': player_message,
@@ -120,114 +121,115 @@ class gamesmodule(commands.Cog, name="GamesModule", description="blackjack, coin
             games_data = games.get_games_json()
             games_data.setdefault('blackjack', {})
             if str(payload.message_id) in games_data['blackjack']:
-                # get info
                 blackjack_game = games_data['blackjack'][str(
-                    payload.message_id)]
-                blackjack_deck = games_constants.blackjack_cards()
-                bust_check = False
-                blackjack_check = False
-                # *******
-                # | Hit |
-                # *******
-                if payload.emoji.name == '🇭':
-                    inactive_cards = [e for e in list(
-                        blackjack_deck) if e not in blackjack_game['all_active_cards_list']]
-                    new_card = random.choice(inactive_cards)
-                    blackjack_game['player_cards'][new_card] = blackjack_deck[new_card]
-                    blackjack_game['all_active_cards_list'] = blackjack_game['all_active_cards_list'] + [
-                        new_card]
-                    # player message
-                    player_message = ''
-                    p_count = 0
-                    for card in list(blackjack_game['player_cards']):
-                        p_count += 1
+                        payload.message_id)]
+                if str(payload.member) == blackjack_game['author_name']:
+                    # get info
+                    blackjack_deck = games_constants.blackjack_cards()
+                    bust_check = False
+                    blackjack_check = False
+                    # *******
+                    # | Hit |
+                    # *******
+                    if payload.emoji.name == '🇭':
+                        inactive_cards = [e for e in list(
+                            blackjack_deck) if e not in blackjack_game['all_active_cards_list']]
+                        new_card = random.choice(inactive_cards)
+                        blackjack_game['player_cards'][new_card] = blackjack_deck[new_card]
+                        blackjack_game['all_active_cards_list'] = blackjack_game['all_active_cards_list'] + [
+                            new_card]
+                        # player message
+                        player_message = ''
+                        p_count = 0
+                        for card in list(blackjack_game['player_cards']):
+                            p_count += 1
+                            player_message = player_message + \
+                                f"{p_count}: **{card}**\n"
+                        # checks
+                        if sum(blackjack_game['player_cards'].values()) == 21:
+                            blackjack_check = True
+                        elif sum(blackjack_game['player_cards'].values()) > 21:
+                            bust_check = True
+                            for key in blackjack_game['player_cards']:
+                                if blackjack_game['player_cards'][key] == 11:
+                                    blackjack_game['player_cards'][key] = 1
+                                if sum(blackjack_game['player_cards'].values()) <= 21:
+                                    bust_check = False
+                                    break
                         player_message = player_message + \
-                            f"{p_count}: **{card}**\n"
-                    # checks
-                    if sum(blackjack_game['player_cards'].values()) == 21:
-                        blackjack_check = True
-                    elif sum(blackjack_game['player_cards'].values()) > 21:
-                        bust_check = True
-                        for key in blackjack_game['player_cards']:
-                            if blackjack_game['player_cards'][key] == 11:
-                                blackjack_game['player_cards'][key] = 1
-                            if sum(blackjack_game['player_cards'].values()) <= 21:
-                                bust_check = False
-                                break
-                    player_message = player_message + \
-                        f"Player's Total: **{sum(blackjack_game['player_cards'].values())}**"
-                    blackjack_game['player_message'] = player_message
-                    # player hit
-                    if not bust_check and not blackjack_check:
+                            f"Player's Total: **{sum(blackjack_game['player_cards'].values())}**"
+                        blackjack_game['player_message'] = player_message
+                        # player hit
+                        if not bust_check and not blackjack_check:
+                            # *********
+                            # | embed |
+                            # *********
+                            embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
+                                        description="React 🇭 to Hit or 🇸 to Stand",
+                                        colour=payload.member.colour)
+                            # embed fields
+                            embed.add_field(name="BeeBot's Cards:",
+                                            value=blackjack_game['dealer_message'], inline=False)
+                            embed.add_field(name="Player's Cards:",
+                                            value=player_message, inline=False)
+                            await message.edit(embed=embed)
+                            await reaction.remove(payload.member)
+                            games.set_games_json(games_data)
+                    # *********
+                    # | Stand |
+                    # *********
+                    if payload.emoji.name == '🇸' or bust_check or blackjack_check:
+                        while sum(blackjack_game['dealer_cards'].values()) < 17:
+                            inactive_cards = [e for e in list(
+                                blackjack_deck) if e not in blackjack_game['all_active_cards_list']]
+                            new_card = random.choice(inactive_cards)
+                            blackjack_game['dealer_cards'][new_card] = blackjack_deck[new_card]
+                            blackjack_game['all_active_cards_list'] = blackjack_game['all_active_cards_list'] + [
+                                new_card]
+                            if sum(blackjack_game['dealer_cards'].values()) > 21:
+                                for key in blackjack_game['dealer_cards']:
+                                    if blackjack_game['dealer_cards'][key] == 11:
+                                        blackjack_game['dealer_cards'][key] = 1
+                                    if sum(blackjack_game['dealer_cards'].values()) <= 21:
+                                        break
+                        # dealer message
+                        dealer_message = ''
+                        d_count = 0
+                        for card in blackjack_game['dealer_cards']:
+                            d_count += 1
+                            dealer_message = dealer_message + \
+                                f"{d_count}: {card}\n"
+                        dealer_message = dealer_message + \
+                            f"BeeBot's Total: **{sum(blackjack_game['dealer_cards'].values())}**"
                         # *********
                         # | embed |
                         # *********
                         embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
-                                      description="React 🇭 to Hit or 🇸 to Stand",
-                                      colour=payload.member.colour)
+                                    colour=payload.member.colour)
                         # embed fields
                         embed.add_field(name="BeeBot's Cards:",
-                                        value=blackjack_game['dealer_message'], inline=False)
+                                        value=dealer_message, inline=False)
                         embed.add_field(name="Player's Cards:",
-                                        value=player_message, inline=False)
+                                        value=blackjack_game['player_message'], inline=False)
+                        dealer_total = sum(blackjack_game['dealer_cards'].values())
+                        player_total = sum(blackjack_game['player_cards'].values())
+                        if dealer_total > 21 and player_total > 21:
+                            embed.add_field(name="Winner:",
+                                            value=f"**Everyone Loses.**", inline=False)
+                        elif dealer_total == player_total:
+                            embed.add_field(name="Winner:",
+                                            value=f"**Draw!**", inline=False)
+                        elif (dealer_total > player_total or bust_check) and dealer_total <= 21:
+                            embed.add_field(name="Winner:",
+                                            value=f"**BeeBot Wins!!**", inline=False)
+                        elif dealer_total < player_total or dealer_total > 21:
+                            embed.add_field(name="Winner:",
+                                            value=f"**{payload.member.display_name} Wins!!**", inline=False)
                         await message.edit(embed=embed)
-                        await reaction.remove(payload.member)
+                        # remove blackjack game
+                        games_data['blackjack'].pop(str(payload.message_id))
                         games.set_games_json(games_data)
-                # *********
-                # | Stand |
-                # *********
-                if payload.emoji.name == '🇸' or bust_check or blackjack_check:
-                    while sum(blackjack_game['dealer_cards'].values()) < 17:
-                        inactive_cards = [e for e in list(
-                            blackjack_deck) if e not in blackjack_game['all_active_cards_list']]
-                        new_card = random.choice(inactive_cards)
-                        blackjack_game['dealer_cards'][new_card] = blackjack_deck[new_card]
-                        blackjack_game['all_active_cards_list'] = blackjack_game['all_active_cards_list'] + [
-                            new_card]
-                        if sum(blackjack_game['dealer_cards'].values()) > 21:
-                            for key in blackjack_game['dealer_cards']:
-                                if blackjack_game['dealer_cards'][key] == 11:
-                                    blackjack_game['dealer_cards'][key] = 1
-                                if sum(blackjack_game['dealer_cards'].values()) <= 21:
-                                    break
-                    # dealer message
-                    dealer_message = ''
-                    d_count = 0
-                    for card in blackjack_game['dealer_cards']:
-                        d_count += 1
-                        dealer_message = dealer_message + \
-                            f"{d_count}: {card}\n"
-                    dealer_message = dealer_message + \
-                        f"BeeBot's Total: **{sum(blackjack_game['dealer_cards'].values())}**"
-                    # *********
-                    # | embed |
-                    # *********
-                    embed = Embed(title="♠️ ♥️ Blackjack ♦️ ♣️",
-                                  colour=payload.member.colour)
-                    # embed fields
-                    embed.add_field(name="BeeBot's Cards:",
-                                    value=dealer_message, inline=False)
-                    embed.add_field(name="Player's Cards:",
-                                    value=blackjack_game['player_message'], inline=False)
-                    dealer_total = sum(blackjack_game['dealer_cards'].values())
-                    player_total = sum(blackjack_game['player_cards'].values())
-                    if dealer_total > 21 and player_total > 21:
-                        embed.add_field(name="Winner:",
-                                        value=f"**Everyone Loses.**", inline=False)
-                    elif dealer_total == player_total:
-                        embed.add_field(name="Winner:",
-                                        value=f"**Draw!**", inline=False)
-                    elif (dealer_total > player_total or bust_check) and dealer_total <= 21:
-                        embed.add_field(name="Winner:",
-                                        value=f"**BeeBot Wins!!**", inline=False)
-                    elif dealer_total < player_total or dealer_total > 21:
-                        embed.add_field(name="Winner:",
-                                        value=f"**{payload.member.display_name} Wins!!**", inline=False)
-                    await message.edit(embed=embed)
-                    # remove blackjack game
-                    games_data['blackjack'].pop(str(payload.message_id))
-                    games.set_games_json(games_data)
-                    await message.clear_reactions()
+                        await message.clear_reactions()
 
     # *********************************************************************************************************************
     # bot command to flip coin
