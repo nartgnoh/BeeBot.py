@@ -16,17 +16,14 @@ class Reactions(Cog):
     # *********************************************************************************************************************
     @Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if payload.emoji.name == '❌':
+        # ***********************************
+        # | delete message on '❌' reaction |
+        # ***********************************
+        if payload.emoji.name == '❌' and payload.member != self.bot.user:
             message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
             first_reaction_users = await message.reactions[0].users().flatten()
-
-            # ***********************************
-            # | delete message on '❌' reaction |
-            # ***********************************
-            for u in first_reaction_users:
-                if u.bot and len(first_reaction_users) > 1 and message.reactions[0] == '❌':
-                    await message.delete()
-                    break
+            if self.bot.user in first_reaction_users and len(first_reaction_users) > 1:
+                await message.delete()
 
         # *********************************
         # | add participants to giveaways |
