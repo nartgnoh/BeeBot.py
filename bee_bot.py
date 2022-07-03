@@ -4,7 +4,7 @@
 
 import os
 import discord
-import itertools
+import random
 
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
@@ -63,7 +63,7 @@ async def on_ready():
           '\n----------------------------------------------')
 
 
-statuslist = itertools.cycle([
+statuslist = [
     'League of Legends [type \"BB help\"]',
     'with your Mom [type \"BB help\"]',
     'with BEES NUTS [type \"BB help\"]',
@@ -77,13 +77,13 @@ statuslist = itertools.cycle([
     'Fortnite [type \"BB help\"]',
     'Card Games [type \"BB help\"]',
     'Minecraft [type \"BB help\"]'
-])
+]
 
 
 # change activity
 @tasks.loop(seconds=900)
 async def change_activity():
-    await bot.change_presence(activity=discord.Game(next(statuslist)))
+    await bot.change_presence(activity=discord.Game(random.choice(statuslist)))
 
 
 bot.run(DISCORD_TOKEN, bot=True, reconnect=True)
