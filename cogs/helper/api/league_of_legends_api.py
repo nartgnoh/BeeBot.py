@@ -31,6 +31,8 @@ def champion_string_formatting(champion):
         return champion.lower().title().replace(' ', '').replace("'", '').strip('"')
     elif check == 'Wukong':
         return 'MonkeyKing'
+    elif check == 'JarvanIv':
+        return 'JarvanIV'
     return champion.replace('.', ' ').replace("'", '').lower().title().replace(' ', '').strip('"')
 
 
