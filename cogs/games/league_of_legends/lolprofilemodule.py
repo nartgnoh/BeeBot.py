@@ -20,12 +20,14 @@ from discord.ext import commands
 from discord import Embed
 from typing import Optional
 from dotenv import load_dotenv
-from riotwatcher import LolWatcher, ApiError
+from riotwatcher import LolWatcher, TftWatcher, ApiError
 
 # get riot_lol_key from .env file
 load_dotenv()
 LOL_KEY = os.getenv('RIOT_LOL_KEY')
+TFT_KEY = os.getenv('RIOT_TFT_KEY')
 lol_watcher = LolWatcher(LOL_KEY)
+tft_watcher = TftWatcher(TFT_KEY)
 default_region = 'na1'
 
 # role specific names
@@ -78,6 +80,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 # get summoner info
                 summoner = lol_watcher.summoner.by_name(
                     region, f"{''.join(summoner_name)}")
+                tft_summoner = tft_watcher.summoner.by_name(
+                    region, f"{''.join(summoner_name)}")
             except:
                 summoner_check = False
                 return await ctx.send("Sorry! The summoner name you inputed doesn't exist! :cry:\n"
@@ -88,7 +92,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 'n']['champion']
             # get summoner ranks
             ranks = lol_watcher.league.by_summoner(
-                region, summoner['id'])
+                region, summoner['id']) + tft_watcher.league.by_summoner(region, tft_summoner['id'])
+            ranks = sorted(ranks, key=lambda d: d['queueType']) 
             # get total mastery
             total_mastery = lol_watcher.champion_mastery.scores_by_summoner(
                 region, summoner['id'])
@@ -116,9 +121,10 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
             # embed fields
             if ranks:
                 for rank in ranks:
-                    embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
-                                    value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
-                                    f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
+                    if rank['queueType'] != 'RANKED_TFT_TURBO':
+                        embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
+                                        value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
+                                        f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
                 embed.add_field(
                     name='\u200b', value='\u200b', inline=False)
             fields = [("Total Champion Mastery Score:", f"*{total_mastery}*", False),
@@ -245,6 +251,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 # get summoner info
                 summoner = lol_watcher.summoner.by_name(
                     region, f"{''.join(summoner_name)}")
+                tft_summoner = tft_watcher.summoner.by_name(
+                    region, f"{''.join(summoner_name)}")
             except:
                 summoner_check = False
                 return await ctx.send("Sorry! The summoner name you inputed doesn't exist! :cry:\n"
@@ -255,25 +263,33 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                 'n']['champion']
             # get summoner ranks
             ranks = lol_watcher.league.by_summoner(
-                region, summoner['id'])
+                region, summoner['id']) + tft_watcher.league.by_summoner(region, tft_summoner['id'])
+            ranks = sorted(ranks, key=lambda d: d['queueType']) 
             # *********
             # | embed |
             # *********
             embed = Embed(title=f"{summoner['name']}'s LoL Rank",
                           description=f"Summoner Level: {summoner['summonerLevel']}",
                           colour=ctx.author.colour)
+            turbo_check = False
             if ranks:
                 riot_ranks = lol_constants.riot_ranks()
                 total_rank = 0
                 for rank in ranks:
-                    embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
-                                    value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
-                                    f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
-                    # get average_rank
-                    rank_key = [k for k, v in riot_ranks.items(
-                    ) if v == {'tier': rank['tier'], 'rank': rank['rank']}]
-                    total_rank = total_rank + sum(rank_key)
-                average_rank = round(total_rank/len(ranks), 0)
+                    if rank['queueType'] == 'RANKED_TFT_TURBO':
+                        turbo_check = True
+                    else:
+                        embed.add_field(name=f"{rank['queueType']} Rank:".replace("_", " ").title(),
+                                        value=f"{rank['tier'].title()} {rank['rank']} {rank['leaguePoints']}LP\n" +
+                                        f"WR: {round((rank['wins']/(rank['wins']+rank['losses']))*100, 2)}% (W{rank['wins']}:L{rank['losses']})", inline=False)
+                        # get average_rank
+                        rank_key = [k for k, v in riot_ranks.items(
+                        ) if v == {'tier': rank['tier'], 'rank': rank['rank']}]
+                        total_rank = total_rank + sum(rank_key)
+                if turbo_check:
+                    average_rank = round(total_rank/(len(ranks)-1), 0)
+                else:
+                    average_rank = round(total_rank/len(ranks), 0)
                 final_rank = riot_ranks.get(int(average_rank))
 
                 embed.add_field(
