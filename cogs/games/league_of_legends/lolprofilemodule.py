@@ -336,7 +336,8 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # *********************************************************************************************************************
     # bot command to add champions to the calling user's champion pool for a given role
     # *********************************************************************************************************************
-    @commands.command(name='lolchamppooladd', aliases=['lolcpadd', 'cpaddlol', 'pooladd', 'champpooladd', '✏'],
+    @commands.command(name='lolchamppooladd', aliases=['lolcpadd', 'cpaddlol', 'pooladd',
+                                                       'champpooladd', 'lolcpa', 'addchamp', '✏'],
                       help=f"✏ Add champions to your champion pool for a given role.\n\n"
                            f"[Input Role: type \"<role>\" (ex: mid)]\n"
                            f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]\n"
@@ -396,7 +397,7 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
     # *********************************************************************************************************************
     @commands.command(name='lolchamppoolremove',
                       aliases=['lolcpremove', 'cpremovelol',
-                               'poolremove', 'champpoolremove', '📃'],
+                               'poolremove', 'champpoolremove', 'lolcpr', 'removechamp', '📃'],
                       help=f"📃 Remove champions from your champion pool for a given role.\n\n"
                            f"[Input Role: type \"<role>\" (ex: mid)]\n"
                            f"[Valid Roles: {', '.join(lol_constants.lol_roles(include_fill=False))}]\n"
