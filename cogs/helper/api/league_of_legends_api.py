@@ -30,10 +30,10 @@ def champion_string_formatting(champion):
     if check == 'Kogmaw' or check == 'Reksai':
         return champion.lower().title().replace(' ', '').replace("'", '').strip('"')
     elif check == 'Wukong': return 'MonkeyKing'
-    elif check == 'JarvanIv' or 'J4': return 'JarvanIV'
+    elif check == 'JarvanIv' or check == 'J4': return 'JarvanIV'
     elif check == 'Mf': return 'MissFortune'
     elif check == 'Ez': return 'Ezreal'
-    elif check == 'Heimer' or 'Donger': return 'Herimerdinger'
+    elif check == 'Heimer' or check =='Donger': return 'Herimerdinger'
     elif check == 'Cass': return 'Cassiopeia'
     elif check == 'Tk': return 'TahmKench'
     elif check == 'Tf': return 'TwistedFate'
