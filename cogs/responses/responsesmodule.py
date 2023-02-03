@@ -11,6 +11,7 @@ import discord
 import random
 import requests
 import json
+import openai
 
 from discord.ext import commands
 from discord import Embed
@@ -32,7 +33,7 @@ admin_specific_command_name = 'Bot Admin'
 
 
 class responsesmodule(commands.Cog, name="ResponsesModule",
-                      description="angry, beefacts, dadjoke, gif, happy, happybirthday, pickcolour, sad"):
+                      description="angry, beefacts, dadjoke, gif, happy, happybirthday, pickcolour, question, sad"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -221,6 +222,27 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
                       help='🃏 Tells a dad joke!')
     async def dad_joke(self, ctx):
         await ctx.send(f"{Dadjoke().joke}  :rofl:")
+
+    # *********************************************************************************************************************
+    # bot command question
+    # *********************************************************************************************************************
+    @commands.command(name='question', aliases=['ask', '?', '❓'],
+                      help='❓ Ask BeeBot a question!')
+    async def question(self, ctx, *, question: Optional[str]):
+        if question == None:
+            return await ctx.send("Please ask me a question! :smile:")
+        else:
+            openai.api_key = os.getenv('OPENAI_KEY')
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=question,
+                temperature=0.69,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+                )
+            await ctx.send(response.choices[0].text)
 
     # *********************************************************************************************************************
     # bot command to send gif/tenor
