@@ -10,3 +10,4 @@ ffmpeg-python
 youtube_dl
 youtube-search
 dadjokes
+openai
