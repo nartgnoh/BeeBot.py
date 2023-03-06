@@ -8,7 +8,9 @@ A cute bee-themed Discord.py bot for my personal Discord server.
 
 Welcome to BeeBot.py!
 
-Code-base for a bee-themed Discord.py bot who responds with cute and helpful reactions with the Tenor API, utilizes the Riot API to help with organizing League of Legends games, helps with organizing game nights, plays music, plays games, and much more! 
+Code-base for a bee-themed Discord bot who organizes game nights, plays games, plays music and much more!
+
+Utilizing Riot, Tenor and OpenAI APIs to create an engaging and interactive discord experience run fully on the cloud.
 
 ## Getting Started
 

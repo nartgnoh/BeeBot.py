@@ -259,8 +259,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='join', aliases=['connect', '🔉'],
                       help='🔉 BeeBot joins voice channel!')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
         # Connect to voice.
         # Parameters
@@ -297,8 +295,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='play', aliases=['sing', '▶️'],
                       help='▶️ Plays YouTube audio! [Provide YouTube search or link, Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def play_(self, ctx, *, search: Optional[str]):
         # Request a song and add it to the queue.
         # This command attempts to join a valid voice channel if the bot is not already in one.
@@ -327,8 +323,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # bot command to pause music
     # *********************************************************************************************************************
     @commands.command(name='pause', aliases=['⏸️'], help='⏸️ Pause current audio playing! [Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def pause_(self, ctx):
         # Pause the currently playing song.
         vc = ctx.voice_client
@@ -359,8 +353,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # bot command to go to next audio in queue by reaction vote
     # *********************************************************************************************************************
     @commands.command(name='next', aliases=['skip', '⏭️'], help='⏭️ Play the next audio! [Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def skip_(self, ctx):
         # Skip the song.
         vc = ctx.voice_client
@@ -378,8 +370,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='queue', aliases=['q', 'playlist', '🎶'],
                       help='🎶 View the current queue! [Current and Upcoming 5 songs, Role specific]]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def queue_info(self, ctx):
         # Retrieve a basic queue of upcoming songs.
         vc = ctx.voice_client
@@ -415,8 +405,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
 
     @commands.command(name='now_playing', aliases=['np', 'current', 'playing', '🎵'],
                       help='🎵 View what\'s playing now! [Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def now_playing_(self, ctx):
         # Display information about the currently playing song.
         vc = ctx.voice_client
@@ -446,8 +434,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='volume', aliases=['vol', '🔊'],
                       help='🔊 Change the player volume! [Range: 1 to 100, Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def change_volume(self, ctx, *, vol: Optional[float]):
         # Change the player volume.
         # Parameters
@@ -472,8 +458,6 @@ class MusicModule(commands.Cog, name="MusicModule", description="BeeBot's Music 
     # *********************************************************************************************************************
     @commands.command(name='leave', aliases=['stop', 'deletequeue', 'disconnect', '🔈'],
                       help='🔈 BeeBot leaves voice channel and deletes current queue. [Role specific]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def stop_(self, ctx):
         # Stop the currently playing song and destroy the player.
         # !Warning!

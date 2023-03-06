@@ -44,8 +44,6 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule",
     # *********************************************************************************************************************
     @commands.command(name='champlookup', aliases=['champ', 'lolchamp', 'champlol', 'lookupchamp', '🔍'],
                       help='🔍 Quick lookup for lol champion. [Auto: random champ]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def champ_lookup(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         champions_version = lol_api.get_version()['n']['champion']
@@ -83,8 +81,6 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule",
                                                    'schamp', 'champskill', 'skillschamp', 'skillchamp', '💥'],
                       help='💥 Full skills lookup for lol champion. [Auto: random champ]\n\n'
                       '[Add an "❌" reaction to delete]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def champ_skill(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         champions_version = lol_api.get_version()['n']['champion']
@@ -127,8 +123,6 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule",
     @commands.command(name='pickskin', aliases=['skinlol', 'lolskin', 'skinpick', 'champskin', 'skinchamp',
                                                 'skinschamp', 'champskins' '👗'],
                       help='👗 Pick a random skin for a champion! [Auto: random champ]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def pick_skin(self, ctx, *, lol_champion: Optional[str]):
         # get current lol version for region
         champions_version = lol_api.get_version()['n']['champion']
@@ -166,8 +160,6 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule",
                                                   'teamlol', 'lolteams', 'teamslol', '⚖️'],
                       help='⚖️ Help balance a lol teamcomp! [Champions with spaces need quotes ""]\n\n'
                       '[Add an "❌" reaction to delete]')
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def lol_balance(self, ctx, *lol_champions):
         if not lol_champions:
             return await ctx.send("Sorry! You forgot to add champions! :slight_smile:")
@@ -258,8 +250,6 @@ class lolinfomodule(commands.Cog, name="LoLInfoModule",
                       help="🕵️ Lookup stats for a live LoL game!\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def lol_live_game(self, ctx, region: Optional[str], *summoner_name):
         summoner_name = list(summoner_name)
         # check region
