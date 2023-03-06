@@ -33,7 +33,7 @@ admin_specific_command_name = 'Bot Admin'
 
 
 class responsesmodule(commands.Cog, name="ResponsesModule",
-                      description="angry, beefacts, dadjoke, gif, happy, happybirthday, pickcolour, question, sad"):
+                      description="angry, ask, beefacts, dadjoke, gif, happy, happybirthday, pickcolour, sad"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -224,18 +224,18 @@ class responsesmodule(commands.Cog, name="ResponsesModule",
         await ctx.send(f"{Dadjoke().joke}  :rofl:")
 
     # *********************************************************************************************************************
-    # bot command question
+    # bot command ask a question to OpenAI (ChatGPT)
     # *********************************************************************************************************************
-    @commands.command(name='question', aliases=['ask', '?', '❓'],
+    @commands.command(name='ask', aliases=['question', '?', '❓'],
                       help='❓ Ask BeeBot a question!')
-    async def question(self, ctx, *, question: Optional[str]):
-        if question == None:
+    async def ask(self, ctx, *, ask: Optional[str]):
+        if ask == None:
             return await ctx.send("Please ask me a question! :smile:")
         else:
             openai.api_key = os.getenv('OPENAI_KEY')
             response = openai.Completion.create(
                 model="text-davinci-003",
-                prompt=question,
+                prompt=ask,
                 temperature=0.69,
                 max_tokens=256,
                 top_p=1,

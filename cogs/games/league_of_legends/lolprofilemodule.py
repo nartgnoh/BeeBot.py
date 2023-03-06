@@ -51,8 +51,6 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                       help=f"👤 Showcase a summoner\'s league of legends profile.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def lol_profile(self, ctx, region: Optional[str], *summoner_name):
         summoner_name = list(summoner_name)
         # check region
@@ -144,8 +142,6 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                       help=f"🎓 Showcase a summoner\'s league of legends mastery.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def lol_mastery(self, ctx, region: Optional[str], *summoner_name):
         summoner_name = list(summoner_name)
         # check region
@@ -222,8 +218,6 @@ class lolprofilemodule(commands.Cog, name="LoLProfileModule", description="lolpr
                       help=f"🏆 Showcase a summoner\'s league of legends rank.\n\n"
                       f"[Input Region: type \"region:<region>\" (ex: region:kr)]\n"
                       f"[Valid Regions: {', '.join(lol_constants.riot_regions())}]")
-    # only specific roles can use this command
-    @commands.has_role(role_specific_command_name)
     async def lol_rank(self, ctx, region: Optional[str], *summoner_name):
         summoner_name = list(summoner_name)
         # check region
