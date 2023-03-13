@@ -33,7 +33,7 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
     # *********************************************************************************************************************
     # bot command admin beebot reset events
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_events',
+    @commands.command(name='admin_beebot_reset_events',
                       help='🛡️ Reset BeeBot events file. [Admin Specific]\n\nOptions: "all", "clash", "giveaways"')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
@@ -46,14 +46,14 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
         events_json = events.get_events_json()
         if not event.lower() in events_json:
             return await ctx.send('Your event doesn\'t exist!')
-        events_json[event.lower()] = {}
+        events_json.pop(event.lower())
         events.set_events_json(events_json)
         await ctx.send(f'Reset {event} BeeBot events file.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset games
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_games',
+    @commands.command(name='admin_beebot_reset_games',
                       help='🛡️ Reset BeeBot games file. [Admin Specific]\n\nOptions: "all", "blackjack"')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
@@ -66,19 +66,29 @@ class admin_beebot_reset_module(commands.Cog, name="Admin_BeeBot_Reset_Module",
         games_json = games.get_games_json()
         if not game.lower() in games_json:
             return await ctx.send('Your game doesn\'t exist!')
-        games_json[game.lower()] = {}
+        games_json.pop(game.lower())
         games.set_games_json(games_json)
         await ctx.send(f'Reset {game} BeeBot games file.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset beebot profiles
     # *********************************************************************************************************************
-    @commands.command(name='admin_beebot_reset_all_beebot_profiles', help='🛡️ Reset BeeBot profiles file. [Admin Specific]')
+    @commands.command(name='admin_beebot_reset_beebot_profiles', help='🛡️ Reset BeeBot profiles file. [Admin Specific]\n\n'
+                      'Options: "user_id" (Example: "BeeBot#4676")')
     # only specific roles can use this command
     @commands.has_role(admin_specific_command_name)
-    async def admin_beebot_reset_all_beebot_profiles(self, ctx):
-        beebot_profiles.set_beebot_profiles_json({})
-        await ctx.send('Reset BeeBot profiles file.')
+    async def admin_beebot_reset_all_beebot_profiles(self, ctx, *, profile: Optional[str]):
+        if profile == None:
+            return await ctx.send('Please add a profile to reset!')
+        # if profile.lower() == 'all':
+        #     beebot_profiles.set_beebot_profiles_json({})
+        #     return await ctx.send('Reset ALL BeeBot profile file.')
+        profile_json = beebot_profiles.get_beebot_profiles_json()
+        if not profile in profile_json:
+            return await ctx.send(f'{profile} isn\'t on file!')
+        profile_json.pop(profile)
+        beebot_profiles.set_beebot_profiles_json(profile_json)
+        await ctx.send(f'Removed {profile} in BeeBot profiles file.')
 
     # *********************************************************************************************************************
     # bot command admin beebot reset urls
