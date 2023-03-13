@@ -45,7 +45,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                       f"[Valid Roles: {', '.join(lol_constants.lol_roles())}]")
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def clash_add(self, ctx, availability: Optional[str], *roles):
+    async def clash_add(self, ctx, *, response: Optional[str]):
         events_data = events.get_events_json()
         if not events.check_event(events_data, 'clash'):
             return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
@@ -54,22 +54,27 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             clash_event['schedule'][0]['startTime'] / 1e3)
         if clash_date < datetime.now():
             return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
-        if availability == None:
-            return await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
-        availability = availability.lower().title()
-        if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both' and availability not in lol_constants.lol_roles():
-            return await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\', \'Both\', or role(s) '
+        if response == None:
+            return await ctx.send('Please specify what days you\'re available for clash after command! :slight_smile:')
+        day_options = ["Sat", "Sun", "Both", "Saturday", "Sunday"]
+        response = response.lower().title()
+        response_list = list(response.split(' '))
+        if not any(elem in day_options for elem in response_list) and not any(elem in lol_constants.lol_roles() for elem in response_list):
+            return await ctx.send('Invalid input! :flushed: Please specify what days you\'re available for clash, or role(s) '
                                   'after command! :smile:')
         available_member = str(ctx.message.author)
         participants = clash_event['participants']
-        roles = list(roles)
+        availability = list(set(day_options) & set(response_list))
+        roles = list(set(lol_constants.lol_roles()) & set(response_list))
         avail_dict = {}
-        if availability in lol_constants.lol_roles():
-            roles = [availability.lower()] + roles
-        elif availability == 'Both':
-            avail_dict = {'Sat': 1, 'Sun': 1}
-        else:
-            avail_dict = {availability: 1}
+        sat_check = False
+        sun_check = False
+        if any(elem in ["Both", "Sat", "Saturday"] for elem in availability):
+            avail_dict["Sat"] = 1
+            sat_check = True
+        if any(elem in ["Both", "Sun", "Sunday"] for elem in availability):
+            avail_dict["Sun"] = 1
+            sun_check = True
         # add roles
         roles_list = []
         if roles:
@@ -91,17 +96,17 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             beebot_profiles_data = beebot_profiles.set_beebot_profiles_json(
                 beebot_profiles_data)
         # check if member already registered
-        if available_member in participants and (availability == 'Sat' or availability == 'Sun' or availability == 'Both'):
+        if available_member in participants and availability:
             member = participants[available_member]
             if member['Sat'] == 1 and member['Sun'] == 1 and not roles_list:
                 await ctx.send('Your name was already added to the list for both days! :open_mouth:')
-            elif (member['Sat'] == 1 and availability == 'Sat') or (member['Sun'] == 1 and availability == 'Sun') and not roles_list:
+            elif (member['Sat'] == 1 and sat_check and not sun_check) or (member['Sun'] == 1 and sun_check and not sat_check) and not roles_list:
                 await ctx.send('Your name was already added to the list for this day! :open_mouth:')
             else:
                 participants[available_member].update(
                     avail_dict)
                 await ctx.send(f"Your availability {role_msg}has been updated! :white_check_mark:")
-        elif availability in lol_constants.lol_roles() and roles_list:
+        elif roles_list:
             await ctx.send(f"Your preferred role(s) has been updated! :white_check_mark:")
         else:
             participants[available_member] = {
@@ -117,7 +122,7 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
                       help='➖ Remove your Clash availability! [Pick between: \'Sat\', \'Sun\', or \'Both\']')
     # only specific roles can use this command
     @commands.has_role(role_specific_command_name)
-    async def clash_remove(self, ctx, availability: Optional[str]):
+    async def clash_remove(self, ctx, *, availability: Optional[str]):
         events_data = events.get_events_json()
         if not events.check_event(events_data, 'clash'):
             return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
@@ -128,21 +133,28 @@ class lolclashmodule(commands.Cog, name="LoLClashModule", description="clashadd,
             return await ctx.send('There\'s currently no clash scheduled! :open_mouth: Try again next clash!')
         if availability == None:
             return await ctx.send('Please specify either \'Sat\', \'Sun\' or \'Both\' after command! :slight_smile:')
+        day_options = ["Sat", "Sun", "Both", "Saturday", "Sunday"]
         availability = availability.lower().title()
-        if not availability == 'Sat' and not availability == 'Sun' and not availability == 'Both':
+        availability = list(availability.split(' '))
+        if not any(elem in day_options for elem in availability):
             return await ctx.send('Invalid input! :flushed: Please specify either \'Sat\', \'Sun\' or \'Both\' '
                                   'after command! :smile:')
         # check if member already registered
         available_member = str(ctx.message.author)
         participants = clash_event['participants']
-        if availability == 'Both':
-            avail_dict = {'Sat': 0, 'Sun': 0}
-        else:
-            avail_dict = {availability: 0}
+        avail_dict = {}
+        sat_check = False
+        sun_check = False
+        if any(elem in ["Both", "Sat", "Saturday"] for elem in availability):
+            avail_dict["Sat"] = 0
+            sat_check = True
+        if any(elem in ["Both", "Sun", "Sunday"] for elem in availability):
+            avail_dict["Sun"] = 0
+            sun_check = True
         if available_member not in participants:
             return await ctx.send('Your name wasn\'t on the list. :thinking: Add it with the "addclash" command! :smile:')
         member = participants[available_member]
-        if (member['Sat'] == 0 and availability == 'Sat') or (member['Sun'] == 0 and availability == 'Sun'):
+        if (member['Sat'] == 0 and sat_check and not sun_check) or (member['Sun'] == 0 and sun_check and not sat_check):
             await ctx.send('You\'re already not signed up for this day! :open_mouth:')
         else:
             participants[available_member].update(
